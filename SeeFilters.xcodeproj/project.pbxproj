@@ -15,6 +15,9 @@
 		0C3860A915AB7EDA002A4EAC /* SFAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C3860A815AB7EDA002A4EAC /* SFAppDelegate.m */; };
 		0C3860AC15AB7EDA002A4EAC /* SFViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C3860AB15AB7EDA002A4EAC /* SFViewController.m */; };
 		0C3860AF15AB7EDA002A4EAC /* SFViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0C3860AD15AB7EDA002A4EAC /* SFViewController.xib */; };
+		0C3860B615AB80D8002A4EAC /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C3860B515AB80D8002A4EAC /* CoreImage.framework */; settings = {ATTRIBUTES = (Required, ); }; };
+		0C3860B815AB8150002A4EAC /* image.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C3860B715AB8150002A4EAC /* image.png */; };
+		0C3860BB15AB8B9A002A4EAC /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C3860BA15AB8B9A002A4EAC /* AssetsLibrary.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,15 +25,18 @@
 		0C38609815AB7EDA002A4EAC /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		0C38609A15AB7EDA002A4EAC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		0C38609C15AB7EDA002A4EAC /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		0C3860A015AB7EDA002A4EAC /* SeeFilters-Info.plist */ = {isa = PBXFileReference; path = "SeeFilters-Info.plist"; sourceTree = "<group>"; };
+		0C3860A015AB7EDA002A4EAC /* SeeFilters-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SeeFilters-Info.plist"; sourceTree = "<group>"; };
 		0C3860A215AB7EDA002A4EAC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		0C3860A415AB7EDA002A4EAC /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		0C3860A615AB7EDA002A4EAC /* SeeFilters-Prefix.pch */ = {isa = PBXFileReference; path = "SeeFilters-Prefix.pch"; sourceTree = "<group>"; };
-		0C3860A715AB7EDA002A4EAC /* SFAppDelegate.h */ = {isa = PBXFileReference; path = SFAppDelegate.h; sourceTree = "<group>"; };
+		0C3860A615AB7EDA002A4EAC /* SeeFilters-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SeeFilters-Prefix.pch"; sourceTree = "<group>"; };
+		0C3860A715AB7EDA002A4EAC /* SFAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFAppDelegate.h; sourceTree = "<group>"; };
 		0C3860A815AB7EDA002A4EAC /* SFAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SFAppDelegate.m; sourceTree = "<group>"; };
-		0C3860AA15AB7EDA002A4EAC /* SFViewController.h */ = {isa = PBXFileReference; path = SFViewController.h; sourceTree = "<group>"; };
+		0C3860AA15AB7EDA002A4EAC /* SFViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFViewController.h; sourceTree = "<group>"; };
 		0C3860AB15AB7EDA002A4EAC /* SFViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SFViewController.m; sourceTree = "<group>"; };
 		0C3860AE15AB7EDA002A4EAC /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/SFViewController.xib; sourceTree = "<group>"; };
+		0C3860B515AB80D8002A4EAC /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
+		0C3860B715AB8150002A4EAC /* image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = image.png; sourceTree = "<group>"; };
+		0C3860BA15AB8B9A002A4EAC /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -38,6 +44,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0C3860BB15AB8B9A002A4EAC /* AssetsLibrary.framework in Frameworks */,
+				0C3860B615AB80D8002A4EAC /* CoreImage.framework in Frameworks */,
 				0C38609915AB7EDA002A4EAC /* UIKit.framework in Frameworks */,
 				0C38609B15AB7EDA002A4EAC /* Foundation.framework in Frameworks */,
 				0C38609D15AB7EDA002A4EAC /* CoreGraphics.framework in Frameworks */,
@@ -50,9 +58,11 @@
 		0C38608915AB7EDA002A4EAC = {
 			isa = PBXGroup;
 			children = (
+				0C3860BA15AB8B9A002A4EAC /* AssetsLibrary.framework */,
 				0C38609E15AB7EDA002A4EAC /* SeeFilters */,
 				0C38609715AB7EDA002A4EAC /* Frameworks */,
 				0C38609515AB7EDA002A4EAC /* Products */,
+				0C3860B915AB8154002A4EAC /* Resources */,
 			);
 			sourceTree = "<group>";
 		};
@@ -67,6 +77,7 @@
 		0C38609715AB7EDA002A4EAC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0C3860B515AB80D8002A4EAC /* CoreImage.framework */,
 				0C38609815AB7EDA002A4EAC /* UIKit.framework */,
 				0C38609A15AB7EDA002A4EAC /* Foundation.framework */,
 				0C38609C15AB7EDA002A4EAC /* CoreGraphics.framework */,
@@ -96,6 +107,14 @@
 				0C3860A615AB7EDA002A4EAC /* SeeFilters-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		0C3860B915AB8154002A4EAC /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				0C3860B715AB8150002A4EAC /* image.png */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -151,6 +170,7 @@
 			files = (
 				0C3860A315AB7EDA002A4EAC /* InfoPlist.strings in Resources */,
 				0C3860AF15AB7EDA002A4EAC /* SFViewController.xib in Resources */,
+				0C3860B815AB8150002A4EAC /* image.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

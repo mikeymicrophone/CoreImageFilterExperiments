@@ -22,6 +22,7 @@
     self.viewController = [[SFViewController alloc] initWithNibName:@"SFViewController" bundle:nil];
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
+    [[UIApplication sharedApplication] setStatusBarHidden:YES];
     return YES;
 }
 
