@@ -8,13 +8,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "SeeFilters/SFViewController.h"
-         timestampString = "363568108.05968"
+         timestampString = "363815502.892235"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "18"
-         endingLineNumber = "18"
-         landmarkName = "@interface SFViewController"
-         landmarkType = "2">
+         startingLineNumber = "20"
+         endingLineNumber = "20">
       </FileBreakpoint>
    </FileBreakpoints>
 </Bucket>

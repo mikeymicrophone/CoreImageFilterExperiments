@@ -14,5 +14,6 @@
 @property (weak, nonatomic) IBOutlet UISlider *amountSlider;
 - (IBAction)loadPhoto:(id)sender;
 - (IBAction)savePhoto:(id)sender;
+@property (weak, nonatomic) IBOutlet UILabel *filterValueLabel;
 
 @end

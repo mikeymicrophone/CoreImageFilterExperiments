@@ -18,6 +18,7 @@
     CIFilter *filter;
     CIImage *beginImage;
 }
+@synthesize filterValueLabel;
 @synthesize amountSlider;
 @synthesize imgV;
 
@@ -57,6 +58,8 @@
     
     [imgV setImage:newImg];
     
+    filterValueLabel.text = [NSString stringWithFormat:@"%1.2f", 0.5];
+    
     CGImageRelease(cgimg);
     
 //    [self logAllFilters];
@@ -66,6 +69,7 @@
 {
     [self setImgV:nil];
     [self setAmountSlider:nil];
+    [self setFilterValueLabel:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -77,6 +81,8 @@
 
 -(IBAction)changeValue:(UISlider *)sender {
     float slideValue = [sender value];
+    
+    filterValueLabel.text = [NSString stringWithFormat:@"%1.2f", slideValue];
     
     [filter setValue:[NSNumber numberWithFloat:slideValue] 
               forKey:@"inputIntensity"];
