@@ -74,9 +74,14 @@
 {
     NSDictionary *attributes = [self attributesForFilter:filterName];
     
-    filter = [CIFilter filterWithName:filterName
-                        keysAndValues: kCIInputImageKey, beginImage, 
-              @"inputIntensity", [NSNumber numberWithFloat:0.8], @"inputColor", [attributes valueForKey:@"inputColor"], nil];
+    filter = [CIFilter filterWithName:filterName];
+    [filter setValue:beginImage forKey:kCIInputImageKey];
+    [filter setValue:[NSNumber numberWithFloat:0.8] forKey:@"inputIntensity"];
+    NSString *setting;
+    for(setting in attributes) {
+        [filter setValue:[attributes valueForKey:setting] forKey:setting];
+    }
+    
 }
 
 - (NSDictionary *)attributesForFilter:(NSString *)filterName
@@ -88,6 +93,8 @@
             CGColorRef clr = CGColorCreate (colorSpace,  components);
             CIColor *black = [[CIColor alloc] initWithCGColor:clr];
             [attributes setValue:black forKey:@"inputColor"];
+    } else if (filterName == @"CISepiaTone") {
+        
     }
     return attributes;
 }
