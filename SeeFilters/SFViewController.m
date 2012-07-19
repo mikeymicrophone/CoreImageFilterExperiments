@@ -19,6 +19,7 @@
     CIImage *beginImage;
 }
 @synthesize filterValueLabel;
+@synthesize filterPicker;
 @synthesize amountSlider;
 @synthesize imgV;
 
@@ -64,6 +65,7 @@
     [self setImgV:nil];
     [self setAmountSlider:nil];
     [self setFilterValueLabel:nil];
+    [self setFilterPicker:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -130,6 +132,49 @@
                           completionBlock:^(NSURL *assetURL, NSError *error) {
                               CGImageRelease(cgImg);
                           }];
+}
+
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
+{
+    return 1;
+}
+
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
+{
+    return 2;
+}
+
+- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
+{
+    switch (row) {
+        case 0:
+            return @"Black/White";
+            break;
+            
+        case 1:
+            return @"Sepia";
+            break;
+            
+        default:
+            return @"Other Filters";
+            break;
+    }
+}
+
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
+{
+    switch (row) {
+        case 0:
+            [self updateFilter:@"CIColorMonochrome"];
+            break;
+            
+        case 1:
+            [self updateFilter:@"CISepiaTone"];
+            break;
+            
+        default:
+            break;
+    }
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker 

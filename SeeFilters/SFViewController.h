@@ -15,6 +15,7 @@
 - (IBAction)loadPhoto:(id)sender;
 - (IBAction)savePhoto:(id)sender;
 @property (weak, nonatomic) IBOutlet UILabel *filterValueLabel;
+@property (weak, nonatomic) IBOutlet UIPickerView *filterPicker;
 - (void)updateFilter:(NSString *)filterName;
 - (NSDictionary *)attributesForFilter:(NSString *)filterName;
 
