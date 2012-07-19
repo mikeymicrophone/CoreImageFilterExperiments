@@ -43,14 +43,8 @@
     beginImage = [CIImage imageWithContentsOfURL:fileNameAndPath];
     context = [CIContext contextWithOptions:nil];
     
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    const CGFloat components[4] = {1.0, 1.0, 1.0, 1.0 };
-    CGColorRef clr = CGColorCreate (colorSpace,  components);
-    CIColor *black = [[CIColor alloc] initWithCGColor:clr];
+    [self updateFilter:@"CIColorMonochrome"];
     
-    filter = [CIFilter filterWithName:@"CIColorMonochrome" 
-                                  keysAndValues: kCIInputImageKey, beginImage, 
-                        @"inputIntensity", [NSNumber numberWithFloat:0.8], @"inputColor", black, nil];
     CIImage *outputImage = [filter outputImage];
     
     CGImageRef cgimg = [context createCGImage:outputImage fromRect:[outputImage extent]];
@@ -72,6 +66,28 @@
     [self setFilterValueLabel:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
+}
+
+- (void)updateFilter:(NSString *)filterName
+{
+    NSDictionary *attributes = [self attributesForFilter:filterName];
+    
+    filter = [CIFilter filterWithName:filterName
+                        keysAndValues: kCIInputImageKey, beginImage, 
+              @"inputIntensity", [NSNumber numberWithFloat:0.8], @"inputColor", [attributes valueForKey:@"inputColor"], nil];
+}
+
+- (NSDictionary *)attributesForFilter:(NSString *)filterName
+{
+    NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
+    if (filterName == @"CIColorMonochrome") {
+            CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+            const CGFloat components[4] = {1.0, 1.0, 1.0, 1.0 };
+            CGColorRef clr = CGColorCreate (colorSpace,  components);
+            CIColor *black = [[CIColor alloc] initWithCGColor:clr];
+            [attributes setValue:black forKey:@"inputColor"];
+    }
+    return attributes;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
