@@ -19,7 +19,11 @@
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
-    self.viewController = [[SFViewController alloc] initWithNibName:@"SFViewController" bundle:nil];
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        self.viewController = [[SFViewController alloc] initWithNibName:@"SFViewController-iPad" bundle:nil];
+    } else {
+        self.viewController = [[SFViewController alloc] initWithNibName:@"SFViewController" bundle:nil];
+    }
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
     [[UIApplication sharedApplication] setStatusBarHidden:YES];

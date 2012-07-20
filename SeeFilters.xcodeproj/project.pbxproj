@@ -18,6 +18,7 @@
 		0C3860B615AB80D8002A4EAC /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C3860B515AB80D8002A4EAC /* CoreImage.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		0C3860B815AB8150002A4EAC /* image.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C3860B715AB8150002A4EAC /* image.png */; };
 		0C3860BB15AB8B9A002A4EAC /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C3860BA15AB8B9A002A4EAC /* AssetsLibrary.framework */; };
+		0C859D4115B8FEDC00C506DF /* SFViewController-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0C859D3F15B8FEDC00C506DF /* SFViewController-iPad.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +38,7 @@
 		0C3860B515AB80D8002A4EAC /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		0C3860B715AB8150002A4EAC /* image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = image.png; sourceTree = "<group>"; };
 		0C3860BA15AB8B9A002A4EAC /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
+		0C859D4015B8FEDC00C506DF /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = "en.lproj/SFViewController-iPad.xib"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +95,7 @@
 				0C3860AA15AB7EDA002A4EAC /* SFViewController.h */,
 				0C3860AB15AB7EDA002A4EAC /* SFViewController.m */,
 				0C3860AD15AB7EDA002A4EAC /* SFViewController.xib */,
+				0C859D3F15B8FEDC00C506DF /* SFViewController-iPad.xib */,
 				0C38609F15AB7EDA002A4EAC /* Supporting Files */,
 			);
 			path = SeeFilters;
@@ -171,6 +174,7 @@
 				0C3860A315AB7EDA002A4EAC /* InfoPlist.strings in Resources */,
 				0C3860AF15AB7EDA002A4EAC /* SFViewController.xib in Resources */,
 				0C3860B815AB8150002A4EAC /* image.png in Resources */,
+				0C859D4115B8FEDC00C506DF /* SFViewController-iPad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -204,6 +208,14 @@
 				0C3860AE15AB7EDA002A4EAC /* en */,
 			);
 			name = SFViewController.xib;
+			sourceTree = "<group>";
+		};
+		0C859D3F15B8FEDC00C506DF /* SFViewController-iPad.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				0C859D4015B8FEDC00C506DF /* en */,
+			);
+			name = "SFViewController-iPad.xib";
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -261,6 +273,7 @@
 				GCC_PREFIX_HEADER = "SeeFilters/SeeFilters-Prefix.pch";
 				INFOPLIST_FILE = "SeeFilters/SeeFilters-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -272,6 +285,7 @@
 				GCC_PREFIX_HEADER = "SeeFilters/SeeFilters-Prefix.pch";
 				INFOPLIST_FILE = "SeeFilters/SeeFilters-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -295,6 +309,7 @@
 				0C3860B415AB7EDA002A4EAC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

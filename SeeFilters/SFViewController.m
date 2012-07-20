@@ -111,8 +111,8 @@
     } else if (filterName == @"CIExposureAdjust") {
         [attributes setValue:[NSNumber numberWithFloat:1.0] forKey:@"inputEV"];
         firstSliderAttribute = @"inputEV";
-        amountSlider.maximumValue = 10.0;
-        amountSlider.minimumValue = -10.0;
+        amountSlider.maximumValue = 4.0;
+        amountSlider.minimumValue = -4.0;
     }
     return attributes;
 }
@@ -125,7 +125,7 @@
 -(IBAction)changeValue:(UISlider *)sender {
     float slideValue = [sender value];
     
-    filterValueLabel.text = [NSString stringWithFormat:@"%1.2f", slideValue];
+    filterValueLabel.text = [NSString stringWithFormat:@"%1.3f", slideValue];
     
     [filter setValue:[NSNumber numberWithFloat:slideValue] 
               forKey:firstSliderAttribute];
