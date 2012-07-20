@@ -19,4 +19,5 @@
 - (void)updateFilter:(NSString *)filterName;
 - (NSDictionary *)attributesForFilter:(NSString *)filterName;
 
+@property (weak, nonatomic) IBOutlet UIImageView *originalImageView;
 @end

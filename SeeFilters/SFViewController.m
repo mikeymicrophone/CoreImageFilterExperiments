@@ -18,7 +18,9 @@
     CIFilter *filter;
     CIImage *beginImage;
     NSString *firstSliderAttribute;
+    UIPopoverController *popover;
 }
+@synthesize originalImageView;
 @synthesize filterValueLabel;
 @synthesize filterPicker;
 @synthesize amountSlider;
@@ -67,6 +69,7 @@
     [self setAmountSlider:nil];
     [self setFilterValueLabel:nil];
     [self setFilterPicker:nil];
+    [self setOriginalImageView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -144,7 +147,13 @@
     UIImagePickerController *pickerC = 
     [[UIImagePickerController alloc] init];
     pickerC.delegate = self;
-    [self presentModalViewController:pickerC animated:YES];
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        UIPopoverController *pickerP = [[UIPopoverController alloc] initWithContentViewController:pickerC];
+        [pickerP presentPopoverFromRect:CGRectMake(100, 100, 100, 100) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+        popover = pickerP;
+    } else {
+        [self presentModalViewController:pickerC animated:YES];
+    }
 }
 
 - (IBAction)savePhoto:(id)sender {
@@ -225,10 +234,18 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     beginImage = [CIImage imageWithCGImage:gotImage.CGImage];    
     [filter setValue:beginImage forKey:kCIInputImageKey];
     [self changeValue:amountSlider];
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        originalImageView.image = gotImage;
+    }
 }
 
 - (void)imagePickerControllerDidCancel:
 (UIImagePickerController *)picker {
-    [self dismissModalViewControllerAnimated:YES];
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        [popover dismissPopoverAnimated:YES];
+    } else {
+        [self dismissModalViewControllerAnimated:YES];
+    }
 }
 @end
