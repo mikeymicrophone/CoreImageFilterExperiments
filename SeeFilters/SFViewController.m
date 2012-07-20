@@ -17,6 +17,7 @@
     CIContext *context;
     CIFilter *filter;
     CIImage *beginImage;
+    NSString *firstSliderAttribute;
 }
 @synthesize filterValueLabel;
 @synthesize filterPicker;
@@ -76,7 +77,6 @@
     
     filter = [CIFilter filterWithName:filterName];
     [filter setValue:beginImage forKey:kCIInputImageKey];
-    [filter setValue:[NSNumber numberWithFloat:0.8] forKey:@"inputIntensity"];
     NSString *setting;
     for(setting in attributes) {
         [filter setValue:[attributes valueForKey:setting] forKey:setting];
@@ -88,13 +88,31 @@
 {
     NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
     if (filterName == @"CIColorMonochrome") {
-            CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-            const CGFloat components[4] = {1.0, 1.0, 1.0, 1.0 };
-            CGColorRef clr = CGColorCreate (colorSpace,  components);
-            CIColor *black = [[CIColor alloc] initWithCGColor:clr];
-            [attributes setValue:black forKey:@"inputColor"];
-    } else if (filterName == @"CISepiaTone") {
+        [attributes setValue:[NSNumber numberWithFloat:0.8] forKey:@"inputIntensity"];
+        firstSliderAttribute = @"inputIntensity";
+        amountSlider.maximumValue = 1.0;
+        amountSlider.minimumValue = 0.0;
         
+        CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+        const CGFloat components[4] = {1.0, 1.0, 1.0, 1.0 };
+        CGColorRef clr = CGColorCreate (colorSpace,  components);
+        CIColor *black = [[CIColor alloc] initWithCGColor:clr];
+        [attributes setValue:black forKey:@"inputColor"];
+    } else if (filterName == @"CISepiaTone") {
+        [attributes setValue:[NSNumber numberWithFloat:0.8] forKey:@"inputIntensity"];
+        firstSliderAttribute = @"inputIntensity";
+        amountSlider.maximumValue = 1.0;
+        amountSlider.minimumValue = 0.0;
+    } else if (filterName == @"CIGammaAdjust") {
+        [attributes setValue:[NSNumber numberWithFloat:1.0] forKey:@"inputPower"];
+        firstSliderAttribute = @"inputPower";
+        amountSlider.maximumValue = 4.0;
+        amountSlider.minimumValue = 0.25;
+    } else if (filterName == @"CIExposureAdjust") {
+        [attributes setValue:[NSNumber numberWithFloat:1.0] forKey:@"inputEV"];
+        firstSliderAttribute = @"inputEV";
+        amountSlider.maximumValue = 10.0;
+        amountSlider.minimumValue = -10.0;
     }
     return attributes;
 }
@@ -110,7 +128,7 @@
     filterValueLabel.text = [NSString stringWithFormat:@"%1.2f", slideValue];
     
     [filter setValue:[NSNumber numberWithFloat:slideValue] 
-              forKey:@"inputIntensity"];
+              forKey:firstSliderAttribute];
     CIImage *outputImage = [filter outputImage];
     
     CGImageRef cgimg = [context createCGImage:outputImage 
@@ -148,7 +166,7 @@
 
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
 {
-    return 2;
+    return 4;
 }
 
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
@@ -160,6 +178,14 @@
             
         case 1:
             return @"Sepia";
+            break;
+            
+        case 2:
+            return @"Gamma";
+            break;
+            
+        case 3:
+            return @"Exposure";
             break;
             
         default:
@@ -177,6 +203,14 @@
             
         case 1:
             [self updateFilter:@"CISepiaTone"];
+            break;
+        
+        case 2:
+            [self updateFilter:@"CIGammaAdjust"];
+            break;
+            
+        case 3:
+            [self updateFilter:@"CIExposureAdjust"];
             break;
             
         default:
