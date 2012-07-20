@@ -262,7 +262,11 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker 
 didFinishPickingMediaWithInfo:(NSDictionary *)info {
-    [self dismissModalViewControllerAnimated:YES];
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        [popover dismissPopoverAnimated:YES];
+    } else {
+        [self dismissModalViewControllerAnimated:YES];
+    }
     UIImage *gotImage = [info objectForKey:UIImagePickerControllerOriginalImage];
     beginImage = [CIImage imageWithCGImage:gotImage.CGImage];    
     [filter setValue:beginImage forKey:kCIInputImageKey];
