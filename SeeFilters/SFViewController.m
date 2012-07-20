@@ -18,8 +18,10 @@
     CIFilter *filter;
     CIImage *beginImage;
     NSString *firstSliderAttribute;
+    NSString *secondSliderAttribute;
     UIPopoverController *popover;
 }
+@synthesize secondSlider;
 @synthesize originalImageView;
 @synthesize filterValueLabel;
 @synthesize filterPicker;
@@ -70,6 +72,7 @@
     [self setFilterValueLabel:nil];
     [self setFilterPicker:nil];
     [self setOriginalImageView:nil];
+    [self setSecondSlider:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -101,21 +104,43 @@
         CGColorRef clr = CGColorCreate (colorSpace,  components);
         CIColor *black = [[CIColor alloc] initWithCGColor:clr];
         [attributes setValue:black forKey:@"inputColor"];
+        
+        secondSlider.hidden = YES;
     } else if (filterName == @"CISepiaTone") {
         [attributes setValue:[NSNumber numberWithFloat:0.8] forKey:@"inputIntensity"];
         firstSliderAttribute = @"inputIntensity";
         amountSlider.maximumValue = 1.0;
         amountSlider.minimumValue = 0.0;
+        
+        secondSlider.hidden = YES;
     } else if (filterName == @"CIGammaAdjust") {
         [attributes setValue:[NSNumber numberWithFloat:1.0] forKey:@"inputPower"];
         firstSliderAttribute = @"inputPower";
         amountSlider.maximumValue = 4.0;
         amountSlider.minimumValue = 0.25;
+        
+        secondSlider.hidden = YES;
     } else if (filterName == @"CIExposureAdjust") {
         [attributes setValue:[NSNumber numberWithFloat:1.0] forKey:@"inputEV"];
         firstSliderAttribute = @"inputEV";
         amountSlider.maximumValue = 4.0;
         amountSlider.minimumValue = -4.0;
+        
+        secondSlider.hidden = YES;
+    } else if (filterName == @"CIColorControls") {
+        firstSliderAttribute = @"inputSaturation";
+        [attributes setValue:[NSNumber numberWithFloat:1.0] forKey:firstSliderAttribute];
+        amountSlider.value = 1.0;
+        amountSlider.maximumValue = 2.0;
+        amountSlider.minimumValue = -1.0;
+        
+        secondSliderAttribute = @"inputContrast";
+        [attributes setValue:[NSNumber numberWithFloat:1.0] forKey:secondSliderAttribute];
+        secondSlider.value = 1.0;
+        secondSlider.maximumValue = 4.0;
+        secondSlider.minimumValue = 0.0;
+        
+        secondSlider.hidden = NO;
     }
     return attributes;
 }
@@ -175,7 +200,7 @@
 
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
 {
-    return 4;
+    return 5;
 }
 
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
@@ -195,6 +220,10 @@
             
         case 3:
             return @"Exposure";
+            break;
+            
+        case 4:
+            return @"Color Controls";
             break;
             
         default:
@@ -222,6 +251,10 @@
             [self updateFilter:@"CIExposureAdjust"];
             break;
             
+        case 4:
+            [self updateFilter:@"CIColorControls"];
+            break;
+            
         default:
             break;
     }
@@ -247,5 +280,22 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     } else {
         [self dismissModalViewControllerAnimated:YES];
     }
+}
+- (IBAction)changeSecondValue:(UISlider *)sender {
+    float slideValue = [sender value];
+    
+//    filterValueLabel.text = [NSString stringWithFormat:@"%1.3f", slideValue];
+    
+    [filter setValue:[NSNumber numberWithFloat:slideValue] 
+              forKey:secondSliderAttribute];
+    CIImage *outputImage = [filter outputImage];
+    
+    CGImageRef cgimg = [context createCGImage:outputImage 
+                                     fromRect:[outputImage extent]];
+    
+    UIImage *newImg = [UIImage imageWithCGImage:cgimg];    
+    [imgV setImage:newImg];
+    
+    CGImageRelease(cgimg);
 }
 @end

@@ -18,6 +18,8 @@
 @property (weak, nonatomic) IBOutlet UIPickerView *filterPicker;
 - (void)updateFilter:(NSString *)filterName;
 - (NSDictionary *)attributesForFilter:(NSString *)filterName;
+@property (weak, nonatomic) IBOutlet UISlider *secondSlider;
+- (IBAction)changeSecondValue:(UISlider *)sender;
 
 @property (weak, nonatomic) IBOutlet UIImageView *originalImageView;
 @end
