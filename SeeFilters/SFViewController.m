@@ -15,14 +15,27 @@
 
 @implementation SFViewController {
     CIContext *context;
-    CIFilter *filter;
+    CIFilter *firstFilter;
+    CIFilter *secondFilter;
+    CIFilter *thirdFilter;
     CIImage *beginImage;
     NSString *firstSliderAttribute;
     NSString *secondSliderAttribute;
     UIPopoverController *popover;
+    CIFilter *configurableFilter;
+    NSDictionary *firstFilterProperties;
+    NSDictionary *secondFilterProperties;
+    NSDictionary *thirdFilterProperties;
+    
 }
 @synthesize secondSlider;
 @synthesize secondFilterValueLabel;
+@synthesize firstFilterControl;
+@synthesize firstFilterArmButton;
+@synthesize secondFilterControl;
+@synthesize secondFilterArmButton;
+@synthesize thirdFilterControl;
+@synthesize thirdFilterArmButton;
 @synthesize originalImageView;
 @synthesize filterValueLabel;
 @synthesize filterPicker;
@@ -50,9 +63,22 @@
     beginImage = [CIImage imageWithContentsOfURL:fileNameAndPath];
     context = [CIContext contextWithOptions:nil];
     
+    firstFilterProperties = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithInt:1], @"active", nil];
+    secondFilterProperties = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithInt:1], @"active", nil];
+    thirdFilterProperties = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithInt:1], @"active", nil];
+    
+    firstFilter = [CIFilter filterWithName:@"CIColorMonochrome"];
+    [firstFilter setValue:beginImage forKey:kCIInputImageKey];
+    secondFilter = [CIFilter filterWithName:@"CIColorMonochrome"];
+    [secondFilter setValue:firstFilter.outputImage forKey:kCIInputImageKey];
+    thirdFilter = [CIFilter filterWithName:@"CIColorMonochrome"];
+    [thirdFilter setValue:secondFilter.outputImage forKey:kCIInputImageKey];
+    
+    configurableFilter = firstFilter;
+    
     [self updateFilter:@"CIColorMonochrome"];
     
-    CIImage *outputImage = [filter outputImage];
+    CIImage *outputImage = [firstFilter outputImage];
     
     CGImageRef cgimg = [context createCGImage:outputImage fromRect:[outputImage extent]];
     UIImage *newImg = [UIImage imageWithCGImage:cgimg];
@@ -75,6 +101,12 @@
     [self setOriginalImageView:nil];
     [self setSecondSlider:nil];
     [self setSecondFilterValueLabel:nil];
+    [self setFirstFilterControl:nil];
+    [self setFirstFilterArmButton:nil];
+    [self setSecondFilterControl:nil];
+    [self setSecondFilterArmButton:nil];
+    [self setThirdFilterControl:nil];
+    [self setThirdFilterArmButton:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -83,11 +115,11 @@
 {
     NSDictionary *attributes = [self attributesForFilter:filterName];
     
-    filter = [CIFilter filterWithName:filterName];
-    [filter setValue:beginImage forKey:kCIInputImageKey];
+    configurableFilter = [CIFilter filterWithName:filterName];
+    [configurableFilter setValue:beginImage forKey:kCIInputImageKey];
     NSString *setting;
     for(setting in attributes) {
-        [filter setValue:[attributes valueForKey:setting] forKey:setting];
+        [configurableFilter setValue:[attributes valueForKey:setting] forKey:setting];
     }
     
 }
@@ -96,7 +128,7 @@
 {
     NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
     if (filterName == @"CIColorMonochrome") {
-        [attributes setValue:[NSNumber numberWithFloat:0.8] forKey:@"inputIntensity"];
+        [attributes setValue:[NSNumber numberWithFloat:0.0] forKey:@"inputIntensity"];
         firstSliderAttribute = @"inputIntensity";
         amountSlider.maximumValue = 1.0;
         amountSlider.minimumValue = 0.0;
@@ -110,7 +142,7 @@
         secondSlider.hidden = YES;
         secondFilterValueLabel.hidden = YES;
     } else if (filterName == @"CISepiaTone") {
-        [attributes setValue:[NSNumber numberWithFloat:0.8] forKey:@"inputIntensity"];
+        [attributes setValue:[NSNumber numberWithFloat:0.0] forKey:@"inputIntensity"];
         firstSliderAttribute = @"inputIntensity";
         amountSlider.maximumValue = 1.0;
         amountSlider.minimumValue = 0.0;
@@ -158,14 +190,42 @@
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
--(IBAction)changeValue:(UISlider *)sender {
-    float slideValue = [sender value];
-    
-    filterValueLabel.text = [NSString stringWithFormat:@"%1.3f", slideValue];
-    
-    [filter setValue:[NSNumber numberWithFloat:slideValue] 
-              forKey:firstSliderAttribute];
-    CIImage *outputImage = [filter outputImage];
+-(void)updateFilterChain
+{
+    CIImage *outputImage;
+    if (firstFilterArmButton.on) {
+        if (secondFilterArmButton.on) {
+            [secondFilter setValue:firstFilter.outputImage forKey:kCIInputImageKey];
+            
+            if (thirdFilterArmButton.on) {
+                [thirdFilter setValue:secondFilter.outputImage forKey:kCIInputImageKey];
+                outputImage = thirdFilter.outputImage;
+            } else {
+                outputImage = secondFilter.outputImage;
+            }
+        } else {
+            if (thirdFilterArmButton.on) {
+                [thirdFilter setValue:firstFilter.outputImage forKey:kCIInputImageKey];
+                
+                outputImage = thirdFilter.outputImage;
+            }
+        }
+    } else {
+        if (secondFilterArmButton.on) {
+            [secondFilter setValue:beginImage forKey:kCIInputImageKey];
+            if (thirdFilterArmButton.on) {
+                [thirdFilter setValue:secondFilter.outputImage forKey:kCIInputImageKey];
+                outputImage = thirdFilter.outputImage;
+            } else {
+                outputImage = secondFilter.outputImage;
+            }
+        } else {
+            if (thirdFilterArmButton.on) {
+                [thirdFilter setValue:beginImage forKey:kCIInputImageKey];
+                outputImage = thirdFilter.outputImage;
+            }
+        }
+    }
     
     CGImageRef cgimg = [context createCGImage:outputImage 
                                      fromRect:[outputImage extent]];
@@ -174,6 +234,16 @@
     [imgV setImage:newImg];
     
     CGImageRelease(cgimg);
+}
+
+-(IBAction)changeValue:(UISlider *)sender {
+    float slideValue = [sender value];
+    
+    filterValueLabel.text = [NSString stringWithFormat:@"%1.3f", slideValue];
+    
+    [configurableFilter setValue:[NSNumber numberWithFloat:slideValue] 
+              forKey:firstSliderAttribute];
+    [self updateFilterChain];
 }
 
 - (IBAction)loadPhoto:(id)sender {
@@ -190,7 +260,7 @@
 }
 
 - (IBAction)savePhoto:(id)sender {
-    CIImage *saveToSave = [filter outputImage];
+    CIImage *saveToSave = [firstFilter outputImage];
     CGImageRef cgImg = [context createCGImage:saveToSave 
                                      fromRect:[saveToSave extent]];
     ALAssetsLibrary* library = [[ALAssetsLibrary alloc] init];
@@ -277,7 +347,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     }
     UIImage *gotImage = [info objectForKey:UIImagePickerControllerOriginalImage];
     beginImage = [CIImage imageWithCGImage:gotImage.CGImage];    
-    [filter setValue:beginImage forKey:kCIInputImageKey];
+    [firstFilter setValue:beginImage forKey:kCIInputImageKey];
     [self changeValue:amountSlider];
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
@@ -298,9 +368,9 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     
     secondFilterValueLabel.text = [NSString stringWithFormat:@"%1.3f", slideValue];
     
-    [filter setValue:[NSNumber numberWithFloat:slideValue] 
+    [firstFilter setValue:[NSNumber numberWithFloat:slideValue] 
               forKey:secondSliderAttribute];
-    CIImage *outputImage = [filter outputImage];
+    CIImage *outputImage = [firstFilter outputImage];
     
     CGImageRef cgimg = [context createCGImage:outputImage 
                                      fromRect:[outputImage extent]];
@@ -309,5 +379,14 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     [imgV setImage:newImg];
     
     CGImageRelease(cgimg);
+}
+- (IBAction)controlFirstFilter:(id)sender {
+    configurableFilter = firstFilter;
+}
+- (IBAction)controlSecondFilter:(id)sender {
+    configurableFilter = secondFilter;
+}
+- (IBAction)controlThirdFilter:(id)sender {
+    configurableFilter = thirdFilter;
 }
 @end

@@ -21,6 +21,17 @@
 @property (weak, nonatomic) IBOutlet UISlider *secondSlider;
 @property (weak, nonatomic) IBOutlet UILabel *secondFilterValueLabel;
 - (IBAction)changeSecondValue:(UISlider *)sender;
+@property (weak, nonatomic) IBOutlet UIButton *firstFilterControl;
+- (IBAction)controlFirstFilter:(id)sender;
+@property (weak, nonatomic) IBOutlet UISwitch *firstFilterArmButton;
+@property (weak, nonatomic) IBOutlet UIButton *secondFilterControl;
+- (IBAction)controlSecondFilter:(id)sender;
+@property (weak, nonatomic) IBOutlet UISwitch *secondFilterArmButton;
+@property (weak, nonatomic) IBOutlet UIButton *thirdFilterControl;
+- (IBAction)controlThirdFilter:(id)sender;
+@property (weak, nonatomic) IBOutlet UISwitch *thirdFilterArmButton;
 
 @property (weak, nonatomic) IBOutlet UIImageView *originalImageView;
+
+-(void)updateFilterChain;
 @end
