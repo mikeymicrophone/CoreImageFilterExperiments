@@ -22,6 +22,7 @@
     UIPopoverController *popover;
 }
 @synthesize secondSlider;
+@synthesize secondFilterValueLabel;
 @synthesize originalImageView;
 @synthesize filterValueLabel;
 @synthesize filterPicker;
@@ -58,7 +59,7 @@
     
     [imgV setImage:newImg];
     
-    filterValueLabel.text = [NSString stringWithFormat:@"%1.2f", 0.5];
+    filterValueLabel.text = [NSString stringWithFormat:@"%1.3f", 0.5];
     
     CGImageRelease(cgimg);
     
@@ -73,6 +74,7 @@
     [self setFilterPicker:nil];
     [self setOriginalImageView:nil];
     [self setSecondSlider:nil];
+    [self setSecondFilterValueLabel:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -106,6 +108,7 @@
         [attributes setValue:black forKey:@"inputColor"];
         
         secondSlider.hidden = YES;
+        secondFilterValueLabel.hidden = YES;
     } else if (filterName == @"CISepiaTone") {
         [attributes setValue:[NSNumber numberWithFloat:0.8] forKey:@"inputIntensity"];
         firstSliderAttribute = @"inputIntensity";
@@ -113,6 +116,7 @@
         amountSlider.minimumValue = 0.0;
         
         secondSlider.hidden = YES;
+        secondFilterValueLabel.hidden = YES;
     } else if (filterName == @"CIGammaAdjust") {
         [attributes setValue:[NSNumber numberWithFloat:1.0] forKey:@"inputPower"];
         firstSliderAttribute = @"inputPower";
@@ -120,6 +124,7 @@
         amountSlider.minimumValue = 0.25;
         
         secondSlider.hidden = YES;
+        secondFilterValueLabel.hidden = YES;
     } else if (filterName == @"CIExposureAdjust") {
         [attributes setValue:[NSNumber numberWithFloat:1.0] forKey:@"inputEV"];
         firstSliderAttribute = @"inputEV";
@@ -127,6 +132,7 @@
         amountSlider.minimumValue = -4.0;
         
         secondSlider.hidden = YES;
+        secondFilterValueLabel.hidden = YES;
     } else if (filterName == @"CIColorControls") {
         firstSliderAttribute = @"inputSaturation";
         [attributes setValue:[NSNumber numberWithFloat:1.0] forKey:firstSliderAttribute];
@@ -136,11 +142,13 @@
         
         secondSliderAttribute = @"inputContrast";
         [attributes setValue:[NSNumber numberWithFloat:1.0] forKey:secondSliderAttribute];
+        secondFilterValueLabel.text = @"1.000";
         secondSlider.value = 1.0;
         secondSlider.maximumValue = 4.0;
         secondSlider.minimumValue = 0.0;
         
         secondSlider.hidden = NO;
+        secondFilterValueLabel.hidden = NO;
     }
     return attributes;
 }
@@ -288,7 +296,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
 - (IBAction)changeSecondValue:(UISlider *)sender {
     float slideValue = [sender value];
     
-//    filterValueLabel.text = [NSString stringWithFormat:@"%1.3f", slideValue];
+    secondFilterValueLabel.text = [NSString stringWithFormat:@"%1.3f", slideValue];
     
     [filter setValue:[NSNumber numberWithFloat:slideValue] 
               forKey:secondSliderAttribute];
