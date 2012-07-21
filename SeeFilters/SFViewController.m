@@ -23,9 +23,10 @@
     NSString *secondSliderAttribute;
     UIPopoverController *popover;
     CIFilter *configurableFilter;
-    NSDictionary *firstFilterProperties;
-    NSDictionary *secondFilterProperties;
-    NSDictionary *thirdFilterProperties;
+    NSMutableDictionary *firstFilterProperties;
+    NSMutableDictionary *secondFilterProperties;
+    NSMutableDictionary *thirdFilterProperties;
+    NSMutableDictionary *configurableFilterProperties;
     
 }
 @synthesize secondSlider;
@@ -42,16 +43,6 @@
 @synthesize amountSlider;
 @synthesize imgV;
 
-//-(void)logAllFilters {
-//    NSArray *properties = [CIFilter filterNamesInCategory:
-//                           kCICategoryBuiltIn];
-//    NSLog(@"%@", properties);
-//    for (NSString *filterName in properties) {
-//        CIFilter *fltr = [CIFilter filterWithName:filterName];
-//        NSLog(@"%@", [fltr attributes]);
-//    }
-//}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -62,34 +53,24 @@
     
     beginImage = [CIImage imageWithContentsOfURL:fileNameAndPath];
     context = [CIContext contextWithOptions:nil];
-    
-    firstFilterProperties = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithInt:1], @"active", nil];
-    secondFilterProperties = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithInt:1], @"active", nil];
-    thirdFilterProperties = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithInt:1], @"active", nil];
-    
+        
     firstFilter = [CIFilter filterWithName:@"CIColorMonochrome"];
-    [firstFilter setValue:beginImage forKey:kCIInputImageKey];
     secondFilter = [CIFilter filterWithName:@"CIColorMonochrome"];
-    [secondFilter setValue:firstFilter.outputImage forKey:kCIInputImageKey];
     thirdFilter = [CIFilter filterWithName:@"CIColorMonochrome"];
-    [thirdFilter setValue:secondFilter.outputImage forKey:kCIInputImageKey];
     
-    configurableFilter = firstFilter;
-    
+    [self controlFirstFilter:nil];
+    firstFilterProperties = [[NSMutableDictionary alloc] init];
     [self updateFilter:@"CIColorMonochrome"];
     
-    CIImage *outputImage = [firstFilter outputImage];
+    [self controlSecondFilter:nil];
+    secondFilterProperties = [[NSMutableDictionary alloc] init];
+    [self updateFilter:@"CISepiaTone"];
     
-    CGImageRef cgimg = [context createCGImage:outputImage fromRect:[outputImage extent]];
-    UIImage *newImg = [UIImage imageWithCGImage:cgimg];
+    [self controlThirdFilter:nil];
+    thirdFilterProperties = [[NSMutableDictionary alloc] init];
+    [self updateFilter:@"CIColorControls"];
     
-    [imgV setImage:newImg];
-    
-    filterValueLabel.text = [NSString stringWithFormat:@"%1.3f", 0.5];
-    
-    CGImageRelease(cgimg);
-    
-//    [self logAllFilters];
+    [self updateFilterChain];
 }
 
 - (void)viewDidUnload
@@ -113,15 +94,35 @@
 
 - (void)updateFilter:(NSString *)filterName
 {
+    NSMutableArray *inputs = [NSMutableArray arrayWithArray:[configurableFilter inputKeys]];
+    [inputs removeObject:@"inputImage"];
+    if (configurableFilter == firstFilter) {
+        configurableFilterProperties = firstFilterProperties;
+    } else if (configurableFilter == secondFilter) {
+        configurableFilterProperties = secondFilterProperties;
+    } else {
+        configurableFilterProperties = thirdFilterProperties;
+    }
+    
+    for (NSString *attr in inputs) {
+        NSLog(@"attr: %@", attr);
+        NSLog(@"identity/default: %@", [[[firstFilter attributes] objectForKey:attr] objectForKey:kCIAttributeIdentity]);
+        id identity = [[[firstFilter attributes] objectForKey:attr] objectForKey:kCIAttributeIdentity];
+        if (identity != nil) {
+            [configurableFilterProperties setValue:identity forKey:attr];
+            NSLog(@"first filter attrs: %@", firstFilterProperties);
+        } else {
+            NSLog(@"attr missing identity value: %@", attr);
+        }
+    }
+    
     NSDictionary *attributes = [self attributesForFilter:filterName];
     
     configurableFilter = [CIFilter filterWithName:filterName];
-    [configurableFilter setValue:beginImage forKey:kCIInputImageKey];
     NSString *setting;
     for(setting in attributes) {
         [configurableFilter setValue:[attributes valueForKey:setting] forKey:setting];
     }
-    
 }
 
 - (NSDictionary *)attributesForFilter:(NSString *)filterName
@@ -134,7 +135,7 @@
         amountSlider.minimumValue = 0.0;
         
         CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-        const CGFloat components[4] = {1.0, 1.0, 1.0, 1.0 };
+        const CGFloat components[4] = {1.0, 1.0, 1.0, 1.0};
         CGColorRef clr = CGColorCreate (colorSpace,  components);
         CIColor *black = [[CIColor alloc] initWithCGColor:clr];
         [attributes setValue:black forKey:@"inputColor"];
@@ -194,6 +195,7 @@
 {
     CIImage *outputImage;
     if (firstFilterArmButton.on) {
+        [firstFilter setValue:beginImage forKey:kCIInputImageKey];
         if (secondFilterArmButton.on) {
             [secondFilter setValue:firstFilter.outputImage forKey:kCIInputImageKey];
             
@@ -382,11 +384,14 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
 }
 - (IBAction)controlFirstFilter:(id)sender {
     configurableFilter = firstFilter;
+    NSLog(@"first filter is now configurable.");
 }
 - (IBAction)controlSecondFilter:(id)sender {
     configurableFilter = secondFilter;
+    NSLog(@"second filter is now configurable.");
 }
 - (IBAction)controlThirdFilter:(id)sender {
     configurableFilter = thirdFilter;
+    NSLog(@"third filter is now configurable.");
 }
 @end
