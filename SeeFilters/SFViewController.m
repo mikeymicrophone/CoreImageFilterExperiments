@@ -105,19 +105,15 @@
     }
     
     for (NSString *attr in inputs) {
-        NSLog(@"attr: %@", attr);
-        NSLog(@"identity/default: %@", [[[firstFilter attributes] objectForKey:attr] objectForKey:kCIAttributeIdentity]);
-        id identity = [[[firstFilter attributes] objectForKey:attr] objectForKey:kCIAttributeIdentity];
+        id identity = [[[configurableFilter attributes] objectForKey:attr] objectForKey:kCIAttributeIdentity];
         if (identity != nil) {
             [configurableFilterProperties setValue:identity forKey:attr];
-            NSLog(@"first filter attrs: %@", firstFilterProperties);
-        } else {
-            NSLog(@"attr missing identity value: %@", attr);
         }
     }
     
-    NSDictionary *attributes = [self attributesForFilter:filterName];
-    
+    NSMutableDictionary *attributes = [self attributesForFilter:filterName];
+    NSLog(@"filter %@ is being assigned attributes %@", filterName, attributes);
+    NSLog(@"configurable filter is %@", configurableFilter);
     configurableFilter = [CIFilter filterWithName:filterName];
     NSString *setting;
     for(setting in attributes) {
