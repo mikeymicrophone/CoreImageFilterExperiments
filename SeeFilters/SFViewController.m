@@ -55,9 +55,9 @@
     beginImage = [CIImage imageWithContentsOfURL:fileNameAndPath];
     context = [CIContext contextWithOptions:nil];
         
-//    firstFilter = [CIFilter filterWithName:@"CIColorMonochrome"];
-//    secondFilter = [CIFilter filterWithName:@"CIColorMonochrome"];
-//    thirdFilter = [CIFilter filterWithName:@"CIColorMonochrome"];
+    firstFilter = [CIFilter filterWithName:@"CIColorMonochrome"];
+    secondFilter = [CIFilter filterWithName:@"CIColorMonochrome"];
+    thirdFilter = [CIFilter filterWithName:@"CIColorMonochrome"];
     
     [self controlFirstFilter:nil];
     firstFilterProperties = [[NSMutableDictionary alloc] init];
@@ -95,6 +95,7 @@
 
 - (void)updateFilter:(NSString *)filterName
 {
+    configurableFilter = [CIFilter filterWithName:filterName];
     NSMutableArray *inputs = [NSMutableArray arrayWithArray:[configurableFilter inputKeys]];
     [inputs removeObject:@"inputImage"];
     if (configurableFilter == firstFilter) {
@@ -115,10 +116,11 @@
         }
     }
     
+    
     NSMutableDictionary *attributes = [self attributesForFilter:filterName];
     NSLog(@"filter %@ is being assigned attributes %@", filterName, attributes);
     NSLog(@"configurable filter is %@", configurableFilter);
-    configurableFilter = [CIFilter filterWithName:filterName];
+    
     switch (configurableFilterIndex) {
         case 1:
             firstFilter = configurableFilter;
@@ -135,62 +137,77 @@
         default:
             break;
     }
-    NSString *setting;
-    for(setting in attributes) {
+    NSLog(@"about to begin assignment of attributes");
+    for(NSString *setting in attributes) {
         [configurableFilter setValue:[attributes valueForKey:setting] forKey:setting];
     }
 }
 
 - (NSMutableDictionary *)attributesForFilter:(NSString *)filterName
 {
+    [self updateSliders];
+    NSLog(@"first slider attribute: %@, second slider attribute: %@", firstSliderAttribute, secondSliderAttribute);
     NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
     if (filterName == @"CIColorMonochrome") {
         [attributes setValue:[NSNumber numberWithFloat:0.0] forKey:@"inputIntensity"];
-        firstSliderAttribute = @"inputIntensity";
-        amountSlider.maximumValue = 1.0;
-        amountSlider.minimumValue = 0.0;
         
         CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
         const CGFloat components[4] = {1.0, 1.0, 1.0, 1.0};
         CGColorRef clr = CGColorCreate (colorSpace,  components);
         CIColor *black = [[CIColor alloc] initWithCGColor:clr];
         [attributes setValue:black forKey:@"inputColor"];
-        
-        secondSlider.hidden = YES;
-        secondFilterValueLabel.hidden = YES;
     } else if (filterName == @"CISepiaTone") {
         [attributes setValue:[NSNumber numberWithFloat:0.0] forKey:@"inputIntensity"];
+    } else if (filterName == @"CIGammaAdjust") {
+        [attributes setValue:[NSNumber numberWithFloat:1.0] forKey:@"inputPower"];
+    } else if (filterName == @"CIExposureAdjust") {
+        [attributes setValue:[NSNumber numberWithFloat:1.0] forKey:@"inputEV"];
+    } else if (filterName == @"CIColorControls") {
+        [attributes setValue:[NSNumber numberWithFloat:1.0] forKey:@"inputSaturation"];
+        [attributes setValue:[NSNumber numberWithFloat:1.0] forKey:@"inputContrast"];
+    }
+    return attributes;
+}
+
+- (void)updateSliders
+{
+    NSString *filterName = [configurableFilter name];
+    NSLog(@"configurable filter: %@, filter name: %@", configurableFilter, filterName);
+    if ([filterName isEqualToString:@"CIColorMonochrome"]) {
+        firstSliderAttribute = @"inputIntensity";
+        amountSlider.maximumValue = 1.0;
+        amountSlider.minimumValue = 0.0;
+                
+        secondSlider.hidden = YES;
+        secondFilterValueLabel.hidden = YES;
+    } else if ([filterName isEqualToString:@"CISepiaTone"]) {
         firstSliderAttribute = @"inputIntensity";
         amountSlider.maximumValue = 1.0;
         amountSlider.minimumValue = 0.0;
         
         secondSlider.hidden = YES;
         secondFilterValueLabel.hidden = YES;
-    } else if (filterName == @"CIGammaAdjust") {
-        [attributes setValue:[NSNumber numberWithFloat:1.0] forKey:@"inputPower"];
+    } else if ([filterName isEqualToString:@"CIGammaAdjust"]) {
         firstSliderAttribute = @"inputPower";
         amountSlider.maximumValue = 4.0;
         amountSlider.minimumValue = 0.25;
         
         secondSlider.hidden = YES;
         secondFilterValueLabel.hidden = YES;
-    } else if (filterName == @"CIExposureAdjust") {
-        [attributes setValue:[NSNumber numberWithFloat:1.0] forKey:@"inputEV"];
+    } else if ([filterName isEqualToString:@"CIExposureAdjust"]) {
         firstSliderAttribute = @"inputEV";
         amountSlider.maximumValue = 4.0;
         amountSlider.minimumValue = -4.0;
         
         secondSlider.hidden = YES;
         secondFilterValueLabel.hidden = YES;
-    } else if (filterName == @"CIColorControls") {
+    } else if ([filterName isEqualToString:@"CIColorControls"]) {
         firstSliderAttribute = @"inputSaturation";
-        [attributes setValue:[NSNumber numberWithFloat:1.0] forKey:firstSliderAttribute];
         amountSlider.value = 1.0;
         amountSlider.maximumValue = 2.0;
         amountSlider.minimumValue = -1.0;
         
         secondSliderAttribute = @"inputContrast";
-        [attributes setValue:[NSNumber numberWithFloat:1.0] forKey:secondSliderAttribute];
         secondFilterValueLabel.text = @"1.000";
         secondSlider.value = 1.0;
         secondSlider.maximumValue = 4.0;
@@ -199,7 +216,6 @@
         secondSlider.hidden = NO;
         secondFilterValueLabel.hidden = NO;
     }
-    return attributes;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -386,17 +402,9 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     
     secondFilterValueLabel.text = [NSString stringWithFormat:@"%1.3f", slideValue];
     
-    [firstFilter setValue:[NSNumber numberWithFloat:slideValue] 
+    [configurableFilter setValue:[NSNumber numberWithFloat:slideValue] 
               forKey:secondSliderAttribute];
-    CIImage *outputImage = [firstFilter outputImage];
-    
-    CGImageRef cgimg = [context createCGImage:outputImage 
-                                     fromRect:[outputImage extent]];
-    
-    UIImage *newImg = [UIImage imageWithCGImage:cgimg];    
-    [imgV setImage:newImg];
-    
-    CGImageRelease(cgimg);
+    [self updateFilterChain];
 }
 - (IBAction)controlFirstFilter:(id)sender {
     configurableFilter = firstFilter;
@@ -404,6 +412,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     secondFilterControl.backgroundColor = nil;
     thirdFilterControl.backgroundColor = nil;
     configurableFilterIndex = 1;
+    [self updateSliders];
     NSLog(@"first filter is now configurable.");
 }
 - (IBAction)controlSecondFilter:(id)sender {
@@ -412,6 +421,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     secondFilterControl.backgroundColor = [UIColor blueColor];
     thirdFilterControl.backgroundColor = nil;
     configurableFilterIndex = 2;
+    [self updateSliders];
     NSLog(@"second filter is now configurable.");
 }
 - (IBAction)controlThirdFilter:(id)sender {
@@ -420,6 +430,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     secondFilterControl.backgroundColor = nil;
     thirdFilterControl.backgroundColor = [UIColor blueColor];
     configurableFilterIndex = 3;
+    [self updateSliders];
     NSLog(@"third filter is now configurable.");
 }
 @end
