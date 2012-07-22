@@ -30,6 +30,9 @@
 @property (weak, nonatomic) IBOutlet UIButton *thirdFilterControl;
 - (IBAction)controlThirdFilter:(id)sender;
 @property (weak, nonatomic) IBOutlet UISwitch *thirdFilterArmButton;
+@property (weak, nonatomic) IBOutlet UILabel *firstFilterPropertyLabel;
+@property (weak, nonatomic) IBOutlet UILabel *secondFilterPropertyLabel;
+@property (weak, nonatomic) IBOutlet UILabel *thirdFilterPropertyLabel;
 
 @property (weak, nonatomic) IBOutlet UIImageView *originalImageView;
 

@@ -38,6 +38,9 @@
 @synthesize secondFilterArmButton;
 @synthesize thirdFilterControl;
 @synthesize thirdFilterArmButton;
+@synthesize firstFilterPropertyLabel;
+@synthesize secondFilterPropertyLabel;
+@synthesize thirdFilterPropertyLabel;
 @synthesize originalImageView;
 @synthesize filterValueLabel;
 @synthesize filterPicker;
@@ -89,6 +92,9 @@
     [self setSecondFilterArmButton:nil];
     [self setThirdFilterControl:nil];
     [self setThirdFilterArmButton:nil];
+    [self setFirstFilterPropertyLabel:nil];
+    [self setSecondFilterPropertyLabel:nil];
+    [self setThirdFilterPropertyLabel:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -98,15 +104,15 @@
     configurableFilter = [CIFilter filterWithName:filterName];
     NSMutableArray *inputs = [NSMutableArray arrayWithArray:[configurableFilter inputKeys]];
     [inputs removeObject:@"inputImage"];
-    if (configurableFilter == firstFilter) {
+    if (configurableFilterIndex == 1) {
         configurableFilterProperties = firstFilterProperties;
-        firstFilterControl.titleLabel.text = filterName;
-    } else if (configurableFilter == secondFilter) {
+        [firstFilterControl setTitle:filterName forState:UIControlStateNormal];
+    } else if (configurableFilterIndex == 2) {
         configurableFilterProperties = secondFilterProperties;
-        secondFilterControl.titleLabel.text = filterName;
+        [secondFilterControl setTitle:filterName forState:UIControlStateNormal];
     } else {
         configurableFilterProperties = thirdFilterProperties;
-        thirdFilterControl.titleLabel.text = filterName;
+        [thirdFilterControl setTitle:filterName forState:UIControlStateNormal];
     }
     
     for (NSString *attr in inputs) {
@@ -118,8 +124,6 @@
     
     
     NSMutableDictionary *attributes = [self attributesForFilter:filterName];
-    NSLog(@"filter %@ is being assigned attributes %@", filterName, attributes);
-    NSLog(@"configurable filter is %@", configurableFilter);
     
     switch (configurableFilterIndex) {
         case 1:
@@ -137,7 +141,6 @@
         default:
             break;
     }
-    NSLog(@"about to begin assignment of attributes");
     for(NSString *setting in attributes) {
         [configurableFilter setValue:[attributes valueForKey:setting] forKey:setting];
     }
@@ -146,7 +149,6 @@
 - (NSMutableDictionary *)attributesForFilter:(NSString *)filterName
 {
     [self updateSliders];
-    NSLog(@"first slider attribute: %@, second slider attribute: %@", firstSliderAttribute, secondSliderAttribute);
     NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
     if (filterName == @"CIColorMonochrome") {
         [attributes setValue:[NSNumber numberWithFloat:0.0] forKey:@"inputIntensity"];
@@ -172,7 +174,6 @@
 - (void)updateSliders
 {
     NSString *filterName = [configurableFilter name];
-    NSLog(@"configurable filter: %@, filter name: %@", configurableFilter, filterName);
     if ([filterName isEqualToString:@"CIColorMonochrome"]) {
         firstSliderAttribute = @"inputIntensity";
         amountSlider.maximumValue = 1.0;
@@ -216,6 +217,17 @@
         secondSlider.hidden = NO;
         secondFilterValueLabel.hidden = NO;
     }
+    NSLog(@"configurable filter: %@", configurableFilter);
+    NSLog(@"configurable filter properties: %@", configurableFilterProperties);
+    NSLog(@"slider attribute: %@", firstSliderAttribute);
+    
+    [amountSlider setValue:[[configurableFilterProperties valueForKey:firstSliderAttribute] floatValue]];
+    filterValueLabel.text = [NSString stringWithFormat:@"%1.3f", amountSlider.value];
+    if (secondSlider.hidden == NO) {
+        [secondSlider setValue:[[configurableFilterProperties valueForKey:secondSliderAttribute] floatValue]];
+        secondFilterValueLabel.text = [NSString stringWithFormat:@"%1.3f", secondSlider.value];
+    }
+    
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -278,6 +290,53 @@
     [configurableFilter setValue:[NSNumber numberWithFloat:slideValue] 
               forKey:firstSliderAttribute];
     [self updateFilterChain];
+    
+    switch (configurableFilterIndex) {
+        case 1:
+            [firstFilterProperties setValue:[NSNumber numberWithFloat:slideValue] forKey:firstSliderAttribute];
+            firstFilterPropertyLabel.text = [NSString stringWithFormat:@"%1.3f", slideValue];
+            break;
+            
+        case 2:
+            [secondFilterProperties setValue:[NSNumber numberWithFloat:slideValue] forKey:firstSliderAttribute];
+            secondFilterPropertyLabel.text = [NSString stringWithFormat:@"%1.3f", slideValue];
+            break;
+            
+        case 3:
+            [thirdFilterProperties setValue:[NSNumber numberWithFloat:slideValue] forKey:firstSliderAttribute];
+            thirdFilterPropertyLabel.text = [NSString stringWithFormat:@"%1.3f", slideValue];
+            break;
+            
+        default:
+            break;
+    }
+}
+
+- (IBAction)changeSecondValue:(UISlider *)sender {
+    float slideValue = [sender value];
+    
+    secondFilterValueLabel.text = [NSString stringWithFormat:@"%1.3f", slideValue];
+    
+    [configurableFilter setValue:[NSNumber numberWithFloat:slideValue] 
+                          forKey:secondSliderAttribute];
+    [self updateFilterChain];
+    
+    switch (configurableFilterIndex) {
+        case 1:
+            [firstFilterProperties setValue:[NSNumber numberWithFloat:slideValue] forKey:secondSliderAttribute];
+            break;
+            
+        case 2:
+            [secondFilterProperties setValue:[NSNumber numberWithFloat:slideValue] forKey:secondSliderAttribute];
+            break;
+
+        case 3:
+            [thirdFilterProperties setValue:[NSNumber numberWithFloat:slideValue] forKey:secondSliderAttribute];
+            break;
+
+        default:
+            break;
+    }
 }
 
 - (IBAction)loadPhoto:(id)sender {
@@ -397,40 +456,32 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
         [self dismissModalViewControllerAnimated:YES];
     }
 }
-- (IBAction)changeSecondValue:(UISlider *)sender {
-    float slideValue = [sender value];
-    
-    secondFilterValueLabel.text = [NSString stringWithFormat:@"%1.3f", slideValue];
-    
-    [configurableFilter setValue:[NSNumber numberWithFloat:slideValue] 
-              forKey:secondSliderAttribute];
-    [self updateFilterChain];
-}
+
 - (IBAction)controlFirstFilter:(id)sender {
     configurableFilter = firstFilter;
+    configurableFilterProperties = firstFilterProperties;
     firstFilterControl.backgroundColor = [UIColor blueColor];
     secondFilterControl.backgroundColor = nil;
     thirdFilterControl.backgroundColor = nil;
     configurableFilterIndex = 1;
     [self updateSliders];
-    NSLog(@"first filter is now configurable.");
 }
 - (IBAction)controlSecondFilter:(id)sender {
     configurableFilter = secondFilter;
+    configurableFilterProperties = secondFilterProperties;
     firstFilterControl.backgroundColor = nil;
     secondFilterControl.backgroundColor = [UIColor blueColor];
     thirdFilterControl.backgroundColor = nil;
     configurableFilterIndex = 2;
     [self updateSliders];
-    NSLog(@"second filter is now configurable.");
 }
 - (IBAction)controlThirdFilter:(id)sender {
     configurableFilter = thirdFilter;
+    configurableFilterProperties = thirdFilterProperties;
     firstFilterControl.backgroundColor = nil;
     secondFilterControl.backgroundColor = nil;
     thirdFilterControl.backgroundColor = [UIColor blueColor];
     configurableFilterIndex = 3;
     [self updateSliders];
-    NSLog(@"third filter is now configurable.");
 }
 @end
