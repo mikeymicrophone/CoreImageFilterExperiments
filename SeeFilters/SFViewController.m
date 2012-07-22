@@ -28,7 +28,7 @@
     NSMutableDictionary *secondFilterProperties;
     NSMutableDictionary *thirdFilterProperties;
     NSMutableDictionary *configurableFilterProperties;
-    
+    NSArray *filterList;
 }
 @synthesize secondSlider;
 @synthesize secondFilterValueLabel;
@@ -51,6 +51,8 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    
+    [self initFilterList];
     
     NSString *filePath = [[NSBundle mainBundle] pathForResource:@"image" ofType:@"png"];
     NSURL *fileNameAndPath = [NSURL fileURLWithPath:filePath];
@@ -221,10 +223,10 @@
     NSLog(@"configurable filter properties: %@", configurableFilterProperties);
     NSLog(@"slider attribute: %@", firstSliderAttribute);
     
-    [amountSlider setValue:[[configurableFilterProperties valueForKey:firstSliderAttribute] floatValue]];
+    [amountSlider setValue:[[configurableFilterProperties valueForKey:firstSliderAttribute] floatValue] animated:YES];
     filterValueLabel.text = [NSString stringWithFormat:@"%1.3f", amountSlider.value];
     if (secondSlider.hidden == NO) {
-        [secondSlider setValue:[[configurableFilterProperties valueForKey:secondSliderAttribute] floatValue]];
+        [secondSlider setValue:[[configurableFilterProperties valueForKey:secondSliderAttribute] floatValue] animated:YES];
         secondFilterValueLabel.text = [NSString stringWithFormat:@"%1.3f", secondSlider.value];
     }
     
@@ -375,7 +377,7 @@
 
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
 {
-    return 5;
+    return [filterList count];
 }
 
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
@@ -409,30 +411,7 @@
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
-    switch (row) {
-        case 0:
-            [self updateFilter:@"CIColorMonochrome"];
-            break;
-            
-        case 1:
-            [self updateFilter:@"CISepiaTone"];
-            break;
-        
-        case 2:
-            [self updateFilter:@"CIGammaAdjust"];
-            break;
-            
-        case 3:
-            [self updateFilter:@"CIExposureAdjust"];
-            break;
-            
-        case 4:
-            [self updateFilter:@"CIColorControls"];
-            break;
-            
-        default:
-            break;
-    }
+    [self updateFilter:[[filterList objectAtIndex:row] name]];
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker 
@@ -461,6 +440,17 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     }
 }
 
+- (void)updatePicker
+{
+    int filterIndex;
+    for (CIFilter *filter in filterList) {
+        if ([[filter name] isEqualToString:[configurableFilter name]]) {
+            filterIndex = [filterList indexOfObject:filter];
+        }
+    }
+    [filterPicker selectRow:filterIndex inComponent:0 animated:YES];
+}
+
 - (IBAction)controlFirstFilter:(id)sender {
     configurableFilter = firstFilter;
     configurableFilterProperties = firstFilterProperties;
@@ -469,6 +459,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     thirdFilterControl.backgroundColor = nil;
     configurableFilterIndex = 1;
     [self updateSliders];
+    [self updatePicker];
 }
 - (IBAction)controlSecondFilter:(id)sender {
     configurableFilter = secondFilter;
@@ -478,6 +469,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     thirdFilterControl.backgroundColor = nil;
     configurableFilterIndex = 2;
     [self updateSliders];
+    [self updatePicker];
 }
 - (IBAction)controlThirdFilter:(id)sender {
     configurableFilter = thirdFilter;
@@ -487,5 +479,16 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     thirdFilterControl.backgroundColor = [UIColor blueColor];
     configurableFilterIndex = 3;
     [self updateSliders];
+    [self updatePicker];
+}
+
+- (void)initFilterList
+{
+    filterList = [NSArray arrayWithObjects:
+                  [CIFilter filterWithName:@"CIColorMonochrome"],
+                  [CIFilter filterWithName:@"CISepiaTone"],
+                  [CIFilter filterWithName:@"CIGammaAdjust"],
+                  [CIFilter filterWithName:@"CIExposureAdjust"],
+                  [CIFilter filterWithName:@"CIColorControls"], nil];
 }
 @end
