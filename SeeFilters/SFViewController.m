@@ -23,6 +23,7 @@
     NSString *secondSliderAttribute;
     UIPopoverController *popover;
     CIFilter *configurableFilter;
+    int configurableFilterIndex;
     NSMutableDictionary *firstFilterProperties;
     NSMutableDictionary *secondFilterProperties;
     NSMutableDictionary *thirdFilterProperties;
@@ -54,9 +55,9 @@
     beginImage = [CIImage imageWithContentsOfURL:fileNameAndPath];
     context = [CIContext contextWithOptions:nil];
         
-    firstFilter = [CIFilter filterWithName:@"CIColorMonochrome"];
-    secondFilter = [CIFilter filterWithName:@"CIColorMonochrome"];
-    thirdFilter = [CIFilter filterWithName:@"CIColorMonochrome"];
+//    firstFilter = [CIFilter filterWithName:@"CIColorMonochrome"];
+//    secondFilter = [CIFilter filterWithName:@"CIColorMonochrome"];
+//    thirdFilter = [CIFilter filterWithName:@"CIColorMonochrome"];
     
     [self controlFirstFilter:nil];
     firstFilterProperties = [[NSMutableDictionary alloc] init];
@@ -98,10 +99,13 @@
     [inputs removeObject:@"inputImage"];
     if (configurableFilter == firstFilter) {
         configurableFilterProperties = firstFilterProperties;
+        firstFilterControl.titleLabel.text = filterName;
     } else if (configurableFilter == secondFilter) {
         configurableFilterProperties = secondFilterProperties;
+        secondFilterControl.titleLabel.text = filterName;
     } else {
         configurableFilterProperties = thirdFilterProperties;
+        thirdFilterControl.titleLabel.text = filterName;
     }
     
     for (NSString *attr in inputs) {
@@ -115,13 +119,29 @@
     NSLog(@"filter %@ is being assigned attributes %@", filterName, attributes);
     NSLog(@"configurable filter is %@", configurableFilter);
     configurableFilter = [CIFilter filterWithName:filterName];
+    switch (configurableFilterIndex) {
+        case 1:
+            firstFilter = configurableFilter;
+            break;
+            
+        case 2:
+            secondFilter = configurableFilter;
+            break;
+            
+        case 3:
+            thirdFilter = configurableFilter;
+            break;
+            
+        default:
+            break;
+    }
     NSString *setting;
     for(setting in attributes) {
         [configurableFilter setValue:[attributes valueForKey:setting] forKey:setting];
     }
 }
 
-- (NSDictionary *)attributesForFilter:(NSString *)filterName
+- (NSMutableDictionary *)attributesForFilter:(NSString *)filterName
 {
     NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
     if (filterName == @"CIColorMonochrome") {
@@ -194,7 +214,6 @@
         [firstFilter setValue:beginImage forKey:kCIInputImageKey];
         if (secondFilterArmButton.on) {
             [secondFilter setValue:firstFilter.outputImage forKey:kCIInputImageKey];
-            
             if (thirdFilterArmButton.on) {
                 [thirdFilter setValue:secondFilter.outputImage forKey:kCIInputImageKey];
                 outputImage = thirdFilter.outputImage;
@@ -204,8 +223,9 @@
         } else {
             if (thirdFilterArmButton.on) {
                 [thirdFilter setValue:firstFilter.outputImage forKey:kCIInputImageKey];
-                
                 outputImage = thirdFilter.outputImage;
+            } else {
+                outputImage = firstFilter.outputImage;
             }
         }
     } else {
@@ -380,14 +400,26 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
 }
 - (IBAction)controlFirstFilter:(id)sender {
     configurableFilter = firstFilter;
+    firstFilterControl.backgroundColor = [UIColor blueColor];
+    secondFilterControl.backgroundColor = nil;
+    thirdFilterControl.backgroundColor = nil;
+    configurableFilterIndex = 1;
     NSLog(@"first filter is now configurable.");
 }
 - (IBAction)controlSecondFilter:(id)sender {
     configurableFilter = secondFilter;
+    firstFilterControl.backgroundColor = nil;
+    secondFilterControl.backgroundColor = [UIColor blueColor];
+    thirdFilterControl.backgroundColor = nil;
+    configurableFilterIndex = 2;
     NSLog(@"second filter is now configurable.");
 }
 - (IBAction)controlThirdFilter:(id)sender {
     configurableFilter = thirdFilter;
+    firstFilterControl.backgroundColor = nil;
+    secondFilterControl.backgroundColor = nil;
+    thirdFilterControl.backgroundColor = [UIColor blueColor];
+    configurableFilterIndex = 3;
     NSLog(@"third filter is now configurable.");
 }
 @end
