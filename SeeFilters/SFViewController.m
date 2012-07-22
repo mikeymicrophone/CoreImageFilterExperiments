@@ -235,6 +235,10 @@
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
+- (IBAction)toggleFilter:(id)sender {
+    [self updateFilterChain];
+}
+
 -(void)updateFilterChain
 {
     CIImage *outputImage;
