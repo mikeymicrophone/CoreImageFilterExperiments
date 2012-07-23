@@ -523,13 +523,13 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     NSString* documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *filterListPath = [documentsPath stringByAppendingPathComponent:@"saved_filters.plist"];
     
-    NSInputStream *input = [NSInputStream inputStreamWithFileAtPath:filterListPath];
-
-    NSError *inputError = nil;
-    NSMutableArray *savedFilters = [NSPropertyListSerialization propertyListWithStream:input options:NSPropertyListMutableContainers format:kCFPropertyListXMLFormat_v1_0 error:&inputError];
-
+//    NSInputStream *input = [NSInputStream inputStreamWithFileAtPath:filterListPath];
+//
+//    NSError *inputError = nil;
+//    NSMutableArray *savedFilters = [NSPropertyListSerialization propertyListWithStream:input options:NSPropertyListMutableContainers format:kCFPropertyListXMLFormat_v1_0 error:&inputError];
+    NSMutableArray *savedFilters = [[NSMutableArray alloc] initWithContentsOfFile:filterListPath];
     NSLog(@"savedFilters: %@", savedFilters);
-    NSLog(@"filterDetails: %@", filterDetails);
+
     if (savedFilters == nil) {
         NSLog(@"app has no array of saved filters");
         savedFilters = [NSMutableArray arrayWithObject:filterDetails];
@@ -541,12 +541,14 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
         }
     }
     
-    NSError *outputError = nil;
-    NSOutputStream *output = [NSOutputStream outputStreamToFileAtPath:filterListPath append:NO];
-    [output open];
-    [NSPropertyListSerialization writePropertyList:savedFilters toStream:output format:kCFPropertyListXMLFormat_v1_0 options:0 error:&outputError];
-    [output close];
-    NSLog(@"input error: %@", inputError);
-    NSLog(@"output error: %@", outputError);
+    [savedFilters writeToFile:filterListPath atomically:YES];
+    
+//    NSError *outputError = nil;
+//    NSOutputStream *output = [NSOutputStream outputStreamToFileAtPath:filterListPath append:NO];
+//    [output open];
+//    [NSPropertyListSerialization writePropertyList:savedFilters toStream:output format:kCFPropertyListXMLFormat_v1_0 options:0 error:&outputError];
+//    [output close];
+//    NSLog(@"input error: %@", inputError);
+//    NSLog(@"output error: %@", outputError);
 }
 @end
