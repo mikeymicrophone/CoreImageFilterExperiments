@@ -202,41 +202,46 @@
 -(void)updateFilterChain
 {
     CIImage *outputImage;
-    if (firstFilterArmButton.on) {
-        [firstFilter setValue:beginImage forKey:kCIInputImageKey];
-        if (secondFilterArmButton.on) {
-            [secondFilter setValue:firstFilter.outputImage forKey:kCIInputImageKey];
-            if (thirdFilterArmButton.on) {
-                [thirdFilter setValue:secondFilter.outputImage forKey:kCIInputImageKey];
-                outputImage = thirdFilter.outputImage;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        if (firstFilterArmButton.on) {
+            [firstFilter setValue:beginImage forKey:kCIInputImageKey];
+            if (secondFilterArmButton.on) {
+                [secondFilter setValue:firstFilter.outputImage forKey:kCIInputImageKey];
+                if (thirdFilterArmButton.on) {
+                    [thirdFilter setValue:secondFilter.outputImage forKey:kCIInputImageKey];
+                    outputImage = thirdFilter.outputImage;
+                } else {
+                    outputImage = secondFilter.outputImage;
+                }
             } else {
-                outputImage = secondFilter.outputImage;
+                if (thirdFilterArmButton.on) {
+                    [thirdFilter setValue:firstFilter.outputImage forKey:kCIInputImageKey];
+                    outputImage = thirdFilter.outputImage;
+                } else {
+                    outputImage = firstFilter.outputImage;
+                }
             }
         } else {
-            if (thirdFilterArmButton.on) {
-                [thirdFilter setValue:firstFilter.outputImage forKey:kCIInputImageKey];
-                outputImage = thirdFilter.outputImage;
+            if (secondFilterArmButton.on) {
+                [secondFilter setValue:beginImage forKey:kCIInputImageKey];
+                if (thirdFilterArmButton.on) {
+                    [thirdFilter setValue:secondFilter.outputImage forKey:kCIInputImageKey];
+                    outputImage = thirdFilter.outputImage;
+                } else {
+                    outputImage = secondFilter.outputImage;
+                }
             } else {
-                outputImage = firstFilter.outputImage;
+                if (thirdFilterArmButton.on) {
+                    [thirdFilter setValue:beginImage forKey:kCIInputImageKey];
+                    outputImage = thirdFilter.outputImage;
+                }
             }
         }
     } else {
-        if (secondFilterArmButton.on) {
-            [secondFilter setValue:beginImage forKey:kCIInputImageKey];
-            if (thirdFilterArmButton.on) {
-                [thirdFilter setValue:secondFilter.outputImage forKey:kCIInputImageKey];
-                outputImage = thirdFilter.outputImage;
-            } else {
-                outputImage = secondFilter.outputImage;
-            }
-        } else {
-            if (thirdFilterArmButton.on) {
-                [thirdFilter setValue:beginImage forKey:kCIInputImageKey];
-                outputImage = thirdFilter.outputImage;
-            }
-        }
+        [firstFilter setValue:beginImage forKey:kCIInputImageKey];
+        outputImage = firstFilter.outputImage;
     }
-    
+        
     CGImageRef cgimg = [context createCGImage:outputImage 
                                      fromRect:[outputImage extent]];
     
