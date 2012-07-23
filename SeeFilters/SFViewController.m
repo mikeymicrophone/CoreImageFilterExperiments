@@ -95,16 +95,6 @@
 - (void)updateFilter:(NSString *)filterName withProperties:(NSMutableDictionary *)properties
 {
     configurableFilter = [CIFilter filterWithName:filterName];
-    if (configurableFilterIndex == 1) {
-        configurableFilterProperties = firstFilterProperties;
-        [firstFilterControl setTitle:[[configurableFilter attributes] objectForKey:kCIAttributeFilterDisplayName] forState:UIControlStateNormal];
-    } else if (configurableFilterIndex == 2) {
-        configurableFilterProperties = secondFilterProperties;
-        [secondFilterControl setTitle:[[configurableFilter attributes] objectForKey:kCIAttributeFilterDisplayName] forState:UIControlStateNormal];
-    } else {
-        configurableFilterProperties = thirdFilterProperties;
-        [thirdFilterControl setTitle:[[configurableFilter attributes] objectForKey:kCIAttributeFilterDisplayName] forState:UIControlStateNormal];
-    }
     
     if (properties == nil) {
         configurableFilterProperties = [[NSMutableDictionary alloc] initWithCapacity:3];
@@ -125,33 +115,21 @@
     NSMutableDictionary *myDefaults = [self attributesForFilter:filterName];
     [configurableFilterProperties addEntriesFromDictionary:myDefaults];
     
-    switch (configurableFilterIndex) {
-        case 1:
-            firstFilter = configurableFilter;
-            break;
-            
-        case 2:
-            secondFilter = configurableFilter;
-            break;
-            
-        case 3:
-            thirdFilter = configurableFilter;
-            break;
-            
-        default:
-            break;
-    }
-    NSLog(@"configurableFilterProperties: %@", configurableFilterProperties);
-    
     for(NSString *setting in configurableFilterProperties) {
         [configurableFilter setValue:[configurableFilterProperties valueForKey:setting] forKey:setting];
     }
     if (configurableFilterIndex == 1) {
+        firstFilter = configurableFilter;
         firstFilterProperties = configurableFilterProperties;
+        [firstFilterControl setTitle:[[configurableFilter attributes] objectForKey:kCIAttributeFilterDisplayName] forState:UIControlStateNormal];
     } else if (configurableFilterIndex == 2) {
+        secondFilter = configurableFilter;
         secondFilterProperties = configurableFilterProperties;
-    } else {
+        [secondFilterControl setTitle:[[configurableFilter attributes] objectForKey:kCIAttributeFilterDisplayName] forState:UIControlStateNormal];
+    } else if (configurableFilterIndex == 3) {
+        thirdFilter = configurableFilter;
         thirdFilterProperties = configurableFilterProperties;
+        [thirdFilterControl setTitle:[[configurableFilter attributes] objectForKey:kCIAttributeFilterDisplayName] forState:UIControlStateNormal];
     }
     [self updateSliders];
     [self updateFilterLabels];
@@ -376,7 +354,6 @@
     [configurableFilterProperties setValue:[NSNumber numberWithFloat:slideValue] forKey:configurableAttribute];
     [self updateFilterChain];
     [self updateFilterLabels];
-    NSLog(@"ffp: %@\n sfp: %@\n tfp: %@\n cfp %@", firstFilterProperties, secondFilterProperties, thirdFilterProperties, configurableFilterProperties);
 }
 
 - (IBAction)toggleFilter:(id)sender {
