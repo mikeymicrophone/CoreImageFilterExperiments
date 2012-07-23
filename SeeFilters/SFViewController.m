@@ -21,6 +21,7 @@
     CIImage *beginImage;
     NSString *firstSliderAttribute;
     NSString *secondSliderAttribute;
+    NSString *configurableAttribute;
     UIPopoverController *popover;
     CIFilter *configurableFilter;
     int configurableFilterIndex;
@@ -59,6 +60,10 @@
     
     beginImage = [CIImage imageWithContentsOfURL:fileNameAndPath];
     context = [CIContext contextWithOptions:nil];
+    
+    firstFilterPropertyLabel.numberOfLines = 0;
+    secondFilterPropertyLabel.numberOfLines = 0;
+    thirdFilterPropertyLabel.numberOfLines = 0;
         
     firstFilter = [CIFilter filterWithName:@"CIColorMonochrome"];
     secondFilter = [CIFilter filterWithName:@"CIColorMonochrome"];
@@ -180,99 +185,60 @@
 {
     NSString *filterName = [configurableFilter name];
     CIFilter *filter = [self filterOfName:filterName];
+    bool secondSliderUsed;
+    
     if ([filterName isEqualToString:@"CIColorMonochrome"]) {
         firstSliderAttribute = @"inputIntensity";
-        amountSlider.maximumValue = 1.0;
-        amountSlider.minimumValue = 0.0;
-        
-        secondSliderAttribute = @"";
-        secondSlider.value = 0.0;
-        secondSlider.hidden = YES;
-        secondFilterValueLabel.hidden = YES;
+        secondSliderUsed = NO;
     } else if ([filterName isEqualToString:@"CISepiaTone"]) {
         firstSliderAttribute = @"inputIntensity";
-        amountSlider.maximumValue = 1.0;
-        amountSlider.minimumValue = 0.0;
-        
-        secondSliderAttribute = @"";
-        secondSlider.value = 0.0;
-        secondSlider.hidden = YES;
-        secondFilterValueLabel.hidden = YES;
+        secondSliderUsed = NO;
     } else if ([filterName isEqualToString:@"CIGammaAdjust"]) {
         firstSliderAttribute = @"inputPower";
-        amountSlider.maximumValue = 4.0;
-        amountSlider.minimumValue = 0.25;
-        
-        secondSliderAttribute = @"";
-        secondSlider.value = 0.0;
-        secondSlider.hidden = YES;
-        secondFilterValueLabel.hidden = YES;
+        secondSliderUsed = NO;
     } else if ([filterName isEqualToString:@"CIExposureAdjust"]) {
         firstSliderAttribute = @"inputEV";
-        amountSlider.maximumValue = 4.0;
-        amountSlider.minimumValue = -4.0;
-        
-        secondSliderAttribute = @"";
-        secondSlider.value = 0.0;
-        secondSlider.hidden = YES;
-        secondFilterValueLabel.hidden = YES;
+        secondSliderUsed = NO;
     } else if ([filterName isEqualToString:@"CIColorControls"]) {
         firstSliderAttribute = @"inputSaturation";
-        amountSlider.value = 1.0;
-        amountSlider.maximumValue = 2.0;
-        amountSlider.minimumValue = -1.0;
-        
         secondSliderAttribute = @"inputContrast";
-        secondFilterValueLabel.text = @"1.000";
-        secondSlider.value = 1.0;
-        secondSlider.maximumValue = 4.0;
-        secondSlider.minimumValue = 0.0;
-        
-        secondSlider.hidden = NO;
-        secondFilterValueLabel.hidden = NO;
+        secondSliderUsed = YES;
     } else if ([filterName isEqualToString:@"CIVibrance"]) {
         firstSliderAttribute = @"inputAmount";
-        amountSlider.value = [[[[filter attributes] valueForKey:firstSliderAttribute] valueForKey:kCIAttributeDefault] floatValue];
-        amountSlider.maximumValue = [[[[filter attributes] valueForKey:firstSliderAttribute] valueForKey:kCIAttributeSliderMax] floatValue];
-        amountSlider.minimumValue = [[[[filter attributes] valueForKey:firstSliderAttribute] valueForKey:kCIAttributeSliderMin] floatValue];
-        
-        secondSliderAttribute = @"";
-        secondSlider.value = 0.0;
-        secondSlider.hidden = YES;
-        secondFilterValueLabel.hidden = YES;
+        secondSliderUsed = NO;
     } else if ([filterName isEqualToString:@"CIHueAdjust"]) {
         firstSliderAttribute = @"inputAngle";
-        amountSlider.value = [[[[filter attributes] valueForKey:firstSliderAttribute] valueForKey:kCIAttributeDefault] floatValue];
-        amountSlider.maximumValue = [[[[filter attributes] valueForKey:firstSliderAttribute] valueForKey:kCIAttributeSliderMax] floatValue];
-        amountSlider.minimumValue = [[[[filter attributes] valueForKey:firstSliderAttribute] valueForKey:kCIAttributeSliderMin] floatValue];
-        
-        secondSliderAttribute = @"";
-        secondSlider.value = 0.0;
-        secondSlider.hidden = YES;
-        secondFilterValueLabel.hidden = YES;
+        secondSliderUsed = NO;
     } else if ([filterName isEqualToString:@"CIHighlightShadowAdjust"]) {
         firstSliderAttribute = @"inputShadowAmount";
-        amountSlider.value = [[[[filter attributes] valueForKey:firstSliderAttribute] valueForKey:kCIAttributeDefault] floatValue];
-        amountSlider.maximumValue = [[[[filter attributes] valueForKey:firstSliderAttribute] valueForKey:kCIAttributeSliderMax] floatValue];
-        amountSlider.minimumValue = [[[[filter attributes] valueForKey:firstSliderAttribute] valueForKey:kCIAttributeSliderMin] floatValue];
-        
         secondSliderAttribute = @"inputHighlightAmount";
-        secondFilterValueLabel.text = @"1.000";
-        amountSlider.value = [[[[filter attributes] valueForKey:secondSliderAttribute] valueForKey:kCIAttributeDefault] floatValue];
-        amountSlider.maximumValue = [[[[filter attributes] valueForKey:secondSliderAttribute] valueForKey:kCIAttributeSliderMax] floatValue];
-        amountSlider.minimumValue = [[[[filter attributes] valueForKey:secondSliderAttribute] valueForKey:kCIAttributeSliderMin] floatValue];
-        
-        secondSlider.hidden = NO;
-        secondFilterValueLabel.hidden = NO;
+        secondSliderUsed = YES;
     }
+    amountSlider.maximumValue = [[[[filter attributes] valueForKey:firstSliderAttribute] valueForKey:kCIAttributeSliderMax] floatValue];
+    amountSlider.minimumValue = [[[[filter attributes] valueForKey:firstSliderAttribute] valueForKey:kCIAttributeSliderMin] floatValue];
+    if ([configurableFilterProperties valueForKey:firstSliderAttribute]) {
+        [amountSlider setValue:[[configurableFilterProperties valueForKey:firstSliderAttribute] floatValue] animated:YES];
+    } else {
+        [amountSlider setValue:[[[[filter attributes] valueForKey:firstSliderAttribute] valueForKey:kCIAttributeIdentity] floatValue] animated:YES];
+    }
+
     
-    [amountSlider setValue:[[configurableFilterProperties valueForKey:firstSliderAttribute] floatValue] animated:YES];
     filterValueLabel.text = [NSString stringWithFormat:@"%1.3f", amountSlider.value];
-    if (secondSlider.hidden == NO) {
-        [secondSlider setValue:[[configurableFilterProperties valueForKey:secondSliderAttribute] floatValue] animated:YES];
+
+    if (secondSliderUsed) {
+        secondSlider.maximumValue = [[[[filter attributes] valueForKey:secondSliderAttribute] valueForKey:kCIAttributeSliderMax] floatValue];
+        secondSlider.minimumValue = [[[[filter attributes] valueForKey:secondSliderAttribute] valueForKey:kCIAttributeSliderMin] floatValue];        
+        if ([configurableFilterProperties valueForKey:secondSliderAttribute]) {
+            [secondSlider setValue:[[configurableFilterProperties valueForKey:secondSliderAttribute] floatValue] animated:YES];
+        } else {
+            [secondSlider setValue:[[[[filter attributes] valueForKey:secondSliderAttribute] valueForKey:kCIAttributeIdentity] floatValue] animated:YES];
+        }
         secondFilterValueLabel.text = [NSString stringWithFormat:@"%1.3f", secondSlider.value];
+    } else {
+        secondSliderAttribute = @"";
     }
-    
+    secondSlider.hidden = !secondSliderUsed;
+    secondFilterValueLabel.hidden = !secondSliderUsed;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -333,11 +299,16 @@
 
 -(IBAction)changeValue:(UISlider *)sender {
     float slideValue = [sender value];
-    
-    filterValueLabel.text = [NSString stringWithFormat:@"%1.3f", slideValue];
+    if (sender == amountSlider) {
+        configurableAttribute = firstSliderAttribute;
+        filterValueLabel.text = [NSString stringWithFormat:@"%1.3f", slideValue];
+    } else {
+        configurableAttribute = secondSliderAttribute;
+        secondFilterValueLabel.text = [NSString stringWithFormat:@"%1.3f", slideValue];
+    }
     
     [configurableFilter setValue:[NSNumber numberWithFloat:slideValue] 
-              forKey:firstSliderAttribute];
+                          forKey:configurableAttribute];
     [self updateFilterChain];
     NSString *firstAttrName = [firstSliderAttribute substringFromIndex:5];
     NSString *secondAttrName;
@@ -347,68 +318,27 @@
         secondAttrName = [secondSliderAttribute substringFromIndex:5];
     }
     
+    UILabel *configurableFilterPropertyLabel;
     switch (configurableFilterIndex) {
         case 1:
-            [firstFilterProperties setValue:[NSNumber numberWithFloat:slideValue] forKey:firstSliderAttribute];
-            firstFilterPropertyLabel.numberOfLines = 0;
-            firstFilterPropertyLabel.text = [NSString stringWithFormat:@"%@:%1.3f\n%@:%1.3f", firstAttrName, [amountSlider value], secondAttrName, [secondSlider value]];
+            configurableFilterPropertyLabel = firstFilterPropertyLabel;
             break;
-            
         case 2:
-            [secondFilterProperties setValue:[NSNumber numberWithFloat:slideValue] forKey:firstSliderAttribute];
-            secondFilterPropertyLabel.numberOfLines = 0;
-            secondFilterPropertyLabel.text = [NSString stringWithFormat:@"%@:%1.3f\n%@:%1.3f", firstAttrName, [amountSlider value], secondAttrName, [secondSlider value]];
+            configurableFilterPropertyLabel = secondFilterPropertyLabel;
             break;
-            
         case 3:
-            [thirdFilterProperties setValue:[NSNumber numberWithFloat:slideValue] forKey:firstSliderAttribute];
-            thirdFilterPropertyLabel.numberOfLines = 0;
-            thirdFilterPropertyLabel.text = [NSString stringWithFormat:@"%@:%1.3f\n%@:%1.3f", firstAttrName, [amountSlider value], secondAttrName, [secondSlider value]];
+            configurableFilterPropertyLabel = thirdFilterPropertyLabel;
             break;
-            
         default:
             break;
     }
-}
-
-- (IBAction)changeSecondValue:(UISlider *)sender {
-    float slideValue = [sender value];
-    
-    secondFilterValueLabel.text = [NSString stringWithFormat:@"%1.3f", slideValue];
-    
-    [configurableFilter setValue:[NSNumber numberWithFloat:slideValue] 
-                          forKey:secondSliderAttribute];
-    [self updateFilterChain];
-    NSString *firstAttrName = [firstSliderAttribute substringFromIndex:5];
-    NSString *secondAttrName;
-    if ([secondSliderAttribute isEqualToString:@""]) {
-        secondAttrName = @"";
+    [configurableFilterProperties setValue:[NSNumber numberWithFloat:slideValue] forKey:configurableAttribute];
+    if ([secondAttrName isEqualToString:@""]) {
+        configurableFilterPropertyLabel.text = [NSString stringWithFormat:@"%@: %1.3f", firstAttrName, [amountSlider value]];
     } else {
-        secondAttrName = [secondSliderAttribute substringFromIndex:5];
+        configurableFilterPropertyLabel.text = [NSString stringWithFormat:@"%@: %1.3f\n%@: %1.3f", firstAttrName, [amountSlider value], secondAttrName, [secondSlider value]];
     }
-    
-    switch (configurableFilterIndex) {
-        case 1:
-            [firstFilterProperties setValue:[NSNumber numberWithFloat:slideValue] forKey:secondSliderAttribute];
-            firstFilterPropertyLabel.numberOfLines = 0;
-            firstFilterPropertyLabel.text = [NSString stringWithFormat:@"%@:%1.3f\n%@:%1.3f", firstAttrName, [amountSlider value], secondAttrName, slideValue];
-            break;
-            
-        case 2:
-            [secondFilterProperties setValue:[NSNumber numberWithFloat:slideValue] forKey:secondSliderAttribute];
-            secondFilterPropertyLabel.numberOfLines = 0;
-            secondFilterPropertyLabel.text = [NSString stringWithFormat:@"%@:%1.3f\n%@:%1.3f", firstAttrName, [amountSlider value], secondAttrName, slideValue];
-            break;
 
-        case 3:
-            [thirdFilterProperties setValue:[NSNumber numberWithFloat:slideValue] forKey:secondSliderAttribute];
-            thirdFilterPropertyLabel.numberOfLines = 0;
-            thirdFilterPropertyLabel.text = [NSString stringWithFormat:@"%@:%1.3f\n%@:%1.3f", firstAttrName, [amountSlider value], secondAttrName, slideValue];
-            break;
-
-        default:
-            break;
-    }
 }
 
 - (IBAction)loadPhoto:(id)sender {
