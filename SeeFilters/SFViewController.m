@@ -213,6 +213,10 @@
         firstSliderAttribute = @"inputShadowAmount";
         secondSliderAttribute = @"inputHighlightAmount";
         secondSliderUsed = YES;
+    } else if ([filterName isEqualToString:@"CIVignette"]) {
+        firstSliderAttribute = @"inputIntensity";
+        secondSliderAttribute = @"inputRadius";
+        secondSliderUsed = YES;
     }
     amountSlider.maximumValue = [[[[filter attributes] valueForKey:firstSliderAttribute] valueForKey:kCIAttributeSliderMax] floatValue];
     amountSlider.minimumValue = [[[[filter attributes] valueForKey:firstSliderAttribute] valueForKey:kCIAttributeSliderMin] floatValue];
@@ -222,7 +226,6 @@
         [amountSlider setValue:[[[[filter attributes] valueForKey:firstSliderAttribute] valueForKey:kCIAttributeIdentity] floatValue] animated:YES];
     }
 
-    
     filterValueLabel.text = [NSString stringWithFormat:@"%1.3f", amountSlider.value];
 
     if (secondSliderUsed) {
@@ -465,7 +468,8 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
                   [CIFilter filterWithName:@"CIColorControls"],
                   [CIFilter filterWithName:@"CIVibrance"],
                   [CIFilter filterWithName:@"CIHueAdjust"],
-                  [CIFilter filterWithName:@"CIHighlightShadowAdjust"], nil];
+                  [CIFilter filterWithName:@"CIHighlightShadowAdjust"],
+                  [CIFilter filterWithName:@"CIVignette"], nil];
 }
 
 - (CIFilter *)filterOfName:(NSString *)filterName
