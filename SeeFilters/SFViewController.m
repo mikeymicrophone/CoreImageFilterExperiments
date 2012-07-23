@@ -107,19 +107,23 @@
     }
     
     if (properties == nil) {
+        configurableFilterProperties = [[NSMutableDictionary alloc] initWithCapacity:3];
         NSMutableArray *inputs = [NSMutableArray arrayWithArray:[configurableFilter inputKeys]];
         [inputs removeObject:@"inputImage"];
         for (NSString *attr in inputs) {
             id identity = [[[configurableFilter attributes] objectForKey:attr] objectForKey:kCIAttributeIdentity];
             if (identity != nil) {
                 [configurableFilterProperties setValue:identity forKey:attr];
+            } else {
+                [configurableFilterProperties setValue:[[[configurableFilter attributes] objectForKey:attr] objectForKey:kCIAttributeDefault] forKey:attr];
             }
         }
     } else {
         configurableFilterProperties = properties;
     }
     
-    NSMutableDictionary *attributes = [self attributesForFilter:filterName];
+    NSMutableDictionary *myDefaults = [self attributesForFilter:filterName];
+    [configurableFilterProperties addEntriesFromDictionary:myDefaults];
     
     switch (configurableFilterIndex) {
         case 1:
@@ -137,13 +141,22 @@
         default:
             break;
     }
-    for(NSString *setting in attributes) {
-        [configurableFilter setValue:[attributes valueForKey:setting] forKey:setting];
+    NSLog(@"configurableFilterProperties: %@", configurableFilterProperties);
+    
+    for(NSString *setting in configurableFilterProperties) {
+        [configurableFilter setValue:[configurableFilterProperties valueForKey:setting] forKey:setting];
     }
+    if (configurableFilterIndex == 1) {
+        firstFilterProperties = configurableFilterProperties;
+    } else if (configurableFilterIndex == 2) {
+        secondFilterProperties = configurableFilterProperties;
+    } else {
+        thirdFilterProperties = configurableFilterProperties;
+    }
+    [self updateSliders];
     [self updateFilterLabels];
+    [self updateFilterChain];
 }
-
-
 
 - (void)updateSliders
 {
@@ -363,6 +376,7 @@
     [configurableFilterProperties setValue:[NSNumber numberWithFloat:slideValue] forKey:configurableAttribute];
     [self updateFilterChain];
     [self updateFilterLabels];
+    NSLog(@"ffp: %@\n sfp: %@\n tfp: %@\n cfp %@", firstFilterProperties, secondFilterProperties, thirdFilterProperties, configurableFilterProperties);
 }
 
 - (IBAction)toggleFilter:(id)sender {
@@ -422,25 +436,13 @@
 
 - (NSMutableDictionary *)attributesForFilter:(NSString *)filterName
 {
-    [self updateSliders];
     NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
     if (filterName == @"CIColorMonochrome") {
-        [attributes setValue:[NSNumber numberWithFloat:0.0] forKey:@"inputIntensity"];
-        
         CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
         const CGFloat components[4] = {1.0, 1.0, 1.0, 1.0};
         CGColorRef clr = CGColorCreate (colorSpace,  components);
         CIColor *black = [[CIColor alloc] initWithCGColor:clr];
         [attributes setValue:black forKey:@"inputColor"];
-    } else if (filterName == @"CISepiaTone") {
-        [attributes setValue:[NSNumber numberWithFloat:0.0] forKey:@"inputIntensity"];
-    } else if (filterName == @"CIGammaAdjust") {
-        [attributes setValue:[NSNumber numberWithFloat:1.0] forKey:@"inputPower"];
-    } else if (filterName == @"CIExposureAdjust") {
-        [attributes setValue:[NSNumber numberWithFloat:1.0] forKey:@"inputEV"];
-    } else if (filterName == @"CIColorControls") {
-        [attributes setValue:[NSNumber numberWithFloat:1.0] forKey:@"inputSaturation"];
-        [attributes setValue:[NSNumber numberWithFloat:1.0] forKey:@"inputContrast"];
     }
     return attributes;
 }
@@ -463,8 +465,6 @@
             }
         }
     }
-    
-    
 }
 
 #pragma mark -- saving custom filters --
@@ -488,35 +488,34 @@
     NSMutableArray *filters = [self savedFilters];
     
     if (filters == nil) {
+        NSLog(@"app found no saved filters");
         filters = [NSMutableArray arrayWithObject:filterDetails];
     } else {
+        NSLog(@"app found saved filters");
         [filters addObject:filterDetails];
     }
-    
-    [filters writeToFile:[self savePath] atomically:YES];
-    
+    NSLog(@"save path: %@", [self savePath]);
+    NSLog(@"filters: %@", filters);
+    BOOL success = [filters writeToFile:[self savePath] atomically:YES];
+    NSLog(@"save success: %d", success);
 }
+
 - (IBAction)loadFilter:(id)sender {
     SFLoadFilterController *filterChooser = [[SFLoadFilterController alloc] initWithStyle:UITableViewStylePlain];
     filterChooser.filters = [self savedFilters];
     filterChooser.filterController = self;
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        UIPopoverController *pickerP = [[UIPopoverController alloc] initWithContentViewController:filterChooser];
-        [pickerP presentPopoverFromRect:CGRectMake(100, 100, 100, 100) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-        popover = pickerP;
-    } else {
-//        [self presentModalViewController:pickerC animated:YES];
+        UIPopoverController *chooserP = [[UIPopoverController alloc] initWithContentViewController:filterChooser];
+        [chooserP presentPopoverFromRect:CGRectMake(100, 100, 100, 100) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+        popover = chooserP;
     }
-    
 }
 
 -(void)useSavedFilterAtIndex:(NSUInteger)index
 {
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         [popover dismissPopoverAnimated:YES];
-    } else {
-//        [self dismissModalViewControllerAnimated:YES];
     }
     
     NSMutableDictionary *filterDetails = [[self savedFilters] objectAtIndex:index];
@@ -550,6 +549,29 @@
     return [[NSMutableArray alloc] initWithContentsOfFile:[self savePath]];
 }
 
+#pragma mark -- filter selection --
+
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
+{
+    return 1;
+}
+
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
+{
+    return [filterList count];
+}
+
+- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
+{
+    NSDictionary *attrs = [[filterList objectAtIndex:row] attributes];
+    return [attrs objectForKey:kCIAttributeFilterDisplayName];
+}
+
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
+{
+    [self updateFilter:[[filterList objectAtIndex:row] name] withProperties:nil];
+}
+
 #pragma mark -- image selection --
 
 - (IBAction)loadPhoto:(id)sender {
@@ -577,27 +599,6 @@
                           completionBlock:^(NSURL *assetURL, NSError *error) {
                               CGImageRelease(cgImg);
                           }];
-}
-
-- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
-{
-    return 1;
-}
-
-- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
-{
-    return [filterList count];
-}
-
-- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
-{
-    NSDictionary *attrs = [[filterList objectAtIndex:row] attributes];
-    return [attrs objectForKey:kCIAttributeFilterDisplayName];
-}
-
-- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
-{
-    [self updateFilter:[[filterList objectAtIndex:row] name] withProperties:nil];
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker 
