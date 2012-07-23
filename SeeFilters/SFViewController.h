@@ -33,6 +33,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *firstFilterPropertyLabel;
 @property (weak, nonatomic) IBOutlet UILabel *secondFilterPropertyLabel;
 @property (weak, nonatomic) IBOutlet UILabel *thirdFilterPropertyLabel;
+- (IBAction)writeFilter:(id)sender;
+@property (weak, nonatomic) IBOutlet UITextField *filterChainTitle;
 
 @property (weak, nonatomic) IBOutlet UIImageView *originalImageView;
 

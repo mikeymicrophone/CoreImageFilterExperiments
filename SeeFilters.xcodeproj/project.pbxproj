@@ -19,6 +19,7 @@
 		0C3860B815AB8150002A4EAC /* image.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C3860B715AB8150002A4EAC /* image.png */; };
 		0C3860BB15AB8B9A002A4EAC /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C3860BA15AB8B9A002A4EAC /* AssetsLibrary.framework */; };
 		0C859D4115B8FEDC00C506DF /* SFViewController-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0C859D3F15B8FEDC00C506DF /* SFViewController-iPad.xib */; };
+		A651706D15BD1741008E6679 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A651706C15BD1741008E6679 /* CoreData.framework */; };
 		A6FE3FEC15BCAFD5006096C4 /* arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = A6FE3FEB15BCAFD5006096C4 /* arrow.png */; };
 /* End PBXBuildFile section */
 
@@ -40,6 +41,7 @@
 		0C3860B715AB8150002A4EAC /* image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = image.png; sourceTree = "<group>"; };
 		0C3860BA15AB8B9A002A4EAC /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		0C859D4015B8FEDC00C506DF /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = "en.lproj/SFViewController-iPad.xib"; sourceTree = "<group>"; };
+		A651706C15BD1741008E6679 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		A6FE3FEB15BCAFD5006096C4 /* arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -48,6 +50,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A651706D15BD1741008E6679 /* CoreData.framework in Frameworks */,
 				0C3860BB15AB8B9A002A4EAC /* AssetsLibrary.framework in Frameworks */,
 				0C3860B615AB80D8002A4EAC /* CoreImage.framework in Frameworks */,
 				0C38609915AB7EDA002A4EAC /* UIKit.framework in Frameworks */,
@@ -62,7 +65,6 @@
 		0C38608915AB7EDA002A4EAC = {
 			isa = PBXGroup;
 			children = (
-				0C3860BA15AB8B9A002A4EAC /* AssetsLibrary.framework */,
 				0C38609E15AB7EDA002A4EAC /* SeeFilters */,
 				0C38609715AB7EDA002A4EAC /* Frameworks */,
 				0C38609515AB7EDA002A4EAC /* Products */,
@@ -81,6 +83,8 @@
 		0C38609715AB7EDA002A4EAC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A651706C15BD1741008E6679 /* CoreData.framework */,
+				0C3860BA15AB8B9A002A4EAC /* AssetsLibrary.framework */,
 				0C3860B515AB80D8002A4EAC /* CoreImage.framework */,
 				0C38609815AB7EDA002A4EAC /* UIKit.framework */,
 				0C38609A15AB7EDA002A4EAC /* Foundation.framework */,

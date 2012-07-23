@@ -42,6 +42,7 @@
 @synthesize firstFilterPropertyLabel;
 @synthesize secondFilterPropertyLabel;
 @synthesize thirdFilterPropertyLabel;
+@synthesize filterChainTitle;
 @synthesize originalImageView;
 @synthesize filterValueLabel;
 @synthesize filterPicker;
@@ -105,6 +106,7 @@
     [self setFirstFilterPropertyLabel:nil];
     [self setSecondFilterPropertyLabel:nil];
     [self setThirdFilterPropertyLabel:nil];
+    [self setFilterChainTitle:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -501,5 +503,50 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     }
     
     
+}
+- (IBAction)writeFilter:(id)sender {
+    NSMutableDictionary *filterDetails = [[NSMutableDictionary alloc] initWithCapacity:10];
+    [filterDetails setValue:[firstFilter name] forKey:@"firstFilterName"];
+    [filterDetails setValue:firstFilterProperties forKey:@"firstFilterProperties"];
+    [filterDetails setValue:[NSNumber numberWithBool:firstFilterArmButton.on] forKey:@"firstFilterArmed"];
+    
+    [filterDetails setValue:[secondFilter name] forKey:@"secondFilterName"];
+    [filterDetails setValue:secondFilterProperties forKey:@"secondFilterProperties"];
+    [filterDetails setValue:[NSNumber numberWithBool:secondFilterArmButton.on] forKey:@"secondFilterArmed"];
+    
+    [filterDetails setValue:[thirdFilter name] forKey:@"thirdFilterName"];
+    [filterDetails setValue:thirdFilterProperties forKey:@"thirdFilterProperties"];
+    [filterDetails setValue:[NSNumber numberWithBool:thirdFilterArmButton.on] forKey:@"thirdFilterArmed"];
+    
+    [filterDetails setValue:filterChainTitle.text forKey:@"filterChainTitle"];
+    
+    NSString* documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *filterListPath = [documentsPath stringByAppendingPathComponent:@"saved_filters.plist"];
+    
+    NSInputStream *input = [NSInputStream inputStreamWithFileAtPath:filterListPath];
+
+    NSError *inputError = nil;
+    NSMutableArray *savedFilters = [NSPropertyListSerialization propertyListWithStream:input options:NSPropertyListMutableContainers format:kCFPropertyListXMLFormat_v1_0 error:&inputError];
+
+    NSLog(@"savedFilters: %@", savedFilters);
+    NSLog(@"filterDetails: %@", filterDetails);
+    if (savedFilters == nil) {
+        NSLog(@"app has no array of saved filters");
+        savedFilters = [NSMutableArray arrayWithObject:filterDetails];
+    } else {
+        NSLog(@"app has an array of saved filters");
+        [savedFilters addObject:filterDetails];
+        for (NSDictionary *filter in savedFilters) {
+            NSLog(@"saved filter: %@", [filter valueForKey:@"filterChainTitle"]);
+        }
+    }
+    
+    NSError *outputError = nil;
+    NSOutputStream *output = [NSOutputStream outputStreamToFileAtPath:filterListPath append:NO];
+    [output open];
+    [NSPropertyListSerialization writePropertyList:savedFilters toStream:output format:kCFPropertyListXMLFormat_v1_0 options:0 error:&outputError];
+    [output close];
+    NSLog(@"input error: %@", inputError);
+    NSLog(@"output error: %@", outputError);
 }
 @end
