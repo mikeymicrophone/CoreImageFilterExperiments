@@ -20,6 +20,8 @@
 		0C3860BB15AB8B9A002A4EAC /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C3860BA15AB8B9A002A4EAC /* AssetsLibrary.framework */; };
 		0C859D4115B8FEDC00C506DF /* SFViewController-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0C859D3F15B8FEDC00C506DF /* SFViewController-iPad.xib */; };
 		A651706D15BD1741008E6679 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A651706C15BD1741008E6679 /* CoreData.framework */; };
+		A651707615BDA094008E6679 /* SFLoadFilterController.m in Sources */ = {isa = PBXBuildFile; fileRef = A651707415BDA094008E6679 /* SFLoadFilterController.m */; };
+		A651707715BDA094008E6679 /* SFLoadFilterController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A651707515BDA094008E6679 /* SFLoadFilterController.xib */; };
 		A6FE3FEC15BCAFD5006096C4 /* arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = A6FE3FEB15BCAFD5006096C4 /* arrow.png */; };
 /* End PBXBuildFile section */
 
@@ -42,6 +44,9 @@
 		0C3860BA15AB8B9A002A4EAC /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		0C859D4015B8FEDC00C506DF /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = "en.lproj/SFViewController-iPad.xib"; sourceTree = "<group>"; };
 		A651706C15BD1741008E6679 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		A651707315BDA094008E6679 /* SFLoadFilterController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFLoadFilterController.h; sourceTree = "<group>"; };
+		A651707415BDA094008E6679 /* SFLoadFilterController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFLoadFilterController.m; sourceTree = "<group>"; };
+		A651707515BDA094008E6679 /* SFLoadFilterController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SFLoadFilterController.xib; sourceTree = "<group>"; };
 		A6FE3FEB15BCAFD5006096C4 /* arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -103,6 +108,9 @@
 				0C3860AD15AB7EDA002A4EAC /* SFViewController.xib */,
 				0C859D3F15B8FEDC00C506DF /* SFViewController-iPad.xib */,
 				0C38609F15AB7EDA002A4EAC /* Supporting Files */,
+				A651707315BDA094008E6679 /* SFLoadFilterController.h */,
+				A651707415BDA094008E6679 /* SFLoadFilterController.m */,
+				A651707515BDA094008E6679 /* SFLoadFilterController.xib */,
 			);
 			path = SeeFilters;
 			sourceTree = "<group>";
@@ -183,6 +191,7 @@
 				0C3860B815AB8150002A4EAC /* image.png in Resources */,
 				0C859D4115B8FEDC00C506DF /* SFViewController-iPad.xib in Resources */,
 				A6FE3FEC15BCAFD5006096C4 /* arrow.png in Resources */,
+				A651707715BDA094008E6679 /* SFLoadFilterController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -196,6 +205,7 @@
 				0C3860A515AB7EDA002A4EAC /* main.m in Sources */,
 				0C3860A915AB7EDA002A4EAC /* SFAppDelegate.m in Sources */,
 				0C3860AC15AB7EDA002A4EAC /* SFViewController.m in Sources */,
+				A651707615BDA094008E6679 /* SFLoadFilterController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

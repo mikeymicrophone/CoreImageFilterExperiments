@@ -7,6 +7,7 @@
 //
 
 #import "SFViewController.h"
+#import "SFLoadFilterController.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 
 @interface SFViewController ()
@@ -72,20 +73,20 @@
     
     [self controlFirstFilter:nil];
     firstFilterProperties = [[NSMutableDictionary alloc] init];
-    [self updateFilter:@"CIColorMonochrome"];
+    [self updateFilter:@"CIColorMonochrome" withProperties:nil];
     
     [self controlSecondFilter:nil];
     secondFilterProperties = [[NSMutableDictionary alloc] init];
-    [self updateFilter:@"CISepiaTone"];
+    [self updateFilter:@"CISepiaTone" withProperties:nil];
     
     [self controlThirdFilter:nil];
     thirdFilterProperties = [[NSMutableDictionary alloc] init];
-    [self updateFilter:@"CIColorControls"];
+    [self updateFilter:@"CIColorControls" withProperties:nil];
     
     [self updateFilterChain];
     [self controlFirstFilter:nil];
     
-    [self logAllFilters];
+//    [self logAllFilters];
 }
 
 - (void)viewDidUnload
@@ -111,11 +112,9 @@
     // Release any retained subviews of the main view.
 }
 
-- (void)updateFilter:(NSString *)filterName
+- (void)updateFilter:(NSString *)filterName withProperties:(NSMutableDictionary *)properties
 {
     configurableFilter = [CIFilter filterWithName:filterName];
-    NSMutableArray *inputs = [NSMutableArray arrayWithArray:[configurableFilter inputKeys]];
-    [inputs removeObject:@"inputImage"];
     if (configurableFilterIndex == 1) {
         configurableFilterProperties = firstFilterProperties;
         [firstFilterControl setTitle:[[configurableFilter attributes] objectForKey:kCIAttributeFilterDisplayName] forState:UIControlStateNormal];
@@ -127,13 +126,18 @@
         [thirdFilterControl setTitle:[[configurableFilter attributes] objectForKey:kCIAttributeFilterDisplayName] forState:UIControlStateNormal];
     }
     
-    for (NSString *attr in inputs) {
-        id identity = [[[configurableFilter attributes] objectForKey:attr] objectForKey:kCIAttributeIdentity];
-        if (identity != nil) {
-            [configurableFilterProperties setValue:identity forKey:attr];
+    if (properties == nil) {
+        NSMutableArray *inputs = [NSMutableArray arrayWithArray:[configurableFilter inputKeys]];
+        [inputs removeObject:@"inputImage"];
+        for (NSString *attr in inputs) {
+            id identity = [[[configurableFilter attributes] objectForKey:attr] objectForKey:kCIAttributeIdentity];
+            if (identity != nil) {
+                [configurableFilterProperties setValue:identity forKey:attr];
+            }
         }
+    } else {
+        configurableFilterProperties = properties;
     }
-    
     
     NSMutableDictionary *attributes = [self attributesForFilter:filterName];
     
@@ -156,6 +160,7 @@
     for(NSString *setting in attributes) {
         [configurableFilter setValue:[attributes valueForKey:setting] forKey:setting];
     }
+    [self updateFilterLabels];
 }
 
 - (NSMutableDictionary *)attributesForFilter:(NSString *)filterName
@@ -312,9 +317,14 @@
         secondFilterValueLabel.text = [NSString stringWithFormat:@"%1.3f", slideValue];
     }
     
-    [configurableFilter setValue:[NSNumber numberWithFloat:slideValue] 
-                          forKey:configurableAttribute];
+    [configurableFilter setValue:[NSNumber numberWithFloat:slideValue] forKey:configurableAttribute];
+    [configurableFilterProperties setValue:[NSNumber numberWithFloat:slideValue] forKey:configurableAttribute];
     [self updateFilterChain];
+    [self updateFilterLabels];
+}
+
+-(void)updateFilterLabels
+{
     NSString *firstAttrName = [firstSliderAttribute substringFromIndex:5];
     NSString *secondAttrName;
     if ([secondSliderAttribute isEqualToString:@""]) {
@@ -337,13 +347,12 @@
         default:
             break;
     }
-    [configurableFilterProperties setValue:[NSNumber numberWithFloat:slideValue] forKey:configurableAttribute];
+    
     if ([secondAttrName isEqualToString:@""]) {
         configurableFilterPropertyLabel.text = [NSString stringWithFormat:@"%@: %1.3f", firstAttrName, [amountSlider value]];
     } else {
         configurableFilterPropertyLabel.text = [NSString stringWithFormat:@"%@: %1.3f\n%@: %1.3f", firstAttrName, [amountSlider value], secondAttrName, [secondSlider value]];
     }
-
 }
 
 - (IBAction)loadPhoto:(id)sender {
@@ -389,7 +398,7 @@
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
-    [self updateFilter:[[filterList objectAtIndex:row] name]];
+    [self updateFilter:[[filterList objectAtIndex:row] name] withProperties:nil];
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker 
@@ -519,36 +528,69 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     [filterDetails setValue:[NSNumber numberWithBool:thirdFilterArmButton.on] forKey:@"thirdFilterArmed"];
     
     [filterDetails setValue:filterChainTitle.text forKey:@"filterChainTitle"];
-    
-    NSString* documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    NSString *filterListPath = [documentsPath stringByAppendingPathComponent:@"saved_filters.plist"];
-    
-//    NSInputStream *input = [NSInputStream inputStreamWithFileAtPath:filterListPath];
-//
-//    NSError *inputError = nil;
-//    NSMutableArray *savedFilters = [NSPropertyListSerialization propertyListWithStream:input options:NSPropertyListMutableContainers format:kCFPropertyListXMLFormat_v1_0 error:&inputError];
-    NSMutableArray *savedFilters = [[NSMutableArray alloc] initWithContentsOfFile:filterListPath];
-    NSLog(@"savedFilters: %@", savedFilters);
 
-    if (savedFilters == nil) {
-        NSLog(@"app has no array of saved filters");
-        savedFilters = [NSMutableArray arrayWithObject:filterDetails];
+    NSMutableArray *filters = [self savedFilters];
+    
+    if (filters == nil) {
+        filters = [NSMutableArray arrayWithObject:filterDetails];
     } else {
-        NSLog(@"app has an array of saved filters");
-        [savedFilters addObject:filterDetails];
-        for (NSDictionary *filter in savedFilters) {
-            NSLog(@"saved filter: %@", [filter valueForKey:@"filterChainTitle"]);
-        }
+        [filters addObject:filterDetails];
     }
     
-    [savedFilters writeToFile:filterListPath atomically:YES];
+    [filters writeToFile:[self savePath] atomically:YES];
     
-//    NSError *outputError = nil;
-//    NSOutputStream *output = [NSOutputStream outputStreamToFileAtPath:filterListPath append:NO];
-//    [output open];
-//    [NSPropertyListSerialization writePropertyList:savedFilters toStream:output format:kCFPropertyListXMLFormat_v1_0 options:0 error:&outputError];
-//    [output close];
-//    NSLog(@"input error: %@", inputError);
-//    NSLog(@"output error: %@", outputError);
+}
+- (IBAction)loadFilter:(id)sender {
+    SFLoadFilterController *filterChooser = [[SFLoadFilterController alloc] initWithStyle:UITableViewStylePlain];
+    filterChooser.filters = [self savedFilters];
+    filterChooser.filterController = self;
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        UIPopoverController *pickerP = [[UIPopoverController alloc] initWithContentViewController:filterChooser];
+        [pickerP presentPopoverFromRect:CGRectMake(100, 100, 100, 100) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+        popover = pickerP;
+    } else {
+//        [self presentModalViewController:pickerC animated:YES];
+    }
+    
+}
+
+-(void)useSavedFilterAtIndex:(NSUInteger)index
+{
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        [popover dismissPopoverAnimated:YES];
+    } else {
+//        [self dismissModalViewControllerAnimated:YES];
+    }
+    
+    NSMutableDictionary *filterDetails = [[self savedFilters] objectAtIndex:index];
+    [self controlFirstFilter:nil];
+    firstFilterProperties = [filterDetails valueForKey:@"firstFilterProperties"];
+    [self updateFilter:[filterDetails valueForKey:@"firstFilterName"] withProperties:firstFilterProperties];
+    [firstFilterArmButton setOn:[[filterDetails valueForKey:@"firstFilterArmed"] boolValue] animated:YES];
+    
+    [self controlSecondFilter:nil];
+    secondFilterProperties = [filterDetails valueForKey:@"secondFilterProperties"];
+    [self updateFilter:[filterDetails valueForKey:@"secondFilterName"] withProperties:secondFilterProperties];
+    [secondFilterArmButton setOn:[[filterDetails valueForKey:@"secondFilterArmed"] boolValue] animated:YES];
+    
+    [self controlThirdFilter:nil];
+    thirdFilterProperties = [filterDetails valueForKey:@"thirdFilterProperties"];
+    [self updateFilter:[filterDetails valueForKey:@"thirdFilterName"] withProperties:thirdFilterProperties];
+    [thirdFilterArmButton setOn:[[filterDetails valueForKey:@"thirdFilterArmed"] boolValue] animated:YES];
+    
+    filterChainTitle.text = [filterDetails valueForKey:@"filterChainTitle"];
+    [self updateFilterChain];
+}
+
+- (NSString *)savePath
+{
+    NSString* documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    return [documentsPath stringByAppendingPathComponent:@"saved_filters.plist"];
+}
+
+- (NSMutableArray *)savedFilters
+{
+    return [[NSMutableArray alloc] initWithContentsOfFile:[self savePath]];
 }
 @end

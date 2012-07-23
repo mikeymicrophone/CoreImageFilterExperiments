@@ -35,9 +35,11 @@
 @property (weak, nonatomic) IBOutlet UILabel *thirdFilterPropertyLabel;
 - (IBAction)writeFilter:(id)sender;
 @property (weak, nonatomic) IBOutlet UITextField *filterChainTitle;
+- (IBAction)loadFilter:(id)sender;
 
 @property (weak, nonatomic) IBOutlet UIImageView *originalImageView;
 
 - (IBAction)toggleFilter:(id)sender;
 -(void)updateFilterChain;
+-(void)useSavedFilterAtIndex:(NSUInteger)index;
 @end
