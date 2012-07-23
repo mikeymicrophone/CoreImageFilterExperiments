@@ -62,7 +62,8 @@
     
     beginImage = [CIImage imageWithContentsOfURL:fileNameAndPath];
     originalImageView.image = [UIImage imageWithContentsOfFile:filePath];
-    context = [CIContext contextWithOptions:nil];
+    context = [CIContext contextWithOptions:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] 
+                                                                        forKey:kCIContextUseSoftwareRenderer]];
     
     firstFilterPropertyLabel.numberOfLines = 0;
     secondFilterPropertyLabel.numberOfLines = 0;
