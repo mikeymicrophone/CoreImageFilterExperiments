@@ -61,6 +61,7 @@
     NSURL *fileNameAndPath = [NSURL fileURLWithPath:filePath];
     
     beginImage = [CIImage imageWithContentsOfURL:fileNameAndPath];
+    originalImageView.image = [UIImage imageWithContentsOfFile:filePath];
     context = [CIContext contextWithOptions:nil];
     
     firstFilterPropertyLabel.numberOfLines = 0;
@@ -89,28 +90,7 @@
 //    [self logAllFilters];
 }
 
-- (void)viewDidUnload
-{
-    [self setImgV:nil];
-    [self setAmountSlider:nil];
-    [self setFilterValueLabel:nil];
-    [self setFilterPicker:nil];
-    [self setOriginalImageView:nil];
-    [self setSecondSlider:nil];
-    [self setSecondFilterValueLabel:nil];
-    [self setFirstFilterControl:nil];
-    [self setFirstFilterArmButton:nil];
-    [self setSecondFilterControl:nil];
-    [self setSecondFilterArmButton:nil];
-    [self setThirdFilterControl:nil];
-    [self setThirdFilterArmButton:nil];
-    [self setFirstFilterPropertyLabel:nil];
-    [self setSecondFilterPropertyLabel:nil];
-    [self setThirdFilterPropertyLabel:nil];
-    [self setFilterChainTitle:nil];
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-}
+#pragma mark -- updaters --
 
 - (void)updateFilter:(NSString *)filterName withProperties:(NSMutableDictionary *)properties
 {
@@ -163,30 +143,7 @@
     [self updateFilterLabels];
 }
 
-- (NSMutableDictionary *)attributesForFilter:(NSString *)filterName
-{
-    [self updateSliders];
-    NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
-    if (filterName == @"CIColorMonochrome") {
-        [attributes setValue:[NSNumber numberWithFloat:0.0] forKey:@"inputIntensity"];
-        
-        CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-        const CGFloat components[4] = {1.0, 1.0, 1.0, 1.0};
-        CGColorRef clr = CGColorCreate (colorSpace,  components);
-        CIColor *black = [[CIColor alloc] initWithCGColor:clr];
-        [attributes setValue:black forKey:@"inputColor"];
-    } else if (filterName == @"CISepiaTone") {
-        [attributes setValue:[NSNumber numberWithFloat:0.0] forKey:@"inputIntensity"];
-    } else if (filterName == @"CIGammaAdjust") {
-        [attributes setValue:[NSNumber numberWithFloat:1.0] forKey:@"inputPower"];
-    } else if (filterName == @"CIExposureAdjust") {
-        [attributes setValue:[NSNumber numberWithFloat:1.0] forKey:@"inputEV"];
-    } else if (filterName == @"CIColorControls") {
-        [attributes setValue:[NSNumber numberWithFloat:1.0] forKey:@"inputSaturation"];
-        [attributes setValue:[NSNumber numberWithFloat:1.0] forKey:@"inputContrast"];
-    }
-    return attributes;
-}
+
 
 - (void)updateSliders
 {
@@ -251,15 +208,6 @@
     secondFilterValueLabel.hidden = !secondSliderUsed;
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
-}
-
-- (IBAction)toggleFilter:(id)sender {
-    [self updateFilterChain];
-}
-
 -(void)updateFilterChain
 {
     CIImage *outputImage;
@@ -307,22 +255,6 @@
     CGImageRelease(cgimg);
 }
 
--(IBAction)changeValue:(UISlider *)sender {
-    float slideValue = [sender value];
-    if (sender == amountSlider) {
-        configurableAttribute = firstSliderAttribute;
-        filterValueLabel.text = [NSString stringWithFormat:@"%1.3f", slideValue];
-    } else {
-        configurableAttribute = secondSliderAttribute;
-        secondFilterValueLabel.text = [NSString stringWithFormat:@"%1.3f", slideValue];
-    }
-    
-    [configurableFilter setValue:[NSNumber numberWithFloat:slideValue] forKey:configurableAttribute];
-    [configurableFilterProperties setValue:[NSNumber numberWithFloat:slideValue] forKey:configurableAttribute];
-    [self updateFilterChain];
-    [self updateFilterLabels];
-}
-
 -(void)updateFilterLabels
 {
     NSString *firstAttrName = [firstSliderAttribute substringFromIndex:5];
@@ -355,76 +287,53 @@
     }
 }
 
-- (IBAction)loadPhoto:(id)sender {
-    UIImagePickerController *pickerC = 
-    [[UIImagePickerController alloc] init];
-    pickerC.delegate = self;
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        UIPopoverController *pickerP = [[UIPopoverController alloc] initWithContentViewController:pickerC];
-        [pickerP presentPopoverFromRect:CGRectMake(100, 100, 100, 100) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-        popover = pickerP;
+-(void)updateTitleColors
+{
+    UIColor *firstTitleColor;
+    UIColor *secondTitleColor;
+    UIColor *thirdTitleColor;
+    if (firstFilterArmButton.on) {
+        if (configurableFilterIndex == 1) {
+            firstTitleColor = [UIColor blueColor];
+        } else {
+            firstTitleColor = [UIColor darkGrayColor];
+        }
     } else {
-        [self presentModalViewController:pickerC animated:YES];
+        if (configurableFilterIndex == 1) {
+            firstTitleColor = [UIColor colorWithRed:0 green:0 blue:1 alpha:0.5];
+        } else {
+            firstTitleColor = [UIColor lightGrayColor];
+        }
     }
-}
-
-- (IBAction)savePhoto:(id)sender {
-    CIImage *saveToSave = [firstFilter outputImage];
-    CGImageRef cgImg = [context createCGImage:saveToSave 
-                                     fromRect:[saveToSave extent]];
-    ALAssetsLibrary* library = [[ALAssetsLibrary alloc] init];
-    [library writeImageToSavedPhotosAlbum:cgImg 
-                                 metadata:[saveToSave properties] 
-                          completionBlock:^(NSURL *assetURL, NSError *error) {
-                              CGImageRelease(cgImg);
-                          }];
-}
-
-- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
-{
-    return 1;
-}
-
-- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
-{
-    return [filterList count];
-}
-
-- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
-{
-    NSDictionary *attrs = [[filterList objectAtIndex:row] attributes];
-    return [attrs objectForKey:kCIAttributeFilterDisplayName];
-}
-
-- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
-{
-    [self updateFilter:[[filterList objectAtIndex:row] name] withProperties:nil];
-}
-
-- (void)imagePickerController:(UIImagePickerController *)picker 
-didFinishPickingMediaWithInfo:(NSDictionary *)info {
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        [popover dismissPopoverAnimated:YES];
+    if (secondFilterArmButton.on) {
+        if (configurableFilterIndex == 2) {
+            secondTitleColor = [UIColor blueColor];
+        } else {
+            secondTitleColor = [UIColor darkGrayColor];
+        }
     } else {
-        [self dismissModalViewControllerAnimated:YES];
+        if (configurableFilterIndex == 2) {
+            secondTitleColor = [UIColor colorWithRed:0 green:0 blue:1 alpha:0.5];
+        } else {
+            secondTitleColor = [UIColor lightGrayColor];
+        }
     }
-    UIImage *gotImage = [info objectForKey:UIImagePickerControllerOriginalImage];
-    beginImage = [CIImage imageWithCGImage:gotImage.CGImage];    
-    [firstFilter setValue:beginImage forKey:kCIInputImageKey];
-    [self changeValue:amountSlider];
-    
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        originalImageView.image = gotImage;
-    }
-}
-
-- (void)imagePickerControllerDidCancel:
-(UIImagePickerController *)picker {
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        [popover dismissPopoverAnimated:YES];
+    if (thirdFilterArmButton.on) {
+        if (configurableFilterIndex == 3) {
+            thirdTitleColor = [UIColor blueColor];
+        } else {
+            thirdTitleColor = [UIColor darkGrayColor];
+        }
     } else {
-        [self dismissModalViewControllerAnimated:YES];
+        if (configurableFilterIndex == 3) {
+            thirdTitleColor = [UIColor colorWithRed:0 green:0 blue:1 alpha:0.5];
+        } else {
+            thirdTitleColor = [UIColor lightGrayColor];
+        }
     }
+    [firstFilterControl setTitleColor:firstTitleColor forState:UIControlStateNormal];
+    [secondFilterControl setTitleColor:secondTitleColor forState:UIControlStateNormal];
+    [thirdFilterControl setTitleColor:thirdTitleColor forState:UIControlStateNormal];
 }
 
 - (void)updatePicker
@@ -438,36 +347,55 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     [filterPicker selectRow:filterIndex inComponent:0 animated:YES];
 }
 
+#pragma mark -- interface controls --
+
+-(IBAction)changeValue:(UISlider *)sender {
+    float slideValue = [sender value];
+    if (sender == amountSlider) {
+        configurableAttribute = firstSliderAttribute;
+        filterValueLabel.text = [NSString stringWithFormat:@"%1.3f", slideValue];
+    } else {
+        configurableAttribute = secondSliderAttribute;
+        secondFilterValueLabel.text = [NSString stringWithFormat:@"%1.3f", slideValue];
+    }
+    
+    [configurableFilter setValue:[NSNumber numberWithFloat:slideValue] forKey:configurableAttribute];
+    [configurableFilterProperties setValue:[NSNumber numberWithFloat:slideValue] forKey:configurableAttribute];
+    [self updateFilterChain];
+    [self updateFilterLabels];
+}
+
+- (IBAction)toggleFilter:(id)sender {
+    [self updateFilterChain];
+    [self updateTitleColors];
+}
+
 - (IBAction)controlFirstFilter:(id)sender {
     configurableFilter = firstFilter;
     configurableFilterProperties = firstFilterProperties;
-    firstFilterControl.backgroundColor = [UIColor blueColor];
-    secondFilterControl.backgroundColor = nil;
-    thirdFilterControl.backgroundColor = nil;
     configurableFilterIndex = 1;
     [self updateSliders];
     [self updatePicker];
+    [self updateTitleColors];
 }
 - (IBAction)controlSecondFilter:(id)sender {
     configurableFilter = secondFilter;
     configurableFilterProperties = secondFilterProperties;
-    firstFilterControl.backgroundColor = nil;
-    secondFilterControl.backgroundColor = [UIColor blueColor];
-    thirdFilterControl.backgroundColor = nil;
     configurableFilterIndex = 2;
     [self updateSliders];
     [self updatePicker];
+    [self updateTitleColors];
 }
 - (IBAction)controlThirdFilter:(id)sender {
     configurableFilter = thirdFilter;
     configurableFilterProperties = thirdFilterProperties;
-    firstFilterControl.backgroundColor = nil;
-    secondFilterControl.backgroundColor = nil;
-    thirdFilterControl.backgroundColor = [UIColor blueColor];
     configurableFilterIndex = 3;
     [self updateSliders];
     [self updatePicker];
+    [self updateTitleColors];
 }
+
+#pragma mark -- filter definitions --
 
 - (void)initFilterList
 {
@@ -492,6 +420,31 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     }
 }
 
+- (NSMutableDictionary *)attributesForFilter:(NSString *)filterName
+{
+    [self updateSliders];
+    NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
+    if (filterName == @"CIColorMonochrome") {
+        [attributes setValue:[NSNumber numberWithFloat:0.0] forKey:@"inputIntensity"];
+        
+        CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+        const CGFloat components[4] = {1.0, 1.0, 1.0, 1.0};
+        CGColorRef clr = CGColorCreate (colorSpace,  components);
+        CIColor *black = [[CIColor alloc] initWithCGColor:clr];
+        [attributes setValue:black forKey:@"inputColor"];
+    } else if (filterName == @"CISepiaTone") {
+        [attributes setValue:[NSNumber numberWithFloat:0.0] forKey:@"inputIntensity"];
+    } else if (filterName == @"CIGammaAdjust") {
+        [attributes setValue:[NSNumber numberWithFloat:1.0] forKey:@"inputPower"];
+    } else if (filterName == @"CIExposureAdjust") {
+        [attributes setValue:[NSNumber numberWithFloat:1.0] forKey:@"inputEV"];
+    } else if (filterName == @"CIColorControls") {
+        [attributes setValue:[NSNumber numberWithFloat:1.0] forKey:@"inputSaturation"];
+        [attributes setValue:[NSNumber numberWithFloat:1.0] forKey:@"inputContrast"];
+    }
+    return attributes;
+}
+
 - (void)logAllFilters
 {
     NSArray *inputs;
@@ -513,6 +466,9 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     
     
 }
+
+#pragma mark -- saving custom filters --
+
 - (IBAction)writeFilter:(id)sender {
     NSMutableDictionary *filterDetails = [[NSMutableDictionary alloc] initWithCapacity:10];
     [filterDetails setValue:[firstFilter name] forKey:@"firstFilterName"];
@@ -593,4 +549,110 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
 {
     return [[NSMutableArray alloc] initWithContentsOfFile:[self savePath]];
 }
+
+#pragma mark -- image selection --
+
+- (IBAction)loadPhoto:(id)sender {
+    UIImagePickerController *pickerC = 
+    [[UIImagePickerController alloc] init];
+    pickerC.delegate = self;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        UIPopoverController *pickerP = [[UIPopoverController alloc] initWithContentViewController:pickerC];
+        [pickerP presentPopoverFromRect:CGRectMake(100, 100, 100, 100) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+        popover = pickerP;
+    } else {
+        [self presentModalViewController:pickerC animated:YES];
+    }
+}
+
+#pragma mark update this to enable photo saving
+
+- (IBAction)savePhoto:(id)sender {
+    CIImage *saveToSave = [firstFilter outputImage];
+    CGImageRef cgImg = [context createCGImage:saveToSave 
+                                     fromRect:[saveToSave extent]];
+    ALAssetsLibrary* library = [[ALAssetsLibrary alloc] init];
+    [library writeImageToSavedPhotosAlbum:cgImg 
+                                 metadata:[saveToSave properties] 
+                          completionBlock:^(NSURL *assetURL, NSError *error) {
+                              CGImageRelease(cgImg);
+                          }];
+}
+
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
+{
+    return 1;
+}
+
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
+{
+    return [filterList count];
+}
+
+- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
+{
+    NSDictionary *attrs = [[filterList objectAtIndex:row] attributes];
+    return [attrs objectForKey:kCIAttributeFilterDisplayName];
+}
+
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
+{
+    [self updateFilter:[[filterList objectAtIndex:row] name] withProperties:nil];
+}
+
+- (void)imagePickerController:(UIImagePickerController *)picker 
+didFinishPickingMediaWithInfo:(NSDictionary *)info {
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        [popover dismissPopoverAnimated:YES];
+    } else {
+        [self dismissModalViewControllerAnimated:YES];
+    }
+    UIImage *gotImage = [info objectForKey:UIImagePickerControllerOriginalImage];
+    beginImage = [CIImage imageWithCGImage:gotImage.CGImage];    
+    [firstFilter setValue:beginImage forKey:kCIInputImageKey];
+    [self changeValue:amountSlider];
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        originalImageView.image = gotImage;
+    }
+}
+
+- (void)imagePickerControllerDidCancel:
+(UIImagePickerController *)picker {
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        [popover dismissPopoverAnimated:YES];
+    } else {
+        [self dismissModalViewControllerAnimated:YES];
+    }
+}
+
+#pragma mark -- boilerplate --
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+- (void)viewDidUnload
+{
+    [self setImgV:nil];
+    [self setAmountSlider:nil];
+    [self setFilterValueLabel:nil];
+    [self setFilterPicker:nil];
+    [self setOriginalImageView:nil];
+    [self setSecondSlider:nil];
+    [self setSecondFilterValueLabel:nil];
+    [self setFirstFilterControl:nil];
+    [self setFirstFilterArmButton:nil];
+    [self setSecondFilterControl:nil];
+    [self setSecondFilterArmButton:nil];
+    [self setThirdFilterControl:nil];
+    [self setThirdFilterArmButton:nil];
+    [self setFirstFilterPropertyLabel:nil];
+    [self setSecondFilterPropertyLabel:nil];
+    [self setThirdFilterPropertyLabel:nil];
+    [self setFilterChainTitle:nil];
+    [super viewDidUnload];
+    // Release any retained subviews of the main view.
+}
+
 @end
