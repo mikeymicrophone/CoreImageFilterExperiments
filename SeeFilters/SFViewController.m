@@ -339,24 +339,31 @@
     [configurableFilter setValue:[NSNumber numberWithFloat:slideValue] 
               forKey:firstSliderAttribute];
     [self updateFilterChain];
+    NSString *firstAttrName = [firstSliderAttribute substringFromIndex:5];
+    NSString *secondAttrName;
+    if ([secondSliderAttribute isEqualToString:@""]) {
+        secondAttrName = @"";
+    } else {
+        secondAttrName = [secondSliderAttribute substringFromIndex:5];
+    }
     
     switch (configurableFilterIndex) {
         case 1:
             [firstFilterProperties setValue:[NSNumber numberWithFloat:slideValue] forKey:firstSliderAttribute];
             firstFilterPropertyLabel.numberOfLines = 0;
-            firstFilterPropertyLabel.text = [NSString stringWithFormat:@"%@:%1.3f\n%@:%1.3f", firstSliderAttribute, [amountSlider value], secondSliderAttribute, [secondSlider value]];
+            firstFilterPropertyLabel.text = [NSString stringWithFormat:@"%@:%1.3f\n%@:%1.3f", firstAttrName, [amountSlider value], secondAttrName, [secondSlider value]];
             break;
             
         case 2:
             [secondFilterProperties setValue:[NSNumber numberWithFloat:slideValue] forKey:firstSliderAttribute];
             secondFilterPropertyLabel.numberOfLines = 0;
-            secondFilterPropertyLabel.text = [NSString stringWithFormat:@"%@:%1.3f\n%@:%1.3f", firstSliderAttribute, [amountSlider value], secondSliderAttribute, [secondSlider value]];
+            secondFilterPropertyLabel.text = [NSString stringWithFormat:@"%@:%1.3f\n%@:%1.3f", firstAttrName, [amountSlider value], secondAttrName, [secondSlider value]];
             break;
             
         case 3:
             [thirdFilterProperties setValue:[NSNumber numberWithFloat:slideValue] forKey:firstSliderAttribute];
             thirdFilterPropertyLabel.numberOfLines = 0;
-            thirdFilterPropertyLabel.text = [NSString stringWithFormat:@"%@:%1.3f\n%@:%1.3f", firstSliderAttribute, [amountSlider value], secondSliderAttribute, [secondSlider value]];
+            thirdFilterPropertyLabel.text = [NSString stringWithFormat:@"%@:%1.3f\n%@:%1.3f", firstAttrName, [amountSlider value], secondAttrName, [secondSlider value]];
             break;
             
         default:
@@ -372,24 +379,31 @@
     [configurableFilter setValue:[NSNumber numberWithFloat:slideValue] 
                           forKey:secondSliderAttribute];
     [self updateFilterChain];
+    NSString *firstAttrName = [firstSliderAttribute substringFromIndex:5];
+    NSString *secondAttrName;
+    if ([secondSliderAttribute isEqualToString:@""]) {
+        secondAttrName = @"";
+    } else {
+        secondAttrName = [secondSliderAttribute substringFromIndex:5];
+    }
     
     switch (configurableFilterIndex) {
         case 1:
             [firstFilterProperties setValue:[NSNumber numberWithFloat:slideValue] forKey:secondSliderAttribute];
             firstFilterPropertyLabel.numberOfLines = 0;
-            firstFilterPropertyLabel.text = [NSString stringWithFormat:@"%@:%1.3f\n%@:%1.3f", firstSliderAttribute, [amountSlider value], secondSliderAttribute, slideValue];
+            firstFilterPropertyLabel.text = [NSString stringWithFormat:@"%@:%1.3f\n%@:%1.3f", firstAttrName, [amountSlider value], secondAttrName, slideValue];
             break;
             
         case 2:
             [secondFilterProperties setValue:[NSNumber numberWithFloat:slideValue] forKey:secondSliderAttribute];
             secondFilterPropertyLabel.numberOfLines = 0;
-            secondFilterPropertyLabel.text = [NSString stringWithFormat:@"%@:%1.3f\n%@:%1.3f", firstSliderAttribute, [amountSlider value], secondSliderAttribute, slideValue];
+            secondFilterPropertyLabel.text = [NSString stringWithFormat:@"%@:%1.3f\n%@:%1.3f", firstAttrName, [amountSlider value], secondAttrName, slideValue];
             break;
 
         case 3:
             [thirdFilterProperties setValue:[NSNumber numberWithFloat:slideValue] forKey:secondSliderAttribute];
             thirdFilterPropertyLabel.numberOfLines = 0;
-            thirdFilterPropertyLabel.text = [NSString stringWithFormat:@"%@:%1.3f\n%@:%1.3f", firstSliderAttribute, [amountSlider value], secondSliderAttribute, slideValue];
+            thirdFilterPropertyLabel.text = [NSString stringWithFormat:@"%@:%1.3f\n%@:%1.3f", firstAttrName, [amountSlider value], secondAttrName, slideValue];
             break;
 
         default:
