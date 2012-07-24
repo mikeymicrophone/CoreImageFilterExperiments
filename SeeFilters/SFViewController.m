@@ -21,7 +21,7 @@
     CIFilter *secondFilter;
     CIFilter *thirdFilter;
     CIImage *beginImage;
-    CIImage *fullSizeImage;
+    UIImage *fullSizeImage;
     NSString *firstSliderAttribute;
     NSString *secondSliderAttribute;
     NSString *configurableAttribute;
@@ -594,7 +594,8 @@
 }
 
 - (IBAction)savePhoto:(id)sender {
-    [self updateFilteredImage:fullSizeImage context:saveContext];
+    CIImage *fullSize = [CIImage imageWithCGImage:fullSizeImage.CGImage];
+    [self updateFilteredImage:fullSize context:saveContext];
     CIImage *imageToSave = thirdFilter.outputImage;
     CGImageRef cgImg = [saveContext createCGImage:imageToSave fromRect:[imageToSave extent]];
     ALAssetsLibrary* library = [[ALAssetsLibrary alloc] init];
