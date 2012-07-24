@@ -484,7 +484,6 @@
         NSLog(@"app found saved filters");
         [filters addObject:filterDetails];
     }
-    NSLog(@"save path: %@", [self savePath]);
     BOOL success = [filters writeToFile:[self savePath] atomically:YES];
     NSLog(@"save success: %d", success);
 }

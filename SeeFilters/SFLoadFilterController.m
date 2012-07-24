@@ -66,7 +66,6 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSString *filterName = [[filters objectAtIndex:[indexPath indexAtPosition:1]] valueForKey:@"filterChainTitle"];
-    NSLog(@"filterName: %@", filterName);
     if ([filterName isEqualToString:@""]) {
         filterName = [NSString stringWithFormat:@"%d", [indexPath indexAtPosition:1]];
     }
