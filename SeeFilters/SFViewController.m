@@ -44,6 +44,7 @@
 @synthesize secondFilterPropertyLabel;
 @synthesize thirdFilterPropertyLabel;
 @synthesize filterChainTitle;
+@synthesize filterControl;
 @synthesize originalImageView;
 @synthesize filterValueLabel;
 @synthesize filterPicker;
@@ -69,9 +70,9 @@
     secondFilterPropertyLabel.numberOfLines = 0;
     thirdFilterPropertyLabel.numberOfLines = 0;
         
-    firstFilter = [CIFilter filterWithName:@"CIColorMonochrome"];
-    secondFilter = [CIFilter filterWithName:@"CIColorMonochrome"];
-    thirdFilter = [CIFilter filterWithName:@"CIColorMonochrome"];
+    firstFilter = [CIFilter filterWithName:@"CIVibrance"];
+    secondFilter = [CIFilter filterWithName:@"CIVibrance"];
+    thirdFilter = [CIFilter filterWithName:@"CIVibrance"];
     
     [self controlFilter:firstFilterControl];
     firstFilterProperties = [[NSMutableDictionary alloc] init];
@@ -123,14 +124,17 @@
         firstFilter = configurableFilter;
         firstFilterProperties = configurableFilterProperties;
         [firstFilterControl setTitle:[[configurableFilter attributes] objectForKey:kCIAttributeFilterDisplayName] forState:UIControlStateNormal];
+        [filterControl setTitle:[[[configurableFilter attributes] objectForKey:kCIAttributeFilterDisplayName] substringToIndex:1] forSegmentAtIndex:0];
     } else if (configurableFilterIndex == 2) {
         secondFilter = configurableFilter;
         secondFilterProperties = configurableFilterProperties;
         [secondFilterControl setTitle:[[configurableFilter attributes] objectForKey:kCIAttributeFilterDisplayName] forState:UIControlStateNormal];
+        [filterControl setTitle:[[[configurableFilter attributes] objectForKey:kCIAttributeFilterDisplayName] substringToIndex:1] forSegmentAtIndex:1];
     } else if (configurableFilterIndex == 3) {
         thirdFilter = configurableFilter;
         thirdFilterProperties = configurableFilterProperties;
         [thirdFilterControl setTitle:[[configurableFilter attributes] objectForKey:kCIAttributeFilterDisplayName] forState:UIControlStateNormal];
+        [filterControl setTitle:[[[configurableFilter attributes] objectForKey:kCIAttributeFilterDisplayName] substringToIndex:1] forSegmentAtIndex:2];
     }
     [self updateSliders];
     [self updateFilterLabels];
@@ -240,7 +244,9 @@
         }
     } else {
         [firstFilter setValue:beginImage forKey:kCIInputImageKey];
-        outputImage = firstFilter.outputImage;
+        [secondFilter setValue:firstFilter.outputImage forKey:kCIInputImageKey];
+        [thirdFilter setValue:secondFilter.outputImage forKey:kCIInputImageKey];
+        outputImage = thirdFilter.outputImage;
     }
         
     CGImageRef cgimg = [context createCGImage:outputImage 
@@ -368,15 +374,15 @@
 }
 
 - (IBAction)controlFilter:(id)sender {
-    if (sender == firstFilterControl) {
+    if (sender == firstFilterControl || (sender == filterControl && (filterControl.selectedSegmentIndex == 0))) {
         configurableFilter = firstFilter;
         configurableFilterProperties = firstFilterProperties;
         configurableFilterIndex = 1;        
-    } else if (sender == secondFilterControl) {
+    } else if (sender == secondFilterControl || (sender == filterControl && (filterControl.selectedSegmentIndex == 1))) {
         configurableFilter = secondFilter;
         configurableFilterProperties = secondFilterProperties;
         configurableFilterIndex = 2;
-    } else if (sender == thirdFilterControl) {
+    } else if (sender == thirdFilterControl || (sender == filterControl && (filterControl.selectedSegmentIndex == 2))) {
         configurableFilter = thirdFilter;
         configurableFilterProperties = thirdFilterProperties;
         configurableFilterIndex = 3;
@@ -647,6 +653,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     [self setSecondFilterPropertyLabel:nil];
     [self setThirdFilterPropertyLabel:nil];
     [self setFilterChainTitle:nil];
+    [self setFilterControl:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }

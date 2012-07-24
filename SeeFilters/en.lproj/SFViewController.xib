@@ -108,7 +108,7 @@
 						<string key="NSFrame">{{88, 184}, {96, 37}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="373601238"/>
+						<reference key="NSNextKeyView" ref="69914524"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -131,7 +131,7 @@
 						<string key="NSFrame">{{179, 0}, {62, 30}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="140068099"/>
+						<reference key="NSNextKeyView" ref="422580885"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -162,7 +162,7 @@
 						<string key="NSFrame">{{249, 0}, {62, 30}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="422580885"/>
+						<reference key="NSNextKeyView" ref="363981494"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -216,8 +216,8 @@
 						<int key="IBNumberOfSegments">3</int>
 						<int key="IBSelectedSegmentIndex">0</int>
 						<array key="IBSegmentTitles">
-							<string>First</string>
-							<string>Second</string>
+							<string>1</string>
+							<string>2</string>
 							<string>3</string>
 						</array>
 						<array class="NSMutableArray" key="IBSegmentWidths">
@@ -270,7 +270,7 @@
 						<string key="NSFrame">{{186, 28}, {110, 37}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="363981494"/>
+						<reference key="NSNextKeyView" ref="140068099"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -293,6 +293,7 @@
 						<string key="NSFrame">{{179, 154}, {132, 31}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="373601238"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -403,6 +404,14 @@
 					<int key="connectionID">37</int>
 				</object>
 				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">filterControl</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="363981494"/>
+					</object>
+					<int key="connectionID">39</int>
+				</object>
+				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
 						<string key="label">changeValue:</string>
 						<reference key="source" ref="923739231"/>
@@ -453,6 +462,15 @@
 						<int key="IBEventType">13</int>
 					</object>
 					<int key="connectionID">26</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">controlFilter:</string>
+						<reference key="source" ref="363981494"/>
+						<reference key="destination" ref="372490531"/>
+						<int key="IBEventType">13</int>
+					</object>
+					<int key="connectionID">38</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
@@ -586,7 +604,7 @@
 				<string key="23.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="27.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="31.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<integer value="2" key="31.IUISegmentedControlInspectorSelectedSegmentMetadataKey"/>
+				<integer value="1" key="31.IUISegmentedControlInspectorSelectedSegmentMetadataKey"/>
 				<string key="32.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="33.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="36.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -597,7 +615,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">37</int>
+			<int key="maxID">39</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -606,9 +624,7 @@
 					<string key="superclassName">UIViewController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
 						<string key="changeValue:">UISlider</string>
-						<string key="controlFirstFilter:">id</string>
-						<string key="controlSecondFilter:">id</string>
-						<string key="controlThirdFilter:">id</string>
+						<string key="controlFilter:">id</string>
 						<string key="loadFilter:">id</string>
 						<string key="loadPhoto:">id</string>
 						<string key="savePhoto:">id</string>
@@ -620,16 +636,8 @@
 							<string key="name">changeValue:</string>
 							<string key="candidateClassName">UISlider</string>
 						</object>
-						<object class="IBActionInfo" key="controlFirstFilter:">
-							<string key="name">controlFirstFilter:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="controlSecondFilter:">
-							<string key="name">controlSecondFilter:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="controlThirdFilter:">
-							<string key="name">controlThirdFilter:</string>
+						<object class="IBActionInfo" key="controlFilter:">
+							<string key="name">controlFilter:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="loadFilter:">
@@ -656,6 +664,7 @@
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="amountSlider">UISlider</string>
 						<string key="filterChainTitle">UITextField</string>
+						<string key="filterControl">UISegmentedControl</string>
 						<string key="filterPicker">UIPickerView</string>
 						<string key="filterValueLabel">UILabel</string>
 						<string key="firstFilterArmButton">UISwitch</string>
@@ -680,6 +689,10 @@
 						<object class="IBToOneOutletInfo" key="filterChainTitle">
 							<string key="name">filterChainTitle</string>
 							<string key="candidateClassName">UITextField</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="filterControl">
+							<string key="name">filterControl</string>
+							<string key="candidateClassName">UISegmentedControl</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="filterPicker">
 							<string key="name">filterPicker</string>
