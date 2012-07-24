@@ -76,20 +76,19 @@
     secondFilter = [CIFilter filterWithName:@"CIVibrance"];
     thirdFilter = [CIFilter filterWithName:@"CIVibrance"];
     
-    [self controlFilter:firstFilterControl];
+    [self controlFilter:[NSNumber numberWithInt:1]];
     firstFilterProperties = [[NSMutableDictionary alloc] init];
-    [self updateFilter:@"CIColorMonochrome" withProperties:nil];
-    
-    [self controlFilter:secondFilterControl];
-    secondFilterProperties = [[NSMutableDictionary alloc] init];
     [self updateFilter:@"CISepiaTone" withProperties:nil];
     
-    [self controlFilter:thirdFilterControl];
+    [self controlFilter:[NSNumber numberWithInt:2]];
+    secondFilterProperties = [[NSMutableDictionary alloc] init];
+    [self updateFilter:@"CIExposureAdjust" withProperties:nil];
+    
+    [self controlFilter:[NSNumber numberWithInt:3]];
     thirdFilterProperties = [[NSMutableDictionary alloc] init];
-    [self updateFilter:@"CIColorControls" withProperties:nil];
+    [self updateFilter:@"CIExposureAdjust" withProperties:nil];
     
     [self updateFilteredImage:beginImage context:previewContext];
-    [self controlFilter:nil];
     
 //    [self logAllFilters];
 }
