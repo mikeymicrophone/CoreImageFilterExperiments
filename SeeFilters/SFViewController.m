@@ -478,6 +478,12 @@
     [filterDetails setValue:[NSNumber numberWithBool:thirdFilterArmButton.on] forKey:@"thirdFilterArmed"];
     
     [filterDetails setValue:filterChainTitle.text forKey:@"filterChainTitle"];
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        [filterDetails setValue:[NSNumber numberWithBool:YES] forKey:@"firstFilterArmed"];
+        [filterDetails setValue:[NSNumber numberWithBool:YES] forKey:@"secondFilterArmed"];
+        [filterDetails setValue:[NSNumber numberWithBool:YES] forKey:@"thirdFilterArmed"];
+    }
 
     NSMutableArray *filters = [self savedFilters];
     
@@ -488,6 +494,7 @@
         NSLog(@"app found saved filters");
         [filters addObject:filterDetails];
     }
+    NSLog(@"details: %@", filterDetails);
     BOOL success = [filters writeToFile:[self savePath] atomically:YES];
     NSLog(@"save success: %d", success);
 }
