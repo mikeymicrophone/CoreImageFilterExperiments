@@ -73,15 +73,15 @@
     secondFilter = [CIFilter filterWithName:@"CIColorMonochrome"];
     thirdFilter = [CIFilter filterWithName:@"CIColorMonochrome"];
     
-    [self controlFirstFilter:nil];
+    [self controlFirstFilter:firstFilterControl];
     firstFilterProperties = [[NSMutableDictionary alloc] init];
     [self updateFilter:@"CIColorMonochrome" withProperties:nil];
     
-    [self controlSecondFilter:nil];
+    [self controlFirstFilter:secondFilterControl];
     secondFilterProperties = [[NSMutableDictionary alloc] init];
     [self updateFilter:@"CISepiaTone" withProperties:nil];
     
-    [self controlThirdFilter:nil];
+    [self controlFirstFilter:thirdFilterControl];
     thirdFilterProperties = [[NSMutableDictionary alloc] init];
     [self updateFilter:@"CIColorControls" withProperties:nil];
     
@@ -368,25 +368,19 @@
 }
 
 - (IBAction)controlFirstFilter:(id)sender {
-    configurableFilter = firstFilter;
-    configurableFilterProperties = firstFilterProperties;
-    configurableFilterIndex = 1;
-    [self updateSliders];
-    [self updatePicker];
-    [self updateTitleColors];
-}
-- (IBAction)controlSecondFilter:(id)sender {
-    configurableFilter = secondFilter;
-    configurableFilterProperties = secondFilterProperties;
-    configurableFilterIndex = 2;
-    [self updateSliders];
-    [self updatePicker];
-    [self updateTitleColors];
-}
-- (IBAction)controlThirdFilter:(id)sender {
-    configurableFilter = thirdFilter;
-    configurableFilterProperties = thirdFilterProperties;
-    configurableFilterIndex = 3;
+    if (sender == firstFilterControl) {
+        configurableFilter = firstFilter;
+        configurableFilterProperties = firstFilterProperties;
+        configurableFilterIndex = 1;        
+    } else if (sender == secondFilterControl) {
+        configurableFilter = secondFilter;
+        configurableFilterProperties = secondFilterProperties;
+        configurableFilterIndex = 2;
+    } else if (sender == thirdFilterControl) {
+        configurableFilter = thirdFilter;
+        configurableFilterProperties = thirdFilterProperties;
+        configurableFilterIndex = 3;
+    }
     [self updateSliders];
     [self updatePicker];
     [self updateTitleColors];
@@ -512,17 +506,17 @@
     }
     
     NSMutableDictionary *filterDetails = [[self savedFilters] objectAtIndex:index];
-    [self controlFirstFilter:nil];
+    [self controlFirstFilter:firstFilterControl];
     firstFilterProperties = [filterDetails valueForKey:@"firstFilterProperties"];
     [self updateFilter:[filterDetails valueForKey:@"firstFilterName"] withProperties:firstFilterProperties];
     [firstFilterArmButton setOn:[[filterDetails valueForKey:@"firstFilterArmed"] boolValue] animated:YES];
     
-    [self controlSecondFilter:nil];
+    [self controlFirstFilter:secondFilterControl];
     secondFilterProperties = [filterDetails valueForKey:@"secondFilterProperties"];
     [self updateFilter:[filterDetails valueForKey:@"secondFilterName"] withProperties:secondFilterProperties];
     [secondFilterArmButton setOn:[[filterDetails valueForKey:@"secondFilterArmed"] boolValue] animated:YES];
     
-    [self controlThirdFilter:nil];
+    [self controlFirstFilter:thirdFilterControl];
     thirdFilterProperties = [filterDetails valueForKey:@"thirdFilterProperties"];
     [self updateFilter:[filterDetails valueForKey:@"thirdFilterName"] withProperties:thirdFilterProperties];
     [thirdFilterArmButton setOn:[[filterDetails valueForKey:@"thirdFilterArmed"] boolValue] animated:YES];
