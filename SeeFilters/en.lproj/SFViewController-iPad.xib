@@ -38,7 +38,7 @@
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 			</object>
 			<object class="IBUIView" id="774585933">
-				<nil key="NSNextResponder"/>
+				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">274</int>
 				<array class="NSMutableArray" key="NSSubviews">
 					<object class="IBUIImageView" id="559796741">
@@ -46,6 +46,7 @@
 						<int key="NSvFlags">274</int>
 						<string key="NSFrame">{{386, 9}, {373, 373}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="923739231"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -56,6 +57,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{18, 431}, {655, 23}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="1031503070"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -69,6 +71,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{619, 928}, {129, 37}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
+						<reference key="NSWindow"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -103,6 +106,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{619, 808}, {129, 37}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="625832537"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -125,6 +129,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{693, 416}, {86, 53}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="332003654"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -155,6 +160,7 @@
 						<int key="NSvFlags">-2147483356</int>
 						<string key="NSFrame">{{693, 468}, {86, 53}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="891591740"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -175,6 +181,7 @@
 						<int key="NSvFlags">290</int>
 						<string key="NSFrame">{{222, 808}, {320, 216}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="692490570"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -185,6 +192,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{10, 9}, {373, 373}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="559796741"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -195,6 +203,7 @@
 						<int key="NSvFlags">-2147483356</int>
 						<string key="NSFrame">{{18, 483}, {655, 23}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="326023934"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -208,6 +217,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{97, 521}, {169, 173}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="1035610444"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -228,6 +238,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{502, 521}, {169, 173}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="994795150"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -249,6 +260,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{298, 521}, {169, 173}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="705308106"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -270,6 +282,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{328, 708}, {94, 27}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="667466170"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -283,6 +296,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{127, 708}, {94, 27}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="476147847"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -296,6 +310,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{532, 708}, {94, 27}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="906450835"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -309,6 +324,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{106, 636}, {151, 50}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="688469938"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -336,6 +352,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{310, 636}, {145, 51}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="629130770"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -356,6 +373,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{511, 636}, {152, 49}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="822536046"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -376,6 +394,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{267, 595}, {30, 40}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="552538886"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -390,6 +409,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{468, 595}, {30, 40}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="650081547"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -399,8 +419,9 @@
 					<object class="IBUIButton" id="388290479">
 						<reference key="NSNextResponder" ref="774585933"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{20, 808}, {129, 37}}</string>
+						<string key="NSFrame">{{10, 698}, {113, 37}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="407698594"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -423,6 +444,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{20, 928}, {129, 37}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="433933767"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -445,6 +467,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{20, 743}, {194, 31}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="388290479"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -480,6 +503,8 @@
 					</object>
 				</array>
 				<string key="NSFrameSize">{768, 1024}</string>
+				<reference key="NSSuperview"/>
+				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="288598691"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">3</int>
@@ -804,9 +829,9 @@
 							<reference ref="1035610444"/>
 							<reference ref="552538886"/>
 							<reference ref="906450835"/>
-							<reference ref="388290479"/>
 							<reference ref="407698594"/>
 							<reference ref="705308106"/>
+							<reference ref="388290479"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -970,9 +995,7 @@
 					<string key="superclassName">UIViewController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
 						<string key="changeValue:">UISlider</string>
-						<string key="controlFirstFilter:">id</string>
-						<string key="controlSecondFilter:">id</string>
-						<string key="controlThirdFilter:">id</string>
+						<string key="controlFilter:">id</string>
 						<string key="loadFilter:">id</string>
 						<string key="loadPhoto:">id</string>
 						<string key="savePhoto:">id</string>
@@ -984,16 +1007,8 @@
 							<string key="name">changeValue:</string>
 							<string key="candidateClassName">UISlider</string>
 						</object>
-						<object class="IBActionInfo" key="controlFirstFilter:">
-							<string key="name">controlFirstFilter:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="controlSecondFilter:">
-							<string key="name">controlSecondFilter:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="controlThirdFilter:">
-							<string key="name">controlThirdFilter:</string>
+						<object class="IBActionInfo" key="controlFilter:">
+							<string key="name">controlFilter:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="loadFilter:">
@@ -1020,6 +1035,7 @@
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="amountSlider">UISlider</string>
 						<string key="filterChainTitle">UITextField</string>
+						<string key="filterControl">UISegmentedControl</string>
 						<string key="filterPicker">UIPickerView</string>
 						<string key="filterValueLabel">UILabel</string>
 						<string key="firstFilterArmButton">UISwitch</string>
@@ -1044,6 +1060,10 @@
 						<object class="IBToOneOutletInfo" key="filterChainTitle">
 							<string key="name">filterChainTitle</string>
 							<string key="candidateClassName">UITextField</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="filterControl">
+							<string key="name">filterControl</string>
+							<string key="candidateClassName">UISegmentedControl</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="filterPicker">
 							<string key="name">filterPicker</string>
