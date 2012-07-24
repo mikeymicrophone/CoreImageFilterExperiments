@@ -415,6 +415,8 @@
             return filter;
         }
     }
+    
+    return nil;
 }
 
 - (NSMutableDictionary *)attributesForFilter:(NSString *)filterName
