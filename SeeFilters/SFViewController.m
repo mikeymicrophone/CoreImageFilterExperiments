@@ -600,8 +600,13 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
         [self dismissModalViewControllerAnimated:YES];
     }
     UIImage *gotImage = [info objectForKey:UIImagePickerControllerOriginalImage];
-    UIImage *sizedImage = [[[UIImage alloc] initWithData:UIImageJPEGRepresentation(gotImage, 1.0)] imageScaledToFitSize:CGSizeMake(373.0,373.0)];
-    
+    CGSize imageSize;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        imageSize = CGSizeMake(373.0,373.0);
+    } else {
+        imageSize = CGSizeMake(171.0,171.0);
+    }
+    UIImage *sizedImage = [[[UIImage alloc] initWithData:UIImageJPEGRepresentation(gotImage, 1.0)] imageScaledToFitSize:imageSize];
     beginImage = [CIImage imageWithCGImage:sizedImage.CGImage];    
     [firstFilter setValue:beginImage forKey:kCIInputImageKey];
     [self changeValue:amountSlider];
