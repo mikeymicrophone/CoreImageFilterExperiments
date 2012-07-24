@@ -614,9 +614,17 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     fullSizeImage = [info objectForKey:UIImagePickerControllerOriginalImage];
     CGSize imageSize;
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        imageSize = CGSizeMake(373.0,373.0);
+        if ([[UIScreen mainScreen] scale] > 1.0) {
+            imageSize = CGSizeMake(746.0,746.0);
+        } else {
+            imageSize = CGSizeMake(373.0,373.0);
+        }
     } else {
-        imageSize = CGSizeMake(171.0,171.0);
+        if ([[UIScreen mainScreen] scale] > 1.0) {
+            imageSize = CGSizeMake(342.0, 342.0);
+        } else {
+            imageSize = CGSizeMake(171.0,171.0);
+        }
     }
     UIImage *sizedImage = [[[UIImage alloc] initWithData:UIImageJPEGRepresentation(fullSizeImage, 1.0)] imageScaledToFitSize:imageSize];
     beginImage = [CIImage imageWithCGImage:sizedImage.CGImage];    
