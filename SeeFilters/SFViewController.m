@@ -485,7 +485,6 @@
         [filters addObject:filterDetails];
     }
     NSLog(@"save path: %@", [self savePath]);
-    NSLog(@"filters: %@", filters);
     BOOL success = [filters writeToFile:[self savePath] atomically:YES];
     NSLog(@"save success: %d", success);
 }
@@ -499,6 +498,8 @@
         UIPopoverController *chooserP = [[UIPopoverController alloc] initWithContentViewController:filterChooser];
         [chooserP presentPopoverFromRect:CGRectMake(65, 935, 85, 20) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
         popover = chooserP;
+    } else {
+        [self presentModalViewController:filterChooser animated:YES];
     }
 }
 
@@ -506,6 +507,8 @@
 {
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         [popover dismissPopoverAnimated:YES];
+    } else {
+        [self dismissModalViewControllerAnimated:YES];
     }
     
     NSMutableDictionary *filterDetails = [[self savedFilters] objectAtIndex:index];
