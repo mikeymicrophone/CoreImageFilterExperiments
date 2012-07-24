@@ -62,8 +62,8 @@
     
     beginImage = [CIImage imageWithContentsOfURL:fileNameAndPath];
     originalImageView.image = [UIImage imageWithContentsOfFile:filePath];
-    context = [CIContext contextWithOptions:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] 
-                                                                        forKey:kCIContextUseSoftwareRenderer]];
+    context = [CIContext contextWithOptions:nil]; //for development on Mac - use below for device
+//    context = [CIContext contextWithOptions:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] forKey:kCIContextUseSoftwareRenderer]];
     
     firstFilterPropertyLabel.numberOfLines = 0;
     secondFilterPropertyLabel.numberOfLines = 0;
@@ -454,6 +454,7 @@
 
 #pragma mark -- saving custom filters --
 
+#pragma mark monochrome filter cannot be saved because its attributes have an object that is not allowed in a plist
 - (IBAction)writeFilter:(id)sender {
     NSMutableDictionary *filterDetails = [[NSMutableDictionary alloc] initWithCapacity:10];
     [filterDetails setValue:[firstFilter name] forKey:@"firstFilterName"];
@@ -595,12 +596,14 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
         [self dismissModalViewControllerAnimated:YES];
     }
     UIImage *gotImage = [info objectForKey:UIImagePickerControllerOriginalImage];
-    beginImage = [CIImage imageWithCGImage:gotImage.CGImage];    
+    UIImage *sizedImage = [[[UIImage alloc] initWithData:UIImageJPEGRepresentation(gotImage, 1.0)] imageScaledToFitSize:CGSizeMake(373.0,373.0)];
+    
+    beginImage = [CIImage imageWithCGImage:sizedImage.CGImage];    
     [firstFilter setValue:beginImage forKey:kCIInputImageKey];
     [self changeValue:amountSlider];
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        originalImageView.image = gotImage;
+        originalImageView.image = sizedImage;
     }
 }
 

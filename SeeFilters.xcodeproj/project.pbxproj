@@ -22,6 +22,11 @@
 		A651706D15BD1741008E6679 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A651706C15BD1741008E6679 /* CoreData.framework */; };
 		A651707615BDA094008E6679 /* SFLoadFilterController.m in Sources */ = {isa = PBXBuildFile; fileRef = A651707415BDA094008E6679 /* SFLoadFilterController.m */; };
 		A651707715BDA094008E6679 /* SFLoadFilterController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A651707515BDA094008E6679 /* SFLoadFilterController.xib */; };
+		A651709415BE652F008E6679 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = A651707D15BE652F008E6679 /* .gitignore */; };
+		A651709615BE652F008E6679 /* UIImage+ProportionalFill.m in Sources */ = {isa = PBXBuildFile; fileRef = A651708215BE652F008E6679 /* UIImage+ProportionalFill.m */; };
+		A651709715BE652F008E6679 /* UIImage+Tint.m in Sources */ = {isa = PBXBuildFile; fileRef = A651708415BE652F008E6679 /* UIImage+Tint.m */; };
+		A651709D15BE652F008E6679 /* README.markdown in Resources */ = {isa = PBXBuildFile; fileRef = A651708E15BE652F008E6679 /* README.markdown */; };
+		A651709E15BE652F008E6679 /* Source Code License.rtf in Resources */ = {isa = PBXBuildFile; fileRef = A651708F15BE652F008E6679 /* Source Code License.rtf */; };
 		A6FE3FEC15BCAFD5006096C4 /* arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = A6FE3FEB15BCAFD5006096C4 /* arrow.png */; };
 /* End PBXBuildFile section */
 
@@ -47,6 +52,13 @@
 		A651707315BDA094008E6679 /* SFLoadFilterController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFLoadFilterController.h; sourceTree = "<group>"; };
 		A651707415BDA094008E6679 /* SFLoadFilterController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFLoadFilterController.m; sourceTree = "<group>"; };
 		A651707515BDA094008E6679 /* SFLoadFilterController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SFLoadFilterController.xib; sourceTree = "<group>"; };
+		A651707D15BE652F008E6679 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		A651708115BE652F008E6679 /* UIImage+ProportionalFill.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ProportionalFill.h"; sourceTree = "<group>"; };
+		A651708215BE652F008E6679 /* UIImage+ProportionalFill.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ProportionalFill.m"; sourceTree = "<group>"; };
+		A651708315BE652F008E6679 /* UIImage+Tint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Tint.h"; sourceTree = "<group>"; };
+		A651708415BE652F008E6679 /* UIImage+Tint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Tint.m"; sourceTree = "<group>"; };
+		A651708E15BE652F008E6679 /* README.markdown */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.markdown; sourceTree = "<group>"; };
+		A651708F15BE652F008E6679 /* Source Code License.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = "Source Code License.rtf"; sourceTree = "<group>"; };
 		A6FE3FEB15BCAFD5006096C4 /* arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -107,6 +119,7 @@
 				0C3860AB15AB7EDA002A4EAC /* SFViewController.m */,
 				0C3860AD15AB7EDA002A4EAC /* SFViewController.xib */,
 				0C859D3F15B8FEDC00C506DF /* SFViewController-iPad.xib */,
+				A651707C15BE652F008E6679 /* MGImageUtilities */,
 				0C38609F15AB7EDA002A4EAC /* Supporting Files */,
 				A651707315BDA094008E6679 /* SFLoadFilterController.h */,
 				A651707415BDA094008E6679 /* SFLoadFilterController.m */,
@@ -133,6 +146,28 @@
 				0C3860B715AB8150002A4EAC /* image.png */,
 			);
 			name = Resources;
+			sourceTree = "<group>";
+		};
+		A651707C15BE652F008E6679 /* MGImageUtilities */ = {
+			isa = PBXGroup;
+			children = (
+				A651707D15BE652F008E6679 /* .gitignore */,
+				A651707E15BE652F008E6679 /* Classes */,
+				A651708E15BE652F008E6679 /* README.markdown */,
+				A651708F15BE652F008E6679 /* Source Code License.rtf */,
+			);
+			path = MGImageUtilities;
+			sourceTree = "<group>";
+		};
+		A651707E15BE652F008E6679 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				A651708115BE652F008E6679 /* UIImage+ProportionalFill.h */,
+				A651708215BE652F008E6679 /* UIImage+ProportionalFill.m */,
+				A651708315BE652F008E6679 /* UIImage+Tint.h */,
+				A651708415BE652F008E6679 /* UIImage+Tint.m */,
+			);
+			path = Classes;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -192,6 +227,9 @@
 				0C859D4115B8FEDC00C506DF /* SFViewController-iPad.xib in Resources */,
 				A6FE3FEC15BCAFD5006096C4 /* arrow.png in Resources */,
 				A651707715BDA094008E6679 /* SFLoadFilterController.xib in Resources */,
+				A651709415BE652F008E6679 /* .gitignore in Resources */,
+				A651709D15BE652F008E6679 /* README.markdown in Resources */,
+				A651709E15BE652F008E6679 /* Source Code License.rtf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -206,6 +244,8 @@
 				0C3860A915AB7EDA002A4EAC /* SFAppDelegate.m in Sources */,
 				0C3860AC15AB7EDA002A4EAC /* SFViewController.m in Sources */,
 				A651707615BDA094008E6679 /* SFLoadFilterController.m in Sources */,
+				A651709615BE652F008E6679 /* UIImage+ProportionalFill.m in Sources */,
+				A651709715BE652F008E6679 /* UIImage+Tint.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
