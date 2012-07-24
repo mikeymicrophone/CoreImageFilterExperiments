@@ -113,7 +113,7 @@
         configurableFilterProperties = properties;
     }
     
-    NSMutableDictionary *myDefaults = [self attributesForFilter:filterName];
+    NSDictionary *myDefaults = [self attributesForFilter:filterName];
     [configurableFilterProperties addEntriesFromDictionary:myDefaults];
     
     for(NSString *setting in configurableFilterProperties) {
