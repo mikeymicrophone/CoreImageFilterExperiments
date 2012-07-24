@@ -548,7 +548,8 @@
 
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
 {
-    NSDictionary *attrs = [[filterList objectAtIndex:row] attributes];
+    CIFilter *filter = [filterList objectAtIndex:row];
+    NSDictionary *attrs = [filter attributes];
     return [attrs objectForKey:kCIAttributeFilterDisplayName];
 }
 
