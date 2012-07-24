@@ -457,6 +457,10 @@
 #pragma mark monochrome filter cannot be saved because its attributes have an object that is not allowed in a plist
 - (IBAction)writeFilter:(id)sender {
     NSMutableDictionary *filterDetails = [[NSMutableDictionary alloc] initWithCapacity:10];
+    [firstFilterProperties removeObjectForKey:@"inputColor"];
+    [secondFilterProperties removeObjectForKey:@"inputColor"];
+    [thirdFilterProperties removeObjectForKey:@"inputColor"];
+    
     [filterDetails setValue:[firstFilter name] forKey:@"firstFilterName"];
     [filterDetails setValue:firstFilterProperties forKey:@"firstFilterProperties"];
     [filterDetails setValue:[NSNumber numberWithBool:firstFilterArmButton.on] forKey:@"firstFilterArmed"];
