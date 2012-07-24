@@ -22,7 +22,7 @@
 @property (weak, nonatomic) IBOutlet UISlider *secondSlider;
 @property (weak, nonatomic) IBOutlet UILabel *secondFilterValueLabel;
 @property (weak, nonatomic) IBOutlet UIButton *firstFilterControl;
-- (IBAction)controlFirstFilter:(id)sender;
+- (IBAction)controlFilter:(id)sender;
 @property (weak, nonatomic) IBOutlet UISwitch *firstFilterArmButton;
 @property (weak, nonatomic) IBOutlet UIButton *secondFilterControl;
 @property (weak, nonatomic) IBOutlet UISwitch *secondFilterArmButton;

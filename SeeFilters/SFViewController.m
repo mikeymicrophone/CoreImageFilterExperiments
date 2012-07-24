@@ -73,20 +73,20 @@
     secondFilter = [CIFilter filterWithName:@"CIColorMonochrome"];
     thirdFilter = [CIFilter filterWithName:@"CIColorMonochrome"];
     
-    [self controlFirstFilter:firstFilterControl];
+    [self controlFilter:firstFilterControl];
     firstFilterProperties = [[NSMutableDictionary alloc] init];
     [self updateFilter:@"CIColorMonochrome" withProperties:nil];
     
-    [self controlFirstFilter:secondFilterControl];
+    [self controlFilter:secondFilterControl];
     secondFilterProperties = [[NSMutableDictionary alloc] init];
     [self updateFilter:@"CISepiaTone" withProperties:nil];
     
-    [self controlFirstFilter:thirdFilterControl];
+    [self controlFilter:thirdFilterControl];
     thirdFilterProperties = [[NSMutableDictionary alloc] init];
     [self updateFilter:@"CIColorControls" withProperties:nil];
     
     [self updateFilterChain];
-    [self controlFirstFilter:nil];
+    [self controlFilter:nil];
     
 //    [self logAllFilters];
 }
@@ -367,7 +367,7 @@
     [self updateTitleColors];
 }
 
-- (IBAction)controlFirstFilter:(id)sender {
+- (IBAction)controlFilter:(id)sender {
     if (sender == firstFilterControl) {
         configurableFilter = firstFilter;
         configurableFilterProperties = firstFilterProperties;
@@ -506,17 +506,17 @@
     }
     
     NSMutableDictionary *filterDetails = [[self savedFilters] objectAtIndex:index];
-    [self controlFirstFilter:firstFilterControl];
+    [self controlFilter:firstFilterControl];
     firstFilterProperties = [filterDetails valueForKey:@"firstFilterProperties"];
     [self updateFilter:[filterDetails valueForKey:@"firstFilterName"] withProperties:firstFilterProperties];
     [firstFilterArmButton setOn:[[filterDetails valueForKey:@"firstFilterArmed"] boolValue] animated:YES];
     
-    [self controlFirstFilter:secondFilterControl];
+    [self controlFilter:secondFilterControl];
     secondFilterProperties = [filterDetails valueForKey:@"secondFilterProperties"];
     [self updateFilter:[filterDetails valueForKey:@"secondFilterName"] withProperties:secondFilterProperties];
     [secondFilterArmButton setOn:[[filterDetails valueForKey:@"secondFilterArmed"] boolValue] animated:YES];
     
-    [self controlFirstFilter:thirdFilterControl];
+    [self controlFilter:thirdFilterControl];
     thirdFilterProperties = [filterDetails valueForKey:@"thirdFilterProperties"];
     [self updateFilter:[filterDetails valueForKey:@"thirdFilterName"] withProperties:thirdFilterProperties];
     [thirdFilterArmButton setOn:[[filterDetails valueForKey:@"thirdFilterArmed"] boolValue] animated:YES];
