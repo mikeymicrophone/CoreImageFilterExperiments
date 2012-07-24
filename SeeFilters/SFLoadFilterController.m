@@ -53,19 +53,17 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    // Return the number of sections.
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    // Return the number of rows in the section.
-    return [filters count];
+    return [[[self filterController] savedFilters] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *filterName = [[filters objectAtIndex:[indexPath indexAtPosition:1]] valueForKey:@"filterChainTitle"];
+    NSString *filterName = [[[[self filterController] savedFilters] objectAtIndex:[indexPath indexAtPosition:1]] valueForKey:@"filterChainTitle"];
     if ([filterName isEqualToString:@""]) {
         filterName = [NSString stringWithFormat:@"%d", [indexPath indexAtPosition:1]];
     }

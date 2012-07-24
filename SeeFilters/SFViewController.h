@@ -40,5 +40,6 @@
 
 - (IBAction)toggleFilter:(id)sender;
 -(void)updateFilteredImage:(CIImage *)image context:(CIContext *)context;
+- (NSMutableArray *)savedFilters;
 -(void)useSavedFilterAtIndex:(NSUInteger)index;
 @end

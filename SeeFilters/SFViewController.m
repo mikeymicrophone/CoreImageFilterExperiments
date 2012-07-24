@@ -377,15 +377,15 @@
 }
 
 - (IBAction)controlFilter:(id)sender {
-    if (sender == firstFilterControl || (sender == filterControl && (filterControl.selectedSegmentIndex == 0))) {
+    if (sender == firstFilterControl || (sender == filterControl && (filterControl.selectedSegmentIndex == 0)) || (sender == [NSNumber numberWithInt:1])) {
         configurableFilter = firstFilter;
         configurableFilterProperties = firstFilterProperties;
         configurableFilterIndex = 1;        
-    } else if (sender == secondFilterControl || (sender == filterControl && (filterControl.selectedSegmentIndex == 1))) {
+    } else if (sender == secondFilterControl || (sender == filterControl && (filterControl.selectedSegmentIndex == 1)) || (sender == [NSNumber numberWithInt:2])) {
         configurableFilter = secondFilter;
         configurableFilterProperties = secondFilterProperties;
         configurableFilterIndex = 2;
-    } else if (sender == thirdFilterControl || (sender == filterControl && (filterControl.selectedSegmentIndex == 2))) {
+    } else if (sender == thirdFilterControl || (sender == filterControl && (filterControl.selectedSegmentIndex == 2)) || (sender == [NSNumber numberWithInt:3])) {
         configurableFilter = thirdFilter;
         configurableFilterProperties = thirdFilterProperties;
         configurableFilterIndex = 3;
@@ -457,7 +457,6 @@
 
 #pragma mark -- saving custom filters --
 
-#pragma mark monochrome filter cannot be saved because its attributes have an object that is not allowed in a plist
 - (IBAction)writeFilter:(id)sender {
     [self.view endEditing:YES];
     NSMutableDictionary *filterDetails = [[NSMutableDictionary alloc] initWithCapacity:10];
@@ -502,6 +501,7 @@
 - (IBAction)loadFilter:(id)sender {
     SFLoadFilterController *filterChooser = [[SFLoadFilterController alloc] initWithStyle:UITableViewStylePlain];
     filterChooser.filters = [self savedFilters];
+//    NSLog(@"filterChooser's filters: %@", filterChooser.filters);
     filterChooser.filterController = self;
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
@@ -522,20 +522,23 @@
     }
     
     NSMutableDictionary *filterDetails = [[self savedFilters] objectAtIndex:index];
-    [self controlFilter:firstFilterControl];
+    [self controlFilter:[NSNumber numberWithInt:1]];
     firstFilterProperties = [filterDetails valueForKey:@"firstFilterProperties"];
     [self updateFilter:[filterDetails valueForKey:@"firstFilterName"] withProperties:firstFilterProperties];
-    [firstFilterArmButton setOn:[[filterDetails valueForKey:@"firstFilterArmed"] boolValue] animated:YES];
     
-    [self controlFilter:secondFilterControl];
+    [self controlFilter:[NSNumber numberWithInt:2]];
     secondFilterProperties = [filterDetails valueForKey:@"secondFilterProperties"];
     [self updateFilter:[filterDetails valueForKey:@"secondFilterName"] withProperties:secondFilterProperties];
-    [secondFilterArmButton setOn:[[filterDetails valueForKey:@"secondFilterArmed"] boolValue] animated:YES];
     
-    [self controlFilter:thirdFilterControl];
+    [self controlFilter:[NSNumber numberWithInt:3]];
     thirdFilterProperties = [filterDetails valueForKey:@"thirdFilterProperties"];
     [self updateFilter:[filterDetails valueForKey:@"thirdFilterName"] withProperties:thirdFilterProperties];
-    [thirdFilterArmButton setOn:[[filterDetails valueForKey:@"thirdFilterArmed"] boolValue] animated:YES];
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        [firstFilterArmButton setOn:[[filterDetails valueForKey:@"firstFilterArmed"] boolValue] animated:YES];
+        [secondFilterArmButton setOn:[[filterDetails valueForKey:@"secondFilterArmed"] boolValue] animated:YES];
+        [thirdFilterArmButton setOn:[[filterDetails valueForKey:@"thirdFilterArmed"] boolValue] animated:YES];
+    }
     
     filterChainTitle.text = [filterDetails valueForKey:@"filterChainTitle"];
     [self updateFilteredImage:beginImage context:previewContext];
@@ -590,8 +593,6 @@
         [self presentModalViewController:pickerC animated:YES];
     }
 }
-
-#pragma mark update this to enable photo saving
 
 - (IBAction)savePhoto:(id)sender {
     [self updateFilteredImage:fullSizeImage context:saveContext];
