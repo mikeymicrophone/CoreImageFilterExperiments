@@ -39,6 +39,6 @@
 @property (weak, nonatomic) IBOutlet UIImageView *originalImageView;
 
 - (IBAction)toggleFilter:(id)sender;
--(void)updateFilterChain;
+-(void)updateFilteredImage:(CIImage *)image context:(CIContext *)context;
 -(void)useSavedFilterAtIndex:(NSUInteger)index;
 @end

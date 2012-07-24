@@ -15,11 +15,13 @@
 @end
 
 @implementation SFViewController {
-    CIContext *context;
+    CIContext *previewContext;
+    CIContext *saveContext;
     CIFilter *firstFilter;
     CIFilter *secondFilter;
     CIFilter *thirdFilter;
     CIImage *beginImage;
+    CIImage *fullSizeImage;
     NSString *firstSliderAttribute;
     NSString *secondSliderAttribute;
     NSString *configurableAttribute;
@@ -63,8 +65,8 @@
     
     beginImage = [CIImage imageWithContentsOfURL:fileNameAndPath];
     originalImageView.image = [UIImage imageWithContentsOfFile:filePath];
-    context = [CIContext contextWithOptions:nil]; //for development on Mac - use below for device
-//    context = [CIContext contextWithOptions:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] forKey:kCIContextUseSoftwareRenderer]];
+    previewContext = [CIContext contextWithOptions:nil];
+    saveContext = [CIContext contextWithOptions:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] forKey:kCIContextUseSoftwareRenderer]];
     
     firstFilterPropertyLabel.numberOfLines = 0;
     secondFilterPropertyLabel.numberOfLines = 0;
@@ -86,7 +88,7 @@
     thirdFilterProperties = [[NSMutableDictionary alloc] init];
     [self updateFilter:@"CIColorControls" withProperties:nil];
     
-    [self updateFilterChain];
+    [self updateFilteredImage:beginImage context:previewContext];
     [self controlFilter:nil];
     
 //    [self logAllFilters];
@@ -138,7 +140,7 @@
     }
     [self updateSliders];
     [self updateFilterLabels];
-    [self updateFilterChain];
+    [self updateFilteredImage:beginImage context:previewContext];
 }
 
 - (void)updateSliders
@@ -204,12 +206,12 @@
     secondFilterValueLabel.hidden = !secondSliderUsed;
 }
 
--(void)updateFilterChain
+-(void)updateFilteredImage:(CIImage *)image context:(CIContext *)context
 {
     CIImage *outputImage;
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         if (firstFilterArmButton.on) {
-            [firstFilter setValue:beginImage forKey:kCIInputImageKey];
+            [firstFilter setValue:image forKey:kCIInputImageKey];
             if (secondFilterArmButton.on) {
                 [secondFilter setValue:firstFilter.outputImage forKey:kCIInputImageKey];
                 if (thirdFilterArmButton.on) {
@@ -248,14 +250,15 @@
         [thirdFilter setValue:secondFilter.outputImage forKey:kCIInputImageKey];
         outputImage = thirdFilter.outputImage;
     }
+    if (context == previewContext) {
+        CGImageRef cgimg = [context createCGImage:outputImage 
+                                         fromRect:[outputImage extent]];
         
-    CGImageRef cgimg = [context createCGImage:outputImage 
-                                     fromRect:[outputImage extent]];
-    
-    UIImage *newImg = [UIImage imageWithCGImage:cgimg];    
-    [imgV setImage:newImg];
-    
-    CGImageRelease(cgimg);
+        UIImage *newImg = [UIImage imageWithCGImage:cgimg];    
+        [imgV setImage:newImg];
+        
+        CGImageRelease(cgimg);
+    }
 }
 
 -(void)updateFilterLabels
@@ -364,12 +367,12 @@
     
     [configurableFilter setValue:[NSNumber numberWithFloat:slideValue] forKey:configurableAttribute];
     [configurableFilterProperties setValue:[NSNumber numberWithFloat:slideValue] forKey:configurableAttribute];
-    [self updateFilterChain];
+    [self updateFilteredImage:beginImage context:previewContext];
     [self updateFilterLabels];
 }
 
 - (IBAction)toggleFilter:(id)sender {
-    [self updateFilterChain];
+    [self updateFilteredImage:beginImage context:previewContext];
     [self updateTitleColors];
 }
 
@@ -527,7 +530,7 @@
     [thirdFilterArmButton setOn:[[filterDetails valueForKey:@"thirdFilterArmed"] boolValue] animated:YES];
     
     filterChainTitle.text = [filterDetails valueForKey:@"filterChainTitle"];
-    [self updateFilterChain];
+    [self updateFilteredImage:beginImage context:previewContext];
 }
 
 - (NSString *)savePath
@@ -583,12 +586,11 @@
 #pragma mark update this to enable photo saving
 
 - (IBAction)savePhoto:(id)sender {
-    CIImage *saveToSave = [firstFilter outputImage];
-    CGImageRef cgImg = [context createCGImage:saveToSave 
-                                     fromRect:[saveToSave extent]];
+    [self updateFilteredImage:fullSizeImage context:saveContext];
+    CIImage *imageToSave = thirdFilter.outputImage;
+    CGImageRef cgImg = [saveContext createCGImage:imageToSave fromRect:[imageToSave extent]];
     ALAssetsLibrary* library = [[ALAssetsLibrary alloc] init];
-    [library writeImageToSavedPhotosAlbum:cgImg 
-                                 metadata:[saveToSave properties] 
+    [library writeImageToSavedPhotosAlbum:cgImg metadata:[imageToSave properties] 
                           completionBlock:^(NSURL *assetURL, NSError *error) {
                               CGImageRelease(cgImg);
                           }];
@@ -601,14 +603,14 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     } else {
         [self dismissModalViewControllerAnimated:YES];
     }
-    UIImage *gotImage = [info objectForKey:UIImagePickerControllerOriginalImage];
+    fullSizeImage = [info objectForKey:UIImagePickerControllerOriginalImage];
     CGSize imageSize;
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         imageSize = CGSizeMake(373.0,373.0);
     } else {
         imageSize = CGSizeMake(171.0,171.0);
     }
-    UIImage *sizedImage = [[[UIImage alloc] initWithData:UIImageJPEGRepresentation(gotImage, 1.0)] imageScaledToFitSize:imageSize];
+    UIImage *sizedImage = [[[UIImage alloc] initWithData:UIImageJPEGRepresentation(fullSizeImage, 1.0)] imageScaledToFitSize:imageSize];
     beginImage = [CIImage imageWithCGImage:sizedImage.CGImage];    
     [firstFilter setValue:beginImage forKey:kCIInputImageKey];
     [self changeValue:amountSlider];
