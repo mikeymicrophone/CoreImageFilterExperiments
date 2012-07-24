@@ -493,7 +493,7 @@
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         UIPopoverController *chooserP = [[UIPopoverController alloc] initWithContentViewController:filterChooser];
-        [chooserP presentPopoverFromRect:CGRectMake(100, 100, 100, 100) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+        [chooserP presentPopoverFromRect:CGRectMake(65, 935, 85, 20) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
         popover = chooserP;
     }
 }
@@ -567,7 +567,7 @@
     pickerC.delegate = self;
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         UIPopoverController *pickerP = [[UIPopoverController alloc] initWithContentViewController:pickerC];
-        [pickerP presentPopoverFromRect:CGRectMake(100, 100, 100, 100) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+        [pickerP presentPopoverFromRect:CGRectMake(650, 925, 75, 20) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
         popover = pickerP;
     } else {
         [self presentModalViewController:pickerC animated:YES];
