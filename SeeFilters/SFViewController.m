@@ -617,26 +617,42 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     CGFloat height = fullSizeImage.size.height;
     CGFloat width = fullSizeImage.size.width;
     
-    CGSize cropSize;
+    CGFloat minorDimension;
     if (width > height) {
-        cropSize = CGSizeMake(height, height);
+        minorDimension = height;
     } else {
-        cropSize = CGSizeMake(width, width);
+        minorDimension = width;
     }
-    UIImage *croppedImage = [[[UIImage alloc] initWithData:UIImageJPEGRepresentation(fullSizeImage, 1.0)] imageCroppedToFitSize:cropSize];
+    UIImage *croppedImage = [[[UIImage alloc] initWithData:UIImageJPEGRepresentation(fullSizeImage, 1.0)] imageCroppedToFitSize:CGSizeMake(minorDimension, minorDimension)];
     
     CGSize imageSize;
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         if ([[UIScreen mainScreen] scale] > 1.0) {
-            imageSize = CGSizeMake(746.0, 746.0);
+            if (minorDimension > 746.0) {
+                imageSize = CGSizeMake(746.0, 746.0);
+            } else {
+                imageSize = CGSizeMake(minorDimension, minorDimension);
+            }
         } else {
-            imageSize = CGSizeMake(373.0, 373.0);
+            if (minorDimension > 373.0) {
+                imageSize = CGSizeMake(373.0, 373.0);
+            } else {
+                imageSize = CGSizeMake(minorDimension, minorDimension);
+            }
         }
     } else {
         if ([[UIScreen mainScreen] scale] > 1.0) {
-            imageSize = CGSizeMake(342.0, 342.0);
+            if (minorDimension > 342.0) {
+                imageSize = CGSizeMake(342.0, 342.0);
+            } else {
+                imageSize = CGSizeMake(minorDimension, minorDimension);
+            }
         } else {
-            imageSize = CGSizeMake(171.0, 171.0);
+            if (minorDimension > 171.0) {
+                imageSize = CGSizeMake(171.0, 171.0);
+            } else {
+                imageSize = CGSizeMake(minorDimension, minorDimension);
+            }
         }
     }
     UIImage *sizedImage = [[[UIImage alloc] initWithData:UIImageJPEGRepresentation(croppedImage, 1.0)] imageScaledToFitSize:imageSize];
