@@ -613,21 +613,33 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
         [self dismissModalViewControllerAnimated:YES];
     }
     fullSizeImage = [info objectForKey:UIImagePickerControllerOriginalImage];
+    
+    CGFloat height = fullSizeImage.size.height;
+    CGFloat width = fullSizeImage.size.width;
+    
+    CGSize cropSize;
+    if (width > height) {
+        cropSize = CGSizeMake(height, height);
+    } else {
+        cropSize = CGSizeMake(width, width);
+    }
+    UIImage *croppedImage = [[[UIImage alloc] initWithData:UIImageJPEGRepresentation(fullSizeImage, 1.0)] imageCroppedToFitSize:cropSize];
+    
     CGSize imageSize;
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         if ([[UIScreen mainScreen] scale] > 1.0) {
-            imageSize = CGSizeMake(746.0,746.0);
+            imageSize = CGSizeMake(746.0, 746.0);
         } else {
-            imageSize = CGSizeMake(373.0,373.0);
+            imageSize = CGSizeMake(373.0, 373.0);
         }
     } else {
         if ([[UIScreen mainScreen] scale] > 1.0) {
             imageSize = CGSizeMake(342.0, 342.0);
         } else {
-            imageSize = CGSizeMake(171.0,171.0);
+            imageSize = CGSizeMake(171.0, 171.0);
         }
     }
-    UIImage *sizedImage = [[[UIImage alloc] initWithData:UIImageJPEGRepresentation(fullSizeImage, 1.0)] imageScaledToFitSize:imageSize];
+    UIImage *sizedImage = [[[UIImage alloc] initWithData:UIImageJPEGRepresentation(croppedImage, 1.0)] imageScaledToFitSize:imageSize];
     beginImage = [CIImage imageWithCGImage:sizedImage.CGImage];    
     [firstFilter setValue:beginImage forKey:kCIInputImageKey];
     [self changeValue:amountSlider];
