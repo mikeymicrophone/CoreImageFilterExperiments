@@ -714,12 +714,14 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     NSArray *toRecipients = [NSArray arrayWithObjects:@"mike.schwab@gmail.com", nil];
     [mailer setToRecipients:toRecipients];
     
-    UIImage *currentOriginalImage = originalImageView.image;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        UIImage *currentOriginalImage = originalImageView.image;
+        NSData *originalImageData = UIImagePNGRepresentation(currentOriginalImage);
+        [mailer addAttachmentData:originalImageData mimeType:@"image/png" fileName:@"unfiltered-image"];
+    }
     UIImage *currentFilteredImage = imgV.image;
-    NSData *originalImageData = UIImagePNGRepresentation(currentOriginalImage);
     NSData *currentImageData = UIImagePNGRepresentation(currentFilteredImage);
     NSData *filterPlist = [NSData dataWithContentsOfFile:[self savePath]];
-    [mailer addAttachmentData:originalImageData mimeType:@"image/png" fileName:@"unfiltered-image"];
     [mailer addAttachmentData:currentImageData mimeType:@"image/png" fileName:@"filtered-image"];
     [mailer addAttachmentData:filterPlist mimeType:@"text/xml" fileName:@"saved-filters.plist"];
     NSString *emailBody = @"Here are all of the filters I've saved, with the newest ones at the bottom.  To load them into your filtering app, open the attached \"saved_filters.plist\"file on a computer, copy the filter XML into an email you can open on your iPad, and paste the XML into the 'Load from Email' window.\n\n\n";
