@@ -704,4 +704,65 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     // Release any retained subviews of the main view.
 }
 
+- (IBAction)sendFilterListInEmail:(id)sender {
+    MFMailComposeViewController *mailer = [[MFMailComposeViewController alloc] init];
+    
+    mailer.mailComposeDelegate = self;
+    
+    [mailer setSubject:@"My saved filters"];
+    
+    NSArray *toRecipients = [NSArray arrayWithObjects:@"mike.schwab@gmail.com", nil];
+    [mailer setToRecipients:toRecipients];
+    
+    UIImage *currentOriginalImage = originalImageView.image;
+    UIImage *currentFilteredImage = imgV.image;
+    NSData *originalImageData = UIImagePNGRepresentation(currentOriginalImage);
+    NSData *currentImageData = UIImagePNGRepresentation(currentFilteredImage);
+    NSData *filterPlist = [NSData dataWithContentsOfFile:[self savePath]];
+    [mailer addAttachmentData:originalImageData mimeType:@"image/png" fileName:@"unfiltered-image"];
+    [mailer addAttachmentData:currentImageData mimeType:@"image/png" fileName:@"filtered-image"];
+    [mailer addAttachmentData:filterPlist mimeType:@"text/xml" fileName:@"saved-filters.plist"];
+    NSString *emailBody = @"Here are all of the filters I've saved, with the newest ones at the bottom.  To load them into your filtering app, open the attached \"saved_filters.plist\"file on a computer, copy the filter XML into an email you can open on your iPad, and paste the XML into the 'Load from Email' window.\n\n\n";
+    
+//    NSError *error = nil;
+//    NSDictionary *documentAttributes = nil;
+//    
+//    NSAttributedString *filterXML = [[NSAttributedString alloc]
+//                                      initWithURL:[NSURL URLWithString:[self savePath]]
+//                                      options:[NSDictionary dictionaryWithObjectsAndKeys: nil]
+//                                     documentAttributes:&documentAttributes
+//                                      error:&error];
+//    
+//    NSString *emailBody = [emailMessage stringByAppendingString:filterXML];
+    
+    [mailer setMessageBody:emailBody isHTML:NO];
+    
+    mailer.modalPresentationStyle = UIModalPresentationPageSheet;
+    [self presentModalViewController:mailer animated:YES];
+}
+
+- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error 
+{   
+    switch (result)
+    {
+        case MFMailComposeResultCancelled:
+            NSLog(@"Mail cancelled: you cancelled the operation and no email message was queued.");
+            break;
+        case MFMailComposeResultSaved:
+            NSLog(@"Mail saved: you saved the email message in the drafts folder.");
+            break;
+        case MFMailComposeResultSent:
+            NSLog(@"Mail sent: the email message is queued in the outbox. It is ready to send.");
+            break;
+        case MFMailComposeResultFailed:
+            NSLog(@"Mail failed: the email message was not saved or queued, possibly due to an error.");
+            break;
+        default:
+            NSLog(@"Mail not sent.");
+            break;
+    }
+    
+    // Remove the mail view
+    [self dismissModalViewControllerAnimated:YES];
+}
 @end

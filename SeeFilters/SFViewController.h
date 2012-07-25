@@ -7,9 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MessageUI/MessageUI.h>
 #import "UIImage+ProportionalFill.h"
 
-@interface SFViewController : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+@interface SFViewController : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate, MFMailComposeViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *imgV;
 - (IBAction)changeValue:(UISlider *)sender;
 @property (weak, nonatomic) IBOutlet UISlider *amountSlider;
@@ -35,6 +36,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *filterChainTitle;
 - (IBAction)loadFilter:(id)sender;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *filterControl;
+- (IBAction)sendFilterListInEmail:(id)sender;
 
 @property (weak, nonatomic) IBOutlet UIImageView *originalImageView;
 

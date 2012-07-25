@@ -19,6 +19,7 @@
 		0C3860B815AB8150002A4EAC /* image.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C3860B715AB8150002A4EAC /* image.png */; };
 		0C3860BB15AB8B9A002A4EAC /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C3860BA15AB8B9A002A4EAC /* AssetsLibrary.framework */; };
 		0C859D4115B8FEDC00C506DF /* SFViewController-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0C859D3F15B8FEDC00C506DF /* SFViewController-iPad.xib */; };
+		A62ECA4615BFAF6400E159E3 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A62ECA4515BFAF6400E159E3 /* MessageUI.framework */; };
 		A651706D15BD1741008E6679 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A651706C15BD1741008E6679 /* CoreData.framework */; };
 		A651707615BDA094008E6679 /* SFLoadFilterController.m in Sources */ = {isa = PBXBuildFile; fileRef = A651707415BDA094008E6679 /* SFLoadFilterController.m */; };
 		A651707715BDA094008E6679 /* SFLoadFilterController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A651707515BDA094008E6679 /* SFLoadFilterController.xib */; };
@@ -48,6 +49,7 @@
 		0C3860B715AB8150002A4EAC /* image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = image.png; sourceTree = "<group>"; };
 		0C3860BA15AB8B9A002A4EAC /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		0C859D4015B8FEDC00C506DF /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = "en.lproj/SFViewController-iPad.xib"; sourceTree = "<group>"; };
+		A62ECA4515BFAF6400E159E3 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		A651706C15BD1741008E6679 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		A651707315BDA094008E6679 /* SFLoadFilterController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFLoadFilterController.h; sourceTree = "<group>"; };
 		A651707415BDA094008E6679 /* SFLoadFilterController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFLoadFilterController.m; sourceTree = "<group>"; };
@@ -67,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A62ECA4615BFAF6400E159E3 /* MessageUI.framework in Frameworks */,
 				A651706D15BD1741008E6679 /* CoreData.framework in Frameworks */,
 				0C3860BB15AB8B9A002A4EAC /* AssetsLibrary.framework in Frameworks */,
 				0C3860B615AB80D8002A4EAC /* CoreImage.framework in Frameworks */,
@@ -100,6 +103,7 @@
 		0C38609715AB7EDA002A4EAC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A62ECA4515BFAF6400E159E3 /* MessageUI.framework */,
 				A651706C15BD1741008E6679 /* CoreData.framework */,
 				0C3860BA15AB8B9A002A4EAC /* AssetsLibrary.framework */,
 				0C3860B515AB80D8002A4EAC /* CoreImage.framework */,
