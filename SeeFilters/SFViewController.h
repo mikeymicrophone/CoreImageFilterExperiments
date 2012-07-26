@@ -37,6 +37,7 @@
 - (IBAction)loadFilter:(id)sender;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *filterControl;
 - (IBAction)sendFilterListInEmail:(id)sender;
+- (IBAction)importFiltersFromXML:(id)sender;
 
 @property (weak, nonatomic) IBOutlet UIImageView *originalImageView;
 

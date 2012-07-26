@@ -20,6 +20,8 @@
 		0C3860BB15AB8B9A002A4EAC /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C3860BA15AB8B9A002A4EAC /* AssetsLibrary.framework */; };
 		0C859D4115B8FEDC00C506DF /* SFViewController-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0C859D3F15B8FEDC00C506DF /* SFViewController-iPad.xib */; };
 		A62ECA4615BFAF6400E159E3 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A62ECA4515BFAF6400E159E3 /* MessageUI.framework */; };
+		A62ECA5015C0770200E159E3 /* SFImportViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A62ECA4E15C0770200E159E3 /* SFImportViewController.m */; };
+		A62ECA5115C0770200E159E3 /* SFImportViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A62ECA4F15C0770200E159E3 /* SFImportViewController.xib */; };
 		A651706D15BD1741008E6679 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A651706C15BD1741008E6679 /* CoreData.framework */; };
 		A651707615BDA094008E6679 /* SFLoadFilterController.m in Sources */ = {isa = PBXBuildFile; fileRef = A651707415BDA094008E6679 /* SFLoadFilterController.m */; };
 		A651707715BDA094008E6679 /* SFLoadFilterController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A651707515BDA094008E6679 /* SFLoadFilterController.xib */; };
@@ -50,6 +52,9 @@
 		0C3860BA15AB8B9A002A4EAC /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		0C859D4015B8FEDC00C506DF /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = "en.lproj/SFViewController-iPad.xib"; sourceTree = "<group>"; };
 		A62ECA4515BFAF6400E159E3 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		A62ECA4D15C0770200E159E3 /* SFImportViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFImportViewController.h; sourceTree = "<group>"; };
+		A62ECA4E15C0770200E159E3 /* SFImportViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFImportViewController.m; sourceTree = "<group>"; };
+		A62ECA4F15C0770200E159E3 /* SFImportViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SFImportViewController.xib; sourceTree = "<group>"; };
 		A651706C15BD1741008E6679 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		A651707315BDA094008E6679 /* SFLoadFilterController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFLoadFilterController.h; sourceTree = "<group>"; };
 		A651707415BDA094008E6679 /* SFLoadFilterController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFLoadFilterController.m; sourceTree = "<group>"; };
@@ -128,6 +133,9 @@
 				A651707315BDA094008E6679 /* SFLoadFilterController.h */,
 				A651707415BDA094008E6679 /* SFLoadFilterController.m */,
 				A651707515BDA094008E6679 /* SFLoadFilterController.xib */,
+				A62ECA4D15C0770200E159E3 /* SFImportViewController.h */,
+				A62ECA4E15C0770200E159E3 /* SFImportViewController.m */,
+				A62ECA4F15C0770200E159E3 /* SFImportViewController.xib */,
 			);
 			path = SeeFilters;
 			sourceTree = "<group>";
@@ -234,6 +242,7 @@
 				A651709415BE652F008E6679 /* .gitignore in Resources */,
 				A651709D15BE652F008E6679 /* README.markdown in Resources */,
 				A651709E15BE652F008E6679 /* Source Code License.rtf in Resources */,
+				A62ECA5115C0770200E159E3 /* SFImportViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -250,6 +259,7 @@
 				A651707615BDA094008E6679 /* SFLoadFilterController.m in Sources */,
 				A651709615BE652F008E6679 /* UIImage+ProportionalFill.m in Sources */,
 				A651709715BE652F008E6679 /* UIImage+Tint.m in Sources */,
+				A62ECA5015C0770200E159E3 /* SFImportViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

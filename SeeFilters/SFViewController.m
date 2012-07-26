@@ -8,6 +8,7 @@
 
 #import "SFViewController.h"
 #import "SFLoadFilterController.h"
+#import "SFImportViewController.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 
 @interface SFViewController ()
@@ -741,6 +742,14 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     
     mailer.modalPresentationStyle = UIModalPresentationPageSheet;
     [self presentModalViewController:mailer animated:YES];
+}
+
+- (IBAction)importFiltersFromXML:(id)sender {
+    SFImportViewController *importController = [[SFImportViewController alloc] initWithNibName:@"SFImportViewController" bundle:nil];
+    importController.filterController = self;
+    
+    importController.modalPresentationStyle = UIModalPresentationPageSheet;
+    [self presentModalViewController:importController animated:YES];
 }
 
 - (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error 
