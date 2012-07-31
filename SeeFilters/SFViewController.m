@@ -34,7 +34,10 @@
     NSMutableDictionary *thirdFilterProperties;
     NSMutableDictionary *configurableFilterProperties;
     NSArray *filterList;
+    UIImage *alternatePreviewImage;
+    bool pickingAlternative;
 }
+@synthesize longPressAlternativeImageLoader;
 @synthesize secondSlider;
 @synthesize secondFilterValueLabel;
 @synthesize firstFilterControl;
@@ -377,6 +380,13 @@
     [self updateFilterLabels];
 }
 
+- (IBAction)pushSliderEndpoints:(UIPanGestureRecognizer *)recognizer
+{
+    CGPoint trans = [recognizer translationInView:self.view];
+    amountSlider.maximumValue = amountSlider.maximumValue - (trans.y / 100);
+    [recognizer setTranslation:CGPointMake(0, 0) inView:self.view];
+}
+
 - (IBAction)toggleFilter:(id)sender {
     [self updateFilteredImage:beginImage context:previewContext];
     [self updateTitleColors];
@@ -493,13 +503,11 @@
     NSMutableArray *filters = [self savedFilters];
     
     if (filters == nil) {
-        NSLog(@"app found no saved filters");
         filters = [NSMutableArray arrayWithObject:filterDetails];
     } else {
-        NSLog(@"app found saved filters");
         [filters addObject:filterDetails];
     }
-    NSLog(@"details: %@", filterDetails);
+
     BOOL success = [filters writeToFile:[self savePath] atomically:YES];
     NSLog(@"save success: %d", success);
 }
@@ -507,7 +515,6 @@
 - (IBAction)loadFilter:(id)sender {
     SFLoadFilterController *filterChooser = [[SFLoadFilterController alloc] initWithStyle:UITableViewStylePlain];
     filterChooser.filters = [self savedFilters];
-//    NSLog(@"filterChooser's filters: %@", filterChooser.filters);
     filterChooser.filterController = self;
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
@@ -588,12 +595,25 @@
 #pragma mark -- image selection --
 
 - (IBAction)loadPhoto:(id)sender {
-    UIImagePickerController *pickerC = 
-    [[UIImagePickerController alloc] init];
+    if (![longPressAlternativeImageLoader isEnabled]) return; // code to prevent multiple long press messages
+    [longPressAlternativeImageLoader setEnabled:NO];
+    [longPressAlternativeImageLoader performSelector:@selector(setEnabled:) withObject: [NSNumber numberWithBool:YES] afterDelay:0.5];
+    CGRect popoverSpot;
+    UIPopoverArrowDirection arrowDirection;
+    if (sender == longPressAlternativeImageLoader) {
+        pickingAlternative = YES;
+        popoverSpot = CGRectMake(140, 340, 100, 50);
+        arrowDirection = UIPopoverArrowDirectionUp;
+    } else {
+        pickingAlternative = NO;
+        popoverSpot = CGRectMake(650, 925, 75, 20);
+        arrowDirection = UIPopoverArrowDirectionDown;
+    }
+    UIImagePickerController *pickerC = [[UIImagePickerController alloc] init];
     pickerC.delegate = self;
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         UIPopoverController *pickerP = [[UIPopoverController alloc] initWithContentViewController:pickerC];
-        [pickerP presentPopoverFromRect:CGRectMake(650, 925, 75, 20) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
+        [pickerP presentPopoverFromRect:popoverSpot inView:self.view permittedArrowDirections:arrowDirection animated:YES];
         popover = pickerP;
     } else {
         [self presentModalViewController:pickerC animated:YES];
@@ -617,6 +637,8 @@
 didFinishPickingMediaWithInfo:(NSDictionary *)info {
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         [popover dismissPopoverAnimated:YES];
+        popover = nil;
+        [longPressAlternativeImageLoader setEnabled:YES];
     } else {
         [self dismissModalViewControllerAnimated:YES];
     }
@@ -664,9 +686,13 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
         }
     }
     UIImage *sizedImage = [[[UIImage alloc] initWithData:UIImageJPEGRepresentation(croppedImage, 1.0)] imageScaledToFitSize:imageSize];
-    beginImage = [CIImage imageWithCGImage:sizedImage.CGImage];    
-    [firstFilter setValue:beginImage forKey:kCIInputImageKey];
-    [self changeValue:amountSlider];
+    if (!pickingAlternative) {
+        beginImage = [CIImage imageWithCGImage:sizedImage.CGImage];    
+        [firstFilter setValue:beginImage forKey:kCIInputImageKey];
+        [self changeValue:amountSlider];
+    } else {
+        alternatePreviewImage = sizedImage;
+    }
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         originalImageView.image = sizedImage;
@@ -677,8 +703,21 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
 (UIImagePickerController *)picker {
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         [popover dismissPopoverAnimated:YES];
+        popover = nil;
+        [longPressAlternativeImageLoader setEnabled:YES];
     } else {
         [self dismissModalViewControllerAnimated:YES];
+    }
+}
+
+- (IBAction)toggleAlternatePreviewImage:(id)sender
+{
+    if (originalImageView.image == alternatePreviewImage) {
+        CGImageRef cgimg = [previewContext createCGImage:beginImage fromRect:[beginImage extent]];
+        UIImage *filterImage = [UIImage imageWithCGImage:cgimg];    
+        originalImageView.image = filterImage;
+    } else {
+        originalImageView.image = alternatePreviewImage;
     }
 }
 
@@ -708,6 +747,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     [self setThirdFilterPropertyLabel:nil];
     [self setFilterChainTitle:nil];
     [self setFilterControl:nil];
+    [self setLongPressAlternativeImageLoader:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -732,18 +772,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     NSData *filterPlist = [NSData dataWithContentsOfFile:[self savePath]];
     [mailer addAttachmentData:currentImageData mimeType:@"image/png" fileName:@"filtered-image"];
     [mailer addAttachmentData:filterPlist mimeType:@"text/xml" fileName:@"saved-filters.plist"];
-    NSString *emailBody = @"Here are all of the filters I've saved, with the newest ones at the bottom.  To load them into your filtering app, open the attached \"saved_filters.plist\"file on a computer, copy the filter XML into an email you can open on your iPad, and paste the XML into the 'Load from Email' window.\n\n\n";
-    
-//    NSError *error = nil;
-//    NSDictionary *documentAttributes = nil;
-//    
-//    NSAttributedString *filterXML = [[NSAttributedString alloc]
-//                                      initWithURL:[NSURL URLWithString:[self savePath]]
-//                                      options:[NSDictionary dictionaryWithObjectsAndKeys: nil]
-//                                     documentAttributes:&documentAttributes
-//                                      error:&error];
-//    
-//    NSString *emailBody = [emailMessage stringByAppendingString:filterXML];
+    NSString *emailBody = @"Here are all of the filters I've saved, with the newest ones at the bottom.  To load them into your filtering app, open the attached \"saved_filters.plist\" file on a computer, copy the filter XML into an email you can open on your iPad, and paste the XML into the 'Load Filters' window.\n\n\n";
     
     [mailer setMessageBody:emailBody isHTML:NO];
     

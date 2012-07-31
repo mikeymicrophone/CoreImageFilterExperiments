@@ -24,6 +24,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *secondFilterValueLabel;
 @property (weak, nonatomic) IBOutlet UIButton *firstFilterControl;
 - (IBAction)controlFilter:(id)sender;
+- (IBAction)pushSliderEndpoints:(UIPanGestureRecognizer *)recognizer;
 @property (weak, nonatomic) IBOutlet UISwitch *firstFilterArmButton;
 @property (weak, nonatomic) IBOutlet UIButton *secondFilterControl;
 @property (weak, nonatomic) IBOutlet UISwitch *secondFilterArmButton;
@@ -41,6 +42,8 @@
 - (IBAction)importFiltersFromXML:(id)sender;
 
 @property (weak, nonatomic) IBOutlet UIImageView *originalImageView;
+- (IBAction)toggleAlternatePreviewImage:(id)sender;
+@property (strong, nonatomic) IBOutlet UILongPressGestureRecognizer *longPressAlternativeImageLoader;
 
 - (IBAction)toggleFilter:(id)sender;
 -(void)updateFilteredImage:(CIImage *)image context:(CIContext *)context;
