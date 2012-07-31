@@ -206,7 +206,11 @@
     secondFilterValueLabel.hidden = !secondSliderUsed;
 }
 
--(void)updateFilteredImage:(CIImage *)image context:(CIContext *)context
+-(void)updateFilteredImage:(CIImage *)image context:(CIContext *)context {
+    [self updateFilteredImage:image context:context intoImage:nil];
+}
+
+-(void)updateFilteredImage:(CIImage *)image context:(CIContext *)context intoImage:(CIImage *)output
 {
     CIImage *outputImage;
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
@@ -258,6 +262,8 @@
         [imgV setImage:newImg];
         
         CGImageRelease(cgimg);
+    } else {
+        output = outputImage;
     }
 }
 
@@ -596,8 +602,9 @@
 
 - (IBAction)savePhoto:(id)sender {
     CIImage *fullSize = [CIImage imageWithCGImage:fullSizeImage.CGImage];
-    [self updateFilteredImage:fullSize context:saveContext];
-    CIImage *imageToSave = thirdFilter.outputImage;
+    CIImage *fullSizeOutput = nil;
+    [self updateFilteredImage:fullSize context:saveContext intoImage:fullSizeOutput];
+    CIImage *imageToSave = fullSizeOutput;
     CGImageRef cgImg = [saveContext createCGImage:imageToSave fromRect:[imageToSave extent]];
     ALAssetsLibrary* library = [[ALAssetsLibrary alloc] init];
     [library writeImageToSavedPhotosAlbum:cgImg metadata:[imageToSave properties] 

@@ -14,6 +14,7 @@
 
 @implementation SFImportViewController
 @synthesize filterTextData;
+@synthesize filterController;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
