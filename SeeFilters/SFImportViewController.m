@@ -45,7 +45,21 @@
 }
 
 - (IBAction)completeImport:(id)sender {
-    NSArray *previousFilterSet = [filterController savedFilters];
+    // write xml string to file
+    NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *importPath = [documentsPath stringByAppendingPathComponent:@"importable_filters.plist"];
+    NSError *writeError = nil;
+    [filterTextData.text writeToFile:importPath atomically:YES encoding:NSASCIIStringEncoding error:&writeError];
+     
+    // open file as plist
+    NSMutableArray *importableFilters = [[NSMutableArray alloc] initWithContentsOfFile:importPath];
     
+    // combine plists
+    NSMutableArray *previousFilterSet = [filterController savedFilters];
+    
+    [previousFilterSet addObjectsFromArray:importableFilters];
+    
+    [previousFilterSet writeToFile:[filterController savePath] atomically:YES];
+    [self dismissModalViewControllerAnimated:YES];
 }
 @end

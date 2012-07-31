@@ -33,6 +33,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *secondFilterPropertyLabel;
 @property (weak, nonatomic) IBOutlet UILabel *thirdFilterPropertyLabel;
 - (IBAction)writeFilter:(id)sender;
+- (NSString *)savePath;
 @property (weak, nonatomic) IBOutlet UITextField *filterChainTitle;
 - (IBAction)loadFilter:(id)sender;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *filterControl;
