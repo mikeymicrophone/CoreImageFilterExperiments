@@ -409,19 +409,22 @@
     if (sender == firstFilterControl || (sender == filterControl && (filterControl.selectedSegmentIndex == 0)) || (sender == [NSNumber numberWithInt:1])) {
         configurableFilter = firstFilter;
         configurableFilterProperties = firstFilterProperties;
-        configurableFilterIndex = 1;        
+        configurableFilterIndex = 1;
+        [firstFilterArmButton setOn:YES animated:YES];
     } else if (sender == secondFilterControl || (sender == filterControl && (filterControl.selectedSegmentIndex == 1)) || (sender == [NSNumber numberWithInt:2])) {
         configurableFilter = secondFilter;
         configurableFilterProperties = secondFilterProperties;
         configurableFilterIndex = 2;
+        [secondFilterArmButton setOn:YES animated:YES];
     } else if (sender == thirdFilterControl || (sender == filterControl && (filterControl.selectedSegmentIndex == 2)) || (sender == [NSNumber numberWithInt:3])) {
         configurableFilter = thirdFilter;
         configurableFilterProperties = thirdFilterProperties;
         configurableFilterIndex = 3;
+        [thirdFilterArmButton setOn:YES animated:YES];
     }
     [self updateSliders];
     [self updatePicker];
-    [self updateTitleColors];
+    [self toggleFilter:nil];
 }
 
 #pragma mark -- filter definitions --
