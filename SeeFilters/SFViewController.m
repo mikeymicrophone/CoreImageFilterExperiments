@@ -596,6 +596,29 @@
     [self updateFilteredImage:beginImage context:previewContext];
 }
 
+- (IBAction)chooseFilterToDelete:(id)sender {
+    SFLoadFilterController *filterChooser = [[SFLoadFilterController alloc] initWithStyle:UITableViewStylePlain];
+    filterChooser.filters = [self savedFilters];
+    filterChooser.filterController = self;
+    filterChooser.idiom = @"delete";
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        UIPopoverController *chooserP = [[UIPopoverController alloc] initWithContentViewController:filterChooser];
+        [chooserP presentPopoverFromRect:CGRectMake(65, 975, 85, 20) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
+        popover = chooserP;
+    } else {
+        [self presentModalViewController:filterChooser animated:YES];
+    }
+}
+
+- (void)deleteFilterAtIndex:(NSUInteger)index
+{
+    NSMutableArray *newFilterGroup = [self savedFilters];
+    [newFilterGroup removeObjectAtIndex:index];
+    BOOL success = [newFilterGroup writeToFile:[self savePath] atomically:YES];
+    NSLog(@"save success: %d", success);
+}
+
 - (NSString *)savePath
 {
     NSString* documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];

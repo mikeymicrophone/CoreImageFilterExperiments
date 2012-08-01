@@ -49,4 +49,7 @@
 -(void)updateFilteredImage:(CIImage *)image context:(CIContext *)context;
 - (NSMutableArray *)savedFilters;
 -(void)useSavedFilterAtIndex:(NSUInteger)index;
+- (IBAction)chooseFilterToDelete:(id)sender;
+- (void)deleteFilterAtIndex:(NSUInteger)index;
+
 @end

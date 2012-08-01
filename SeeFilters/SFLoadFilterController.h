@@ -13,5 +13,6 @@
 
 @property (weak, nonatomic) SFViewController *filterController;
 @property (weak, nonatomic) NSMutableArray *filters;
+@property (weak, nonatomic) NSString *idiom;
 
 @end

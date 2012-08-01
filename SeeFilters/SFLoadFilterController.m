@@ -16,6 +16,7 @@
 
 @synthesize filters;
 @synthesize filterController;
+@synthesize idiom;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -124,6 +125,9 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [filterController useSavedFilterAtIndex:[indexPath indexAtPosition:1]];
+    if ([idiom isEqualToString:@"delete"]) {
+        [filterController deleteFilterAtIndex:[indexPath indexAtPosition:1]];
+    }
 }
 
 @end
