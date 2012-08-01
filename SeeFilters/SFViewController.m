@@ -123,7 +123,11 @@
     [configurableFilterProperties addEntriesFromDictionary:myDefaults];
     
     for(NSString *setting in configurableFilterProperties) {
-        [configurableFilter setValue:[configurableFilterProperties valueForKey:setting] forKey:setting];
+        if ([setting isEqualToString:@"configuredMaximumForFirstSlider"] || [setting isEqualToString:@"configuredMinimumForFirstSlider"] || [setting isEqualToString:@"configuredMaximumForSecondSlider"] || [setting isEqualToString:@"configuredMinimumForSecondSlider"]) {
+            NSLog(@"got it");
+        } else {
+            [configurableFilter setValue:[configurableFilterProperties valueForKey:setting] forKey:setting];
+        }
     }
     if (configurableFilterIndex == 1) {
         firstFilter = configurableFilter;
