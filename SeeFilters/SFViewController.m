@@ -225,11 +225,7 @@
     secondFilterValueLabel.hidden = !secondSliderUsed;
 }
 
--(void)updateFilteredImage:(CIImage *)image context:(CIContext *)context {
-    [self updateFilteredImage:image context:context intoImage:nil];
-}
-
--(void)updateFilteredImage:(CIImage *)image context:(CIContext *)context intoImage:(CIImage *)output
+-(void)updateFilteredImage:(CIImage *)image context:(CIContext *)context
 {
     CIImage *outputImage;
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
@@ -281,8 +277,13 @@
         [imgV setImage:newImg];
         
         CGImageRelease(cgimg);
-    } else {
-        output = outputImage;
+    } else if (context == saveContext) {
+        CGImageRef cgImg = [context createCGImage:outputImage fromRect:[outputImage extent]];
+        ALAssetsLibrary* library = [[ALAssetsLibrary alloc] init];
+        [library writeImageToSavedPhotosAlbum:cgImg metadata:[outputImage properties]
+                              completionBlock:^(NSURL *assetURL, NSError *error) {
+                                  CGImageRelease(cgImg);
+                              }];
     }
 }
 
@@ -684,15 +685,7 @@
 
 - (IBAction)savePhoto:(id)sender {
     CIImage *fullSize = [CIImage imageWithCGImage:fullSizeImage.CGImage];
-    CIImage *fullSizeOutput = nil;
-    [self updateFilteredImage:fullSize context:saveContext intoImage:fullSizeOutput];
-    CIImage *imageToSave = fullSizeOutput;
-    CGImageRef cgImg = [saveContext createCGImage:imageToSave fromRect:[imageToSave extent]];
-    ALAssetsLibrary* library = [[ALAssetsLibrary alloc] init];
-    [library writeImageToSavedPhotosAlbum:cgImg metadata:[imageToSave properties] 
-                          completionBlock:^(NSURL *assetURL, NSError *error) {
-                              CGImageRelease(cgImg);
-                          }];
+    [self updateFilteredImage:fullSize context:saveContext];
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker 
