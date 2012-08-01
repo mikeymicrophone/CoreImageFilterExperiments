@@ -382,8 +382,15 @@
 
 - (IBAction)pushSliderEndpoints:(UIPanGestureRecognizer *)recognizer
 {
+    NSLog(@"pushing endpoints %@", recognizer);
     CGPoint trans = [recognizer translationInView:self.view];
-    amountSlider.maximumValue = amountSlider.maximumValue - (trans.y / 100);
+    if (recognizer.numberOfTouches == 3) {
+        amountSlider.maximumValue = amountSlider.maximumValue - (trans.y / 100);
+        filterValueLabel.text = [NSString stringWithFormat:@"%1.3f", amountSlider.maximumValue];
+    } else {
+        amountSlider.minimumValue = amountSlider.minimumValue - (trans.y / 100);
+        filterValueLabel.text = [NSString stringWithFormat:@"%1.3f", amountSlider.minimumValue];
+    }
     [recognizer setTranslation:CGPointMake(0, 0) inView:self.view];
 }
 
