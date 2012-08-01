@@ -183,8 +183,16 @@
         secondSliderAttribute = @"inputRadius";
         secondSliderUsed = YES;
     }
-    amountSlider.maximumValue = [[[[filter attributes] valueForKey:firstSliderAttribute] valueForKey:kCIAttributeSliderMax] floatValue];
-    amountSlider.minimumValue = [[[[filter attributes] valueForKey:firstSliderAttribute] valueForKey:kCIAttributeSliderMin] floatValue];
+    if ([configurableFilterProperties valueForKey:@"configuredMaximumForFirstSlider"]) {
+        amountSlider.maximumValue = [[configurableFilterProperties valueForKey:@"configuredMaximumForFirstSlider"] floatValue];
+    } else {
+        amountSlider.maximumValue = [[[[filter attributes] valueForKey:firstSliderAttribute] valueForKey:kCIAttributeSliderMax] floatValue];
+    }
+    if ([configurableFilterProperties valueForKey:@"configuredMinimumForFirstSlider"]) {
+        amountSlider.minimumValue = [[configurableFilterProperties valueForKey:@"configuredMinimumForFirstSlider"] floatValue];
+    } else {
+        amountSlider.minimumValue = [[[[filter attributes] valueForKey:firstSliderAttribute] valueForKey:kCIAttributeSliderMin] floatValue];
+    }
     if ([configurableFilterProperties valueForKey:firstSliderAttribute]) {
         [amountSlider setValue:[[configurableFilterProperties valueForKey:firstSliderAttribute] floatValue] animated:YES];
     } else {
@@ -194,8 +202,16 @@
     filterValueLabel.text = [NSString stringWithFormat:@"%1.3f", amountSlider.value];
 
     if (secondSliderUsed) {
-        secondSlider.maximumValue = [[[[filter attributes] valueForKey:secondSliderAttribute] valueForKey:kCIAttributeSliderMax] floatValue];
-        secondSlider.minimumValue = [[[[filter attributes] valueForKey:secondSliderAttribute] valueForKey:kCIAttributeSliderMin] floatValue];        
+        if ([configurableFilterProperties valueForKey:@"configuredMaximumForSecondSlider"]) {
+            secondSlider.maximumValue = [[configurableFilterProperties valueForKey:@"configuredMaximumForSecondSlider"] floatValue];
+        } else {
+            secondSlider.maximumValue = [[[[filter attributes] valueForKey:secondSliderAttribute] valueForKey:kCIAttributeSliderMax] floatValue];
+        }
+        if ([configurableFilterProperties valueForKey:@"configuredMinimumForSecondSlider"]) {
+            secondSlider.minimumValue = [[configurableFilterProperties valueForKey:@"configuredMinimumForSecondSlider"] floatValue];
+        } else {
+            secondSlider.minimumValue = [[[[filter attributes] valueForKey:secondSliderAttribute] valueForKey:kCIAttributeSliderMin] floatValue];
+        }
         if ([configurableFilterProperties valueForKey:secondSliderAttribute]) {
             [secondSlider setValue:[[configurableFilterProperties valueForKey:secondSliderAttribute] floatValue] animated:YES];
         } else {
@@ -383,19 +399,26 @@
 - (IBAction)pushSliderEndpoints:(UIPanGestureRecognizer *)recognizer
 {
     CGPoint trans = [recognizer translationInView:self.view];
+    NSString *sliderConfigIdentity;
     UISlider *configurableSlider = (UISlider *) recognizer.view;
     UILabel *configurableLabel;
     if (recognizer.view == amountSlider) {
         configurableLabel = filterValueLabel;
+        sliderConfigIdentity = @"FirstSlider";
     } else if (recognizer.view == secondSlider) {
         configurableLabel = secondFilterValueLabel;
+        sliderConfigIdentity = @"SecondSlider";
     }
     if (recognizer.numberOfTouches == 3) {
         configurableSlider.maximumValue = configurableSlider.maximumValue - (trans.y / 100);
         configurableLabel.text = [NSString stringWithFormat:@"%1.3f", configurableSlider.maximumValue];
-    } else {
+        NSString *configurableKey = [@"configuredMaximumFor" stringByAppendingString:sliderConfigIdentity];
+        [configurableFilterProperties setValue:[NSNumber numberWithFloat:configurableSlider.maximumValue] forKey:configurableKey];
+    } else if (recognizer.numberOfTouches == 2) {
         configurableSlider.minimumValue = configurableSlider.minimumValue - (trans.y / 100);
         configurableLabel.text = [NSString stringWithFormat:@"%1.3f", configurableSlider.minimumValue];
+        NSString *configurableKey = [@"configuredMinimumFor" stringByAppendingString:sliderConfigIdentity];
+        [configurableFilterProperties setValue:[NSNumber numberWithFloat:configurableSlider.minimumValue] forKey:configurableKey];
     }
     [recognizer setTranslation:CGPointMake(0, 0) inView:self.view];
 }
