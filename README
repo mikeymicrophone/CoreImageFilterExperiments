@@ -1,0 +1,13 @@
+Core Image Filter Experiments
+
+This iOS app lets you filter your photos with some of the Core Image filters.  You can use multiple filters at once, configure their settings, and preview your image as you make adjustments.
+
+When you're happy with the image, you can export it at full resolution, and optionally, save the filter group that created the effect.
+
+Saved filters can be shared with other users of the app over email.
+
+If you'd like to refer to another image while tuning your filters, you can load it into the left pane by holding a finger on the left image (a "long tap").  Tapping the image will then switch between the unfiltered image and your reference image.
+
+Most of this works on iPhone but the best interface is on iPad.
+
+This software is licensed under the MIT license.
