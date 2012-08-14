@@ -82,11 +82,11 @@
     
     [self controlFilter:[NSNumber numberWithInt:1]];
     firstFilterProperties = [[NSMutableDictionary alloc] init];
-    [self updateFilter:@"CISepiaTone" withProperties:nil];
+    [self updateFilter:@"CIVibrance" withProperties:nil];
     
     [self controlFilter:[NSNumber numberWithInt:2]];
     secondFilterProperties = [[NSMutableDictionary alloc] init];
-    [self updateFilter:@"CIExposureAdjust" withProperties:nil];
+    [self updateFilter:@"CIGammaAdjust" withProperties:nil];
     
     [self controlFilter:[NSNumber numberWithInt:3]];
     thirdFilterProperties = [[NSMutableDictionary alloc] init];
@@ -98,7 +98,7 @@
 }
 
 #pragma mark -- updaters --
-
+// This method loads a filter into one of the filter banks, with settings that are either determined from a saved filter or set to default values.
 - (void)updateFilter:(NSString *)filterName withProperties:(NSMutableDictionary *)properties
 {
     configurableFilter = [CIFilter filterWithName:filterName];
@@ -150,6 +150,7 @@
     [self updateFilteredImage:beginImage context:previewContext];
 }
 
+// This method determines how many sliders to display, and which values to set them at, while making a filter active for configuration.
 - (void)updateSliders
 {
     NSString *filterName = [configurableFilter name];
@@ -229,6 +230,7 @@
     secondFilterValueLabel.hidden = !secondSliderUsed;
 }
 
+// This method applies the filter chain to the image.  It is used for both preview and export.
 -(void)updateFilteredImage:(CIImage *)image context:(CIContext *)context
 {
     CIImage *outputImage;
@@ -291,6 +293,7 @@
     }
 }
 
+// This method displays the configured values of the filters.
 -(void)updateFilterLabels
 {
     NSString *firstAttrName = [firstSliderAttribute substringFromIndex:5];
@@ -323,6 +326,7 @@
     }
 }
 
+// This method updates the color of the filter name based on its interactive status.
 -(void)updateTitleColors
 {
     UIColor *firstTitleColor;
@@ -372,6 +376,7 @@
     [thirdFilterControl setTitleColor:thirdTitleColor forState:UIControlStateNormal];
 }
 
+// This method moves the picker wheel to display the name of the active filter, just for clarity's sake.
 - (void)updatePicker
 {
     int filterIndex;
@@ -384,7 +389,7 @@
 }
 
 #pragma mark -- interface controls --
-
+// This method responds to the user pushing a slider by updating filters, labels, and stored properties.
 -(IBAction)changeValue:(UISlider *)sender {
     float slideValue = [sender value];
     if (sender == amountSlider) {
@@ -401,6 +406,7 @@
     [self updateFilterLabels];
 }
 
+// This method updates the endpoints of a slider, responding to a pan gesture of two or three fingers.
 - (IBAction)pushSliderEndpoints:(UIPanGestureRecognizer *)recognizer
 {
     CGPoint trans = [recognizer translationInView:self.view];
@@ -428,11 +434,13 @@
     [recognizer setTranslation:CGPointMake(0, 0) inView:self.view];
 }
 
+// This method responds to a toggle control by re-filtering the image and coloring the filter name.
 - (IBAction)toggleFilter:(id)sender {
     [self updateFilteredImage:beginImage context:previewContext];
     [self updateTitleColors];
 }
 
+// This method tells the app which filter is being configured.  It responds to a tap on one of the filter banks.
 - (IBAction)controlFilter:(id)sender {
     if (sender == firstFilterControl || (sender == filterControl && (filterControl.selectedSegmentIndex == 0)) || (sender == [NSNumber numberWithInt:1])) {
         configurableFilter = firstFilter;
@@ -456,7 +464,7 @@
 }
 
 #pragma mark -- filter definitions --
-
+// This is a list of the filters available.
 - (void)initFilterList
 {
     filterList = [NSArray arrayWithObjects:
@@ -471,6 +479,7 @@
                   [CIFilter filterWithName:@"CIVignette"], nil];
 }
 
+// This method provides a filter object, given its name.
 - (CIFilter *)filterOfName:(NSString *)filterName
 {
     for (CIFilter *filter in filterList) {
@@ -482,6 +491,7 @@
     return nil;
 }
 
+// This method enables the setting of a default value not present in the filter's own defaults.
 - (NSMutableDictionary *)attributesForFilter:(NSString *)filterName
 {
     NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
@@ -495,6 +505,7 @@
     return attributes;
 }
 
+// This method prints out details about the API of each filter.  Currently it highlights those with numeric inputs, which are suitable for slider controls.
 - (void)logAllFilters
 {
     NSArray *inputs;
@@ -516,7 +527,7 @@
 }
 
 #pragma mark -- saving custom filters --
-
+// This method saves the currently configured filter chain.
 - (IBAction)writeFilter:(id)sender {
     [self.view endEditing:YES];
     NSMutableDictionary *filterDetails = [[NSMutableDictionary alloc] initWithCapacity:10];
@@ -556,6 +567,7 @@
     NSLog(@"save success: %d", success);
 }
 
+// This method displays a list of available filter chains.
 - (IBAction)loadFilter:(id)sender {
     SFLoadFilterController *filterChooser = [[SFLoadFilterController alloc] initWithStyle:UITableViewStylePlain];
     filterChooser.filters = [self savedFilters];
@@ -570,6 +582,7 @@
     }
 }
 
+// This method loads a saved filter chain into the filter banks.
 -(void)useSavedFilterAtIndex:(NSUInteger)index
 {
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
@@ -601,6 +614,7 @@
     [self updateFilteredImage:beginImage context:previewContext];
 }
 
+// This method displays a list of saved filters that can be deleted.
 - (IBAction)chooseFilterToDelete:(id)sender {
     SFLoadFilterController *filterChooser = [[SFLoadFilterController alloc] initWithStyle:UITableViewStylePlain];
     filterChooser.filters = [self savedFilters];
@@ -616,6 +630,7 @@
     }
 }
 
+// This method removes a chosen filter chain from the saved group.
 - (void)deleteFilterAtIndex:(NSUInteger)index
 {
     NSMutableArray *newFilterGroup = [self savedFilters];
@@ -624,29 +639,33 @@
     NSLog(@"save success: %d", success);
 }
 
+// This is the path to the file used for storing saved filters.
 - (NSString *)savePath
 {
     NSString* documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     return [documentsPath stringByAppendingPathComponent:@"saved_filters.plist"];
 }
 
+// This is the array of saved filter chains (stored as dictionaries containing configuration settings).
 - (NSMutableArray *)savedFilters
 {
     return [[NSMutableArray alloc] initWithContentsOfFile:[self savePath]];
 }
 
 #pragma mark -- filter selection --
-
+// This indicates that the filters in the picker are not currently grouped in any way.
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
 {
     return 1;
 }
 
+// This tells the picker how many filters it will hold.
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
 {
     return [filterList count];
 }
 
+// This gets human-readable names for the filters implemented.
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
 {
     CIFilter *filter = [filterList objectAtIndex:row];
@@ -654,13 +673,14 @@
     return [attrs objectForKey:kCIAttributeFilterDisplayName];
 }
 
+// This responds to the picker by loading the selected filter into the active bank.
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
     [self updateFilter:[[filterList objectAtIndex:row] name] withProperties:nil];
 }
 
 #pragma mark -- image selection --
-
+// This method displays the photo album picker used to pick photos.
 - (IBAction)loadPhoto:(id)sender {
     if (![longPressAlternativeImageLoader isEnabled]) return; // code to prevent multiple long press messages
     [longPressAlternativeImageLoader setEnabled:NO];
@@ -687,13 +707,14 @@
     }
 }
 
+// This method saves/exports a full-resolution version of the filtered image.
 - (IBAction)savePhoto:(id)sender {
     CIImage *fullSize = [CIImage imageWithCGImage:fullSizeImage.CGImage];
     [self updateFilteredImage:fullSize context:saveContext];
 }
 
-- (void)imagePickerController:(UIImagePickerController *)picker 
-didFinishPickingMediaWithInfo:(NSDictionary *)info {
+// This method loads the selected image into the preview window and into the filter chain (unless it's just a reference image).
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         [popover dismissPopoverAnimated:YES];
         popover = nil;
@@ -758,6 +779,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     }
 }
 
+// This method handles cancellation of an image pick - although I'm not sure how to cancel (tapping outside the picker doesn't seem to run this).
 - (void)imagePickerControllerDidCancel:
 (UIImagePickerController *)picker {
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
@@ -769,6 +791,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     }
 }
 
+// This method toggles whether your original image or your reference image is displayed in the left-side preview window.
 - (IBAction)toggleAlternatePreviewImage:(id)sender
 {
     if (originalImageView.image == alternatePreviewImage) {
@@ -778,6 +801,71 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     } else {
         originalImageView.image = alternatePreviewImage;
     }
+}
+
+#pragma mark -- filter sharing and importing --
+// This method populates an email with attachments (filter plist, current previews) and instructions on how to import filters.
+- (IBAction)sendFilterListInEmail:(id)sender {
+    MFMailComposeViewController *mailer = [[MFMailComposeViewController alloc] init];
+    
+    mailer.mailComposeDelegate = self;
+    
+    [mailer setSubject:@"My saved filters"];
+    
+    NSArray *toRecipients = [NSArray arrayWithObjects:@"mike.schwab@gmail.com", nil];
+    [mailer setToRecipients:toRecipients];
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        UIImage *currentOriginalImage = originalImageView.image;
+        NSData *originalImageData = UIImagePNGRepresentation(currentOriginalImage);
+        [mailer addAttachmentData:originalImageData mimeType:@"image/png" fileName:@"unfiltered-image"];
+    }
+    UIImage *currentFilteredImage = imgV.image;
+    NSData *currentImageData = UIImagePNGRepresentation(currentFilteredImage);
+    NSData *filterPlist = [NSData dataWithContentsOfFile:[self savePath]];
+    [mailer addAttachmentData:currentImageData mimeType:@"image/png" fileName:@"filtered-image"];
+    [mailer addAttachmentData:filterPlist mimeType:@"text/xml" fileName:@"saved-filters.plist"];
+    NSString *emailBody = @"Here are all of the filters I've saved, with the newest ones at the bottom.  To load them into your filtering app, open the attached \"saved_filters.plist\" file on a computer, copy the filter XML into an email you can open on your iPad, and paste the XML into the 'Load Filters' window.\n\n\n";
+    
+    [mailer setMessageBody:emailBody isHTML:NO];
+    
+    mailer.modalPresentationStyle = UIModalPresentationPageSheet;
+    [self presentModalViewController:mailer animated:YES];
+}
+
+// This method presents the import view where filter XML can be pasted.
+- (IBAction)importFiltersFromXML:(id)sender {
+    SFImportViewController *importController = [[SFImportViewController alloc] initWithNibName:@"SFImportViewController" bundle:nil];
+    importController.filterController = self;
+    
+    importController.modalPresentationStyle = UIModalPresentationPageSheet;
+    [self presentModalViewController:importController animated:YES];
+}
+
+// This method sends the email after composition is complete.
+- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error
+{
+    switch (result)
+    {
+        case MFMailComposeResultCancelled:
+            NSLog(@"Mail cancelled: you cancelled the operation and no email message was queued.");
+            break;
+        case MFMailComposeResultSaved:
+            NSLog(@"Mail saved: you saved the email message in the drafts folder.");
+            break;
+        case MFMailComposeResultSent:
+            NSLog(@"Mail sent: the email message is queued in the outbox. It is ready to send.");
+            break;
+        case MFMailComposeResultFailed:
+            NSLog(@"Mail failed: the email message was not saved or queued, possibly due to an error.");
+            break;
+        default:
+            NSLog(@"Mail not sent.");
+            break;
+    }
+    
+        // Remove the mail view
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 #pragma mark -- boilerplate --
@@ -809,66 +897,5 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     [self setLongPressAlternativeImageLoader:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
-}
-
-- (IBAction)sendFilterListInEmail:(id)sender {
-    MFMailComposeViewController *mailer = [[MFMailComposeViewController alloc] init];
-    
-    mailer.mailComposeDelegate = self;
-    
-    [mailer setSubject:@"My saved filters"];
-    
-    NSArray *toRecipients = [NSArray arrayWithObjects:@"mike.schwab@gmail.com", nil];
-    [mailer setToRecipients:toRecipients];
-    
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        UIImage *currentOriginalImage = originalImageView.image;
-        NSData *originalImageData = UIImagePNGRepresentation(currentOriginalImage);
-        [mailer addAttachmentData:originalImageData mimeType:@"image/png" fileName:@"unfiltered-image"];
-    }
-    UIImage *currentFilteredImage = imgV.image;
-    NSData *currentImageData = UIImagePNGRepresentation(currentFilteredImage);
-    NSData *filterPlist = [NSData dataWithContentsOfFile:[self savePath]];
-    [mailer addAttachmentData:currentImageData mimeType:@"image/png" fileName:@"filtered-image"];
-    [mailer addAttachmentData:filterPlist mimeType:@"text/xml" fileName:@"saved-filters.plist"];
-    NSString *emailBody = @"Here are all of the filters I've saved, with the newest ones at the bottom.  To load them into your filtering app, open the attached \"saved_filters.plist\" file on a computer, copy the filter XML into an email you can open on your iPad, and paste the XML into the 'Load Filters' window.\n\n\n";
-    
-    [mailer setMessageBody:emailBody isHTML:NO];
-    
-    mailer.modalPresentationStyle = UIModalPresentationPageSheet;
-    [self presentModalViewController:mailer animated:YES];
-}
-
-- (IBAction)importFiltersFromXML:(id)sender {
-    SFImportViewController *importController = [[SFImportViewController alloc] initWithNibName:@"SFImportViewController" bundle:nil];
-    importController.filterController = self;
-    
-    importController.modalPresentationStyle = UIModalPresentationPageSheet;
-    [self presentModalViewController:importController animated:YES];
-}
-
-- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error 
-{   
-    switch (result)
-    {
-        case MFMailComposeResultCancelled:
-            NSLog(@"Mail cancelled: you cancelled the operation and no email message was queued.");
-            break;
-        case MFMailComposeResultSaved:
-            NSLog(@"Mail saved: you saved the email message in the drafts folder.");
-            break;
-        case MFMailComposeResultSent:
-            NSLog(@"Mail sent: the email message is queued in the outbox. It is ready to send.");
-            break;
-        case MFMailComposeResultFailed:
-            NSLog(@"Mail failed: the email message was not saved or queued, possibly due to an error.");
-            break;
-        default:
-            NSLog(@"Mail not sent.");
-            break;
-    }
-    
-    // Remove the mail view
-    [self dismissModalViewControllerAnimated:YES];
 }
 @end
