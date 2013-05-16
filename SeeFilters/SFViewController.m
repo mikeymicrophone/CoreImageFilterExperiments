@@ -187,6 +187,43 @@
         firstSliderAttribute = @"inputIntensity";
         secondSliderAttribute = @"inputRadius";
         secondSliderUsed = YES;
+    } else if ([filterName isEqualToString:@"CIBloom"]) {
+        firstSliderAttribute = @"inputIntensity";
+        secondSliderAttribute = @"inputRadius";
+        secondSliderUsed = YES;
+    } else if ([filterName isEqualToString:@"CIBumpDistortion"]) {
+        firstSliderAttribute = @"inputScale";
+        secondSliderAttribute = @"inputRadius";
+        secondSliderUsed = YES;
+    } else if ([filterName isEqualToString:@"CICircularScreen"]) {
+        firstSliderAttribute = @"inputWidth";
+        secondSliderAttribute = @"inputSharpness";
+        secondSliderUsed = YES;
+    } else if ([filterName isEqualToString:@"CIColorInvert"]) {
+        firstSliderAttribute = nil;
+        secondSliderUsed = NO;
+    } else if ([filterName isEqualToString:@"CIColorPosterize"]) {
+        firstSliderAttribute = @"inputLevels";
+        secondSliderUsed = NO;
+    } else if ([filterName isEqualToString:@"CIDotScreen"]) {
+        firstSliderAttribute = @"inputWidth";
+        secondSliderAttribute = @"inputSharpness";
+        secondSliderUsed = YES;
+    } else if ([filterName isEqualToString:@"CIGaussianBlur"]) {
+        firstSliderAttribute = @"inputRadius";
+        secondSliderUsed = NO;
+    } else if ([filterName isEqualToString:@"CIGloom"]) {
+        firstSliderAttribute = @"inputIntensity";
+        secondSliderAttribute = @"inputRadius";
+        secondSliderUsed = YES;
+    } else if ([filterName isEqualToString:@"CIHatchedScreen"]) {
+        firstSliderAttribute = @"inputWidth";
+        secondSliderAttribute = @"inputSharpness";
+        secondSliderUsed = YES;
+    } else if ([filterName isEqualToString:@"CIUnsharpMask"]) {
+        firstSliderAttribute = @"inputIntensity";
+        secondSliderAttribute = @"inputRadius";
+        secondSliderUsed = YES;
     }
     if ([configurableFilterProperties valueForKey:@"configuredMaximumForFirstSlider"]) {
         amountSlider.maximumValue = [[configurableFilterProperties valueForKey:@"configuredMaximumForFirstSlider"] floatValue];
@@ -477,6 +514,18 @@
                   [CIFilter filterWithName:@"CIHueAdjust"],
                   [CIFilter filterWithName:@"CIHighlightShadowAdjust"],
                   [CIFilter filterWithName:@"CIVignette"], nil];
+                  [CIFilter filterWithName:@"CIVignette"],
+                  [CIFilter filterWithName:@"CIBloom"],
+                  [CIFilter filterWithName:@"CIBumpDistortion"],
+                  [CIFilter filterWithName:@"CICircularScreen"],
+                  [CIFilter filterWithName:@"CIColorInvert"],
+                  [CIFilter filterWithName:@"CIColorPosterize"],
+                  [CIFilter filterWithName:@"CIDotScreen"],
+                  [CIFilter filterWithName:@"CIGaussianBlur"],
+                  [CIFilter filterWithName:@"CIGloom"],
+                  [CIFilter filterWithName:@"CIHatchedScreen"],
+                  [CIFilter filterWithName:@"CIUnsharpMask"],
+                  nil];
 }
 
 // This method provides a filter object, given its name.
