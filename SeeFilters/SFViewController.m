@@ -63,6 +63,7 @@
 	// Do any additional setup after loading the view, typically from a nib.
     
     [self initFilterList];
+    NSLog(@"length of filter list: %d", [filterList count]);
     
     NSString *filePath = [[NSBundle mainBundle] pathForResource:@"image" ofType:@"png"];
     NSURL *fileNameAndPath = [NSURL fileURLWithPath:filePath];
@@ -224,16 +225,24 @@
         firstSliderAttribute = @"inputIntensity";
         secondSliderAttribute = @"inputRadius";
         secondSliderUsed = YES;
+    } else if ([filterName isEqualToString:@"CICircleSplashDistortion"]) {
+        firstSliderAttribute = @"inputRadius";
+        secondSliderUsed = NO;
+    } else if ([filterName isEqualToString:@"CIColorCube"]) {
+        firstSliderAttribute = @"inputCubeDimension";
+        secondSliderUsed = NO;
     }
+    
+    
     if ([configurableFilterProperties valueForKey:@"configuredMaximumForFirstSlider"]) {
         amountSlider.maximumValue = [[configurableFilterProperties valueForKey:@"configuredMaximumForFirstSlider"] floatValue];
     } else {
-        amountSlider.maximumValue = [[[[filter attributes] valueForKey:firstSliderAttribute] valueForKey:kCIAttributeSliderMax] floatValue];
+        amountSlider.maximumValue = [[[[filter attributes] valueForKey:firstSliderAttribute] valueForKey:kCIAttributeMax] floatValue];
     }
     if ([configurableFilterProperties valueForKey:@"configuredMinimumForFirstSlider"]) {
         amountSlider.minimumValue = [[configurableFilterProperties valueForKey:@"configuredMinimumForFirstSlider"] floatValue];
     } else {
-        amountSlider.minimumValue = [[[[filter attributes] valueForKey:firstSliderAttribute] valueForKey:kCIAttributeSliderMin] floatValue];
+        amountSlider.minimumValue = [[[[filter attributes] valueForKey:firstSliderAttribute] valueForKey:kCIAttributeMin] floatValue];
     }
     if ([configurableFilterProperties valueForKey:firstSliderAttribute]) {
         [amountSlider setValue:[[configurableFilterProperties valueForKey:firstSliderAttribute] floatValue] animated:YES];
@@ -513,7 +522,6 @@
                   [CIFilter filterWithName:@"CIVibrance"],
                   [CIFilter filterWithName:@"CIHueAdjust"],
                   [CIFilter filterWithName:@"CIHighlightShadowAdjust"],
-                  [CIFilter filterWithName:@"CIVignette"], nil];
                   [CIFilter filterWithName:@"CIVignette"],
                   [CIFilter filterWithName:@"CIBloom"],
                   [CIFilter filterWithName:@"CIBumpDistortion"],
@@ -525,7 +533,8 @@
                   [CIFilter filterWithName:@"CIGloom"],
                   [CIFilter filterWithName:@"CIHatchedScreen"],
                   [CIFilter filterWithName:@"CIUnsharpMask"],
-                  nil];
+                  [CIFilter filterWithName:@"CICircleSplashDistortion"],
+                  [CIFilter filterWithName:@"CIColorCube"], nil];
 }
 
 // This method provides a filter object, given its name.

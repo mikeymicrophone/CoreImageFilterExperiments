@@ -210,6 +210,11 @@
 			attributes = {
 				CLASSPREFIX = SF;
 				LastUpgradeCheck = 0430;
+				TargetAttributes = {
+					0C38609315AB7EDA002A4EAC = {
+						DevelopmentTeam = C7FJS9SLNW;
+					};
+				};
 			};
 			buildConfigurationList = 0C38608E15AB7EDA002A4EAC /* Build configuration list for PBXProject "SeeFilters" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -341,10 +346,13 @@
 		0C3860B315AB7EDA002A4EAC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SeeFilters/SeeFilters-Prefix.pch";
 				INFOPLIST_FILE = "SeeFilters/SeeFilters-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -353,10 +361,13 @@
 		0C3860B415AB7EDA002A4EAC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SeeFilters/SeeFilters-Prefix.pch";
 				INFOPLIST_FILE = "SeeFilters/SeeFilters-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -386,10 +397,13 @@
 		C86AD26615BDE8EC006AC2E9 /* Distribution */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SeeFilters/SeeFilters-Prefix.pch";
 				INFOPLIST_FILE = "SeeFilters/SeeFilters-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
