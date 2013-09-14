@@ -268,8 +268,10 @@
     } else if ([filterName isEqualToString:@"CIPixellate"]) {
         firstSliderAttribute = @"inputScale";
         secondSliderUsed = NO;
+    } else if ([filterName isEqualToString:@"CISharpenLuminance"]) {
+        firstSliderAttribute = @"inputSharpness";
+        secondSliderUsed = NO;
     }
-    
     
     
     
@@ -612,7 +614,8 @@
                   [CIFilter filterWithName:@"CILineScreen"],
                   [CIFilter filterWithName:@"CIMaskToAlpha"],
                   [CIFilter filterWithName:@"CIPinchDistortion"],
-                  [CIFilter filterWithName:@"CIPixellate"], nil];
+                  [CIFilter filterWithName:@"CIPixellate"],
+                  [CIFilter filterWithName:@"CISharpenLuminance"], nil];
 }
 
 // This method provides a filter object, given its name.
