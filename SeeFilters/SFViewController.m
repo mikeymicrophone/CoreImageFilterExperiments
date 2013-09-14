@@ -231,18 +231,53 @@
     } else if ([filterName isEqualToString:@"CIColorCube"]) {
         firstSliderAttribute = @"inputCubeDimension";
         secondSliderUsed = NO;
+    } else if ([filterName isEqualToString:@"CIConvolution3X3"]) {
+        firstSliderAttribute = @"inputBias";
+        secondSliderUsed = NO;
+    } else if ([filterName isEqualToString:@"CIEightfoldReflectedTile"]) {
+        firstSliderAttribute = @"inputAngle";
+        secondSliderAttribute = @"inputWidth";
+        secondSliderUsed = YES;
+    } else if ([filterName isEqualToString:@"CIFourfoldReflectedTile"]) {
+        firstSliderAttribute = @"inputAngle";
+        secondSliderAttribute = @"inputWidth";
+        secondSliderUsed = YES;
+    } else if ([filterName isEqualToString:@"CIFourfoldRotatedTile"]) {
+        firstSliderAttribute = @"inputAngle";
+        secondSliderAttribute = @"inputWidth";
+        secondSliderUsed = YES;
+    } else if ([filterName isEqualToString:@"CIHoleDistortion"]) {
+        firstSliderAttribute = @"inputRadius";
+        secondSliderUsed = NO;
     }
+    
+    
+    
+    NSLog(@"filter attributes: %@", [filter attributes]);
     
     
     if ([configurableFilterProperties valueForKey:@"configuredMaximumForFirstSlider"]) {
         amountSlider.maximumValue = [[configurableFilterProperties valueForKey:@"configuredMaximumForFirstSlider"] floatValue];
     } else {
-        amountSlider.maximumValue = [[[[filter attributes] valueForKey:firstSliderAttribute] valueForKey:kCIAttributeMax] floatValue];
+        if ([[[filter attributes] valueForKey:firstSliderAttribute] valueForKey:@"CIAttributeSliderMax"]) {
+            amountSlider.maximumValue = [[[[filter attributes] valueForKey:firstSliderAttribute] valueForKey:@"CIAttributeSliderMax"] floatValue];
+        } else if ([[[filter attributes] valueForKey:firstSliderAttribute] valueForKey:@"CIAttributeMax"]) {
+            amountSlider.maximumValue = [[[[filter attributes] valueForKey:firstSliderAttribute] valueForKey:@"CIAttributeMax"] floatValue];
+        } else {
+            amountSlider.maximumValue = 4.0;
+        }
+        
     }
     if ([configurableFilterProperties valueForKey:@"configuredMinimumForFirstSlider"]) {
         amountSlider.minimumValue = [[configurableFilterProperties valueForKey:@"configuredMinimumForFirstSlider"] floatValue];
     } else {
-        amountSlider.minimumValue = [[[[filter attributes] valueForKey:firstSliderAttribute] valueForKey:kCIAttributeMin] floatValue];
+        if ([[[filter attributes] valueForKey:firstSliderAttribute] valueForKey:@"CIAttributeSliderMin"]) {
+            amountSlider.minimumValue = [[[[filter attributes] valueForKey:firstSliderAttribute] valueForKey:@"CIAttributeSliderMin"] floatValue];
+        } else if ([[[filter attributes] valueForKey:firstSliderAttribute] valueForKey:@"CIAttributeMin"]) {
+            amountSlider.minimumValue = [[[[filter attributes] valueForKey:firstSliderAttribute] valueForKey:@"CIAttributeMin"] floatValue];
+        } else {
+            amountSlider.minimumValue = 0.0;
+        }
     }
     if ([configurableFilterProperties valueForKey:firstSliderAttribute]) {
         [amountSlider setValue:[[configurableFilterProperties valueForKey:firstSliderAttribute] floatValue] animated:YES];
@@ -256,12 +291,24 @@
         if ([configurableFilterProperties valueForKey:@"configuredMaximumForSecondSlider"]) {
             secondSlider.maximumValue = [[configurableFilterProperties valueForKey:@"configuredMaximumForSecondSlider"] floatValue];
         } else {
-            secondSlider.maximumValue = [[[[filter attributes] valueForKey:secondSliderAttribute] valueForKey:kCIAttributeSliderMax] floatValue];
+            if ([[[filter attributes] valueForKey:secondSliderAttribute] valueForKey:@"CIAttributeSliderMax"]) {
+                secondSlider.maximumValue = [[[[filter attributes] valueForKey:secondSliderAttribute] valueForKey:@"CIAttributeSliderMax"] floatValue];
+            } else if ([[[filter attributes] valueForKey:secondSliderAttribute] valueForKey:@"CIAttributeMax"]) {
+                secondSlider.maximumValue = [[[[filter attributes] valueForKey:secondSliderAttribute] valueForKey:@"CIAttributeMax"] floatValue];
+            } else {
+                secondSlider.maximumValue = 4.0;
+            }
         }
         if ([configurableFilterProperties valueForKey:@"configuredMinimumForSecondSlider"]) {
             secondSlider.minimumValue = [[configurableFilterProperties valueForKey:@"configuredMinimumForSecondSlider"] floatValue];
         } else {
-            secondSlider.minimumValue = [[[[filter attributes] valueForKey:secondSliderAttribute] valueForKey:kCIAttributeSliderMin] floatValue];
+            if ([[[filter attributes] valueForKey:secondSliderAttribute] valueForKey:@"CIAttributeSliderMin"]) {
+                secondSlider.minimumValue = [[[[filter attributes] valueForKey:secondSliderAttribute] valueForKey:@"CIAttributeSliderMin"] floatValue];
+            } else if ([[[filter attributes] valueForKey:secondSliderAttribute] valueForKey:@"CIAttributeMin"]) {
+                secondSlider.minimumValue = [[[[filter attributes] valueForKey:secondSliderAttribute] valueForKey:@"CIAttributeMin"] floatValue];
+            } else {
+                secondSlider.minimumValue = 0.0;
+            }
         }
         if ([configurableFilterProperties valueForKey:secondSliderAttribute]) {
             [secondSlider setValue:[[configurableFilterProperties valueForKey:secondSliderAttribute] floatValue] animated:YES];
@@ -534,7 +581,12 @@
                   [CIFilter filterWithName:@"CIHatchedScreen"],
                   [CIFilter filterWithName:@"CIUnsharpMask"],
                   [CIFilter filterWithName:@"CICircleSplashDistortion"],
-                  [CIFilter filterWithName:@"CIColorCube"], nil];
+                  [CIFilter filterWithName:@"CIColorCube"],
+                  [CIFilter filterWithName:@"CIConvolution3X3"],
+                  [CIFilter filterWithName:@"CIEightfoldReflectedTile"],
+                  [CIFilter filterWithName:@"CIFourfoldReflectedTile"],
+                  [CIFilter filterWithName:@"CIFourfoldRotatedTile"],
+                  [CIFilter filterWithName:@"CIHoleDistortion"], nil];
 }
 
 // This method provides a filter object, given its name.
