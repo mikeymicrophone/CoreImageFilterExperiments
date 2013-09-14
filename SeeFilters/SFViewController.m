@@ -271,6 +271,21 @@
     } else if ([filterName isEqualToString:@"CISharpenLuminance"]) {
         firstSliderAttribute = @"inputSharpness";
         secondSliderUsed = NO;
+    } else if ([filterName isEqualToString:@"CIStraightenFilter"]) {
+        firstSliderAttribute = @"inputAngle";
+        secondSliderUsed = NO;
+    } else if ([filterName isEqualToString:@"CITriangleKaleidoscope"]) {
+        firstSliderAttribute = @"inputSize";
+        secondSliderAttribute = @"inputDecay";
+        secondSliderUsed = YES;
+    } else if ([filterName isEqualToString:@"CITwirlDistortion"]) {
+        firstSliderAttribute = @"inputRadius";
+        secondSliderAttribute = @"inputAngle";
+        secondSliderUsed = YES;
+    } else if ([filterName isEqualToString:@"CIVortexDistortion"]) {
+        firstSliderAttribute = @"inputRadius";
+        secondSliderAttribute = @"inputAngle";
+        secondSliderUsed = YES;
     }
     
     
@@ -615,7 +630,11 @@
                   [CIFilter filterWithName:@"CIMaskToAlpha"],
                   [CIFilter filterWithName:@"CIPinchDistortion"],
                   [CIFilter filterWithName:@"CIPixellate"],
-                  [CIFilter filterWithName:@"CISharpenLuminance"], nil];
+                  [CIFilter filterWithName:@"CISharpenLuminance"],
+                  [CIFilter filterWithName:@"CIStraightenFilter"],
+                  [CIFilter filterWithName:@"CITriangleKaleidoscope"],
+                  [CIFilter filterWithName:@"CITwirlDistortion"],
+                  [CIFilter filterWithName:@"CIVortexDistortion"], nil];
 }
 
 // This method provides a filter object, given its name.
