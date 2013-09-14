@@ -261,6 +261,13 @@
         firstSliderAttribute = @"inputAngle";
         secondSliderAttribute = @"inputSharpness";
         secondSliderUsed = YES;
+    } else if ([filterName isEqualToString:@"CIPinchDistortion"]) {
+        firstSliderAttribute = @"inputRadius";
+        secondSliderAttribute = @"inputScale";
+        secondSliderUsed = YES;
+    } else if ([filterName isEqualToString:@"CIPixellate"]) {
+        firstSliderAttribute = @"inputScale";
+        secondSliderUsed = NO;
     }
     
     
@@ -602,7 +609,10 @@
                   [CIFilter filterWithName:@"CIHoleDistortion"],
                   [CIFilter filterWithName:@"CILanczosScaleTransform"],
                   [CIFilter filterWithName:@"CILightTunnel"],
-                  [CIFilter filterWithName:@"CILineScreen"], nil];
+                  [CIFilter filterWithName:@"CILineScreen"],
+                  [CIFilter filterWithName:@"CIMaskToAlpha"],
+                  [CIFilter filterWithName:@"CIPinchDistortion"],
+                  [CIFilter filterWithName:@"CIPixellate"], nil];
 }
 
 // This method provides a filter object, given its name.
