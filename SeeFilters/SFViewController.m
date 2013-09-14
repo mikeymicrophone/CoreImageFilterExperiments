@@ -249,7 +249,20 @@
     } else if ([filterName isEqualToString:@"CIHoleDistortion"]) {
         firstSliderAttribute = @"inputRadius";
         secondSliderUsed = NO;
+    } else if ([filterName isEqualToString:@"CILanczosScaleTransform"]) {
+        firstSliderAttribute = @"inputScale";
+        secondSliderAttribute = @"inputAspectRatio";
+        secondSliderUsed = YES;
+    } else if ([filterName isEqualToString:@"CILightTunnel"]) {
+        firstSliderAttribute = @"inputRotation";
+        secondSliderAttribute = @"inputRadius";
+        secondSliderUsed = YES;
+    } else if ([filterName isEqualToString:@"CILineScreen"]) {
+        firstSliderAttribute = @"inputAngle";
+        secondSliderAttribute = @"inputSharpness";
+        secondSliderUsed = YES;
     }
+    
     
     
     
@@ -586,7 +599,10 @@
                   [CIFilter filterWithName:@"CIEightfoldReflectedTile"],
                   [CIFilter filterWithName:@"CIFourfoldReflectedTile"],
                   [CIFilter filterWithName:@"CIFourfoldRotatedTile"],
-                  [CIFilter filterWithName:@"CIHoleDistortion"], nil];
+                  [CIFilter filterWithName:@"CIHoleDistortion"],
+                  [CIFilter filterWithName:@"CILanczosScaleTransform"],
+                  [CIFilter filterWithName:@"CILightTunnel"],
+                  [CIFilter filterWithName:@"CILineScreen"], nil];
 }
 
 // This method provides a filter object, given its name.
