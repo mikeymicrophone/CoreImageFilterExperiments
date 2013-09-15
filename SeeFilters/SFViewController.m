@@ -94,7 +94,7 @@
     
     [self updateFilteredImage:beginImage context:previewContext];
     
-//    [self logAllFilters];
+    [self logAllFilters];
 }
 
 #pragma mark -- updaters --
@@ -513,7 +513,6 @@
                   [CIFilter filterWithName:@"CIVibrance"],
                   [CIFilter filterWithName:@"CIHueAdjust"],
                   [CIFilter filterWithName:@"CIHighlightShadowAdjust"],
-                  [CIFilter filterWithName:@"CIVignette"], nil];
                   [CIFilter filterWithName:@"CIVignette"],
                   [CIFilter filterWithName:@"CIBloom"],
                   [CIFilter filterWithName:@"CIBumpDistortion"],
@@ -563,14 +562,12 @@
     for (NSString* filterName in filters)
     {
         CIFilter *filter = [CIFilter filterWithName:filterName];
-        NSLog(@"Filter: %@", filterName);
+//        NSLog(@"Filter: %@", filterName);
         inputs = [filter inputKeys];
-        NSLog(@"Inputs: %@", inputs);
+//        NSLog(@"Inputs: %@", inputs);
         for (NSString *input in inputs) {
             attrClass = [[[filter attributes] valueForKey:input] valueForKey:kCIAttributeClass];
-            if ([attrClass isEqualToString:@"NSNumber"]) {
-                NSLog(@"filter takes a number as input: %@", filterName);
-            }
+            NSLog(@"%@\t%@\t%@", filterName, input, attrClass);
         }
     }
 }
