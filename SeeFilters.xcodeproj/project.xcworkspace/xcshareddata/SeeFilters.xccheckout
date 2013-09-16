@@ -5,19 +5,19 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>96239869-002A-44A9-84EF-E138B55E1B95</string>
+	<string>2F60907A-0F31-470A-AAF8-9CF70D0F3227</string>
 	<key>IDESourceControlProjectName</key>
 	<string>SeeFilters</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>2A75E67E-5EE5-4BF8-AD03-C8410D952A11</key>
+		<key>91576F0D-D8B0-4CB2-8698-8150A1AB1DA7</key>
 		<string>ssh://github.com/mikeymicrophone/CoreImageFilterExperiments.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>SeeFilters.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>2A75E67E-5EE5-4BF8-AD03-C8410D952A11</key>
+		<key>91576F0D-D8B0-4CB2-8698-8150A1AB1DA7</key>
 		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
@@ -25,14 +25,14 @@
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>2A75E67E-5EE5-4BF8-AD03-C8410D952A11</string>
+	<string>91576F0D-D8B0-4CB2-8698-8150A1AB1DA7</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>2A75E67E-5EE5-4BF8-AD03-C8410D952A11</string>
+			<string>91576F0D-D8B0-4CB2-8698-8150A1AB1DA7</string>
 			<key>IDESourceControlWCCName</key>
 			<string>CoreImageFilterExperiments</string>
 		</dict>
