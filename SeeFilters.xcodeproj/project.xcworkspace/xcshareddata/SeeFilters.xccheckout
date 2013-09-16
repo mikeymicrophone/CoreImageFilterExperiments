@@ -5,18 +5,28 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
+<<<<<<< HEAD
 	<string>2F60907A-0F31-470A-AAF8-9CF70D0F3227</string>
+=======
+	<string>EBCC0657-2D92-4560-B4B7-55C65017D535</string>
+>>>>>>> 1182cc4c51f5ca1e7d0fbe86968345fa943cda3f
 	<key>IDESourceControlProjectName</key>
 	<string>SeeFilters</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
+<<<<<<< HEAD
 		<key>91576F0D-D8B0-4CB2-8698-8150A1AB1DA7</key>
 		<string>ssh://github.com/mikeymicrophone/CoreImageFilterExperiments.git</string>
+=======
+		<key>5D5F0E96-3BFF-42F4-8019-92012BC1C2C9</key>
+		<string>http://github.com/mikeymicrophone/CoreImageFilterExperiments.git</string>
+>>>>>>> 1182cc4c51f5ca1e7d0fbe86968345fa943cda3f
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>SeeFilters.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
+<<<<<<< HEAD
 		<key>91576F0D-D8B0-4CB2-8698-8150A1AB1DA7</key>
 		<string>../..</string>
 	</dict>
@@ -26,13 +36,28 @@
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
 	<string>91576F0D-D8B0-4CB2-8698-8150A1AB1DA7</string>
+=======
+		<key>5D5F0E96-3BFF-42F4-8019-92012BC1C2C9</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>http://github.com/mikeymicrophone/CoreImageFilterExperiments.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>5D5F0E96-3BFF-42F4-8019-92012BC1C2C9</string>
+>>>>>>> 1182cc4c51f5ca1e7d0fbe86968345fa943cda3f
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
+<<<<<<< HEAD
 			<string>91576F0D-D8B0-4CB2-8698-8150A1AB1DA7</string>
+=======
+			<string>5D5F0E96-3BFF-42F4-8019-92012BC1C2C9</string>
+>>>>>>> 1182cc4c51f5ca1e7d0fbe86968345fa943cda3f
 			<key>IDESourceControlWCCName</key>
 			<string>CoreImageFilterExperiments</string>
 		</dict>

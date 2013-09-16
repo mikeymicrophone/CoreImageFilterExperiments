@@ -209,7 +209,11 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = SF;
+<<<<<<< HEAD
 				LastUpgradeCheck = 0500;
+=======
+				LastUpgradeCheck = 0430;
+>>>>>>> 1182cc4c51f5ca1e7d0fbe86968345fa943cda3f
 				TargetAttributes = {
 					0C38609315AB7EDA002A4EAC = {
 						DevelopmentTeam = C7FJS9SLNW;
