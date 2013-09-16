@@ -83,7 +83,7 @@
     
     [self controlFilter:[NSNumber numberWithInt:1]];
     firstFilterProperties = [[NSMutableDictionary alloc] init];
-    [self updateFilter:@"CIVibrance" withProperties:nil];
+    [self updateFilter:@"CIExposureAdjust" withProperties:nil];
     
     [self controlFilter:[NSNumber numberWithInt:2]];
     secondFilterProperties = [[NSMutableDictionary alloc] init];
@@ -91,7 +91,7 @@
     
     [self controlFilter:[NSNumber numberWithInt:3]];
     thirdFilterProperties = [[NSMutableDictionary alloc] init];
-    [self updateFilter:@"CIExposureAdjust" withProperties:nil];
+    [self updateFilter:@"CIColorControls" withProperties:nil];
     
     [self updateFilteredImage:beginImage context:previewContext];
     
